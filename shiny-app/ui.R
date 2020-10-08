@@ -8,26 +8,28 @@
 #
 
 library(shiny)
+library(shinythemes)
+library(tidyverse)
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
+shinyUI(navbarPage(
+    
+# Here, I am setting the theme for my Shiny App.
+theme = shinytheme("flatly"),
+    
+#Here, I am setting the title of my Shiny App.
+"Asian American Voting Patterns",
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    tabPanel("About",
+             p("Hello World!", a("Link", 
+    href = "https://www.youtube.com/watch?v=Yw6u6YkTgQ4&ab_channel=LouieZong")),
+             h1("Sentience!")
+             ),
+    
+    # Another tab panel
+    tabPanel("Plot",
+             plotOutput("carPlot")
+             )
 
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
-        )
-    )
 ))
