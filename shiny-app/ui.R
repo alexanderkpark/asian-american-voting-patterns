@@ -32,7 +32,7 @@ theme = shinytheme("flatly"),
     
     # Another tab panel
     tabPanel("Data",
-             plotOutput("carPlot")
+             plotOutput("NFLHomeAvg")
              )
 
 ))

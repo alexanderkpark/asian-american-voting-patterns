@@ -7,16 +7,18 @@
 #    http://shiny.rstudio.com/
 #
 
-x <- mtcars
+x <- avg_nfl_home_score
 
 # Define server logic required to draw a line graph.
 shinyServer(function(input, output) {
 
-  # carPlot is madeup name
-    output$carPlot <- renderPlot({
+  # NFLPlot made
+    output$NFLHomeAvg <- renderPlot({
       
       # Just read in data!
-        ggplot(x, aes(mpg, disp)) + geom_line()
+      ggplot(x, aes(team_home, avg_home)) + 
+        geom_col(color = "white", fill = "dodgerblue") +
+        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.3))
     })
 
 })

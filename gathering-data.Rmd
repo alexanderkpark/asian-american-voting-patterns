@@ -19,5 +19,16 @@ library(readxl)
 
 nfl_scores_1966 <- read_csv("data/spreadspoke_scores.csv")
 
+# Create object avg_nfl_home_score that is the average score that home teams
+# have had over the years.
+
+avg_nfl_home_score <- nfl_scores_1966 %>%
+  group_by(team_home) %>%
+  summarize(avg_home = mean(score_home), .groups = "drop")
+
+ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
+        geom_col(color = "white", fill = "dodgerblue") +
+        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.3))
+
 ```
 
