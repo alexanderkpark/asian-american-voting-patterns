@@ -7,9 +7,12 @@
 #    http://shiny.rstudio.com/
 #
 
+########## PREP ##########
+
 library(shiny)
 library(shinythemes)
 library(tidyverse)
+library(readxl)
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
@@ -18,7 +21,7 @@ shinyUI(navbarPage(
 theme = shinytheme("flatly"),
     
 #Here, I am setting the title of my Shiny App.
-"Asian American Voting Patterns",
+"Home Field Advantage",
 
     # Application title
     tabPanel("About",
@@ -28,7 +31,7 @@ theme = shinytheme("flatly"),
              ),
     
     # Another tab panel
-    tabPanel("Plot",
+    tabPanel("Data",
              plotOutput("carPlot")
              )
 

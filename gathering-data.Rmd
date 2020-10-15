@@ -1,0 +1,23 @@
+---
+title: "gathering-data"
+author: "Alexander Park"
+date: "10/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+setwd("~/Desktop/GOV_50/home-field-advantage/shiny-app")
+```
+
+```{r test}
+
+# Create object nfl_scores_1966 that has all scores from NFL games from 1966-67
+# to 2020-21.
+
+nfl_scores_1966 <- read_csv("data/spreadspoke_scores.csv")
+
+```
+

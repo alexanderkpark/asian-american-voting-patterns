@@ -5,3 +5,5 @@
 
 *Rproj
 /shiny-app/rsconnect/
+
+*.Ds_Store

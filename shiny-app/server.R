@@ -7,14 +7,16 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
-library(tidyverse)
+x <- mtcars
 
 # Define server logic required to draw a line graph.
 shinyServer(function(input, output) {
 
+  # carPlot is madeup name
     output$carPlot <- renderPlot({
-        ggplot(mtcars, aes(mpg, disp)) + geom_line()
+      
+      # Just read in data!
+        ggplot(x, aes(mpg, disp)) + geom_line()
     })
 
 })
