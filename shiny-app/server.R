@@ -16,9 +16,15 @@ shinyServer(function(input, output) {
     output$NFLHomeAvg <- renderPlot({
       
       # Just read in data!
-      ggplot(x, aes(team_home, avg_home)) + 
+      ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
-        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0.3))
+        theme(axis.text.x = element_text(angle = 90, 
+                                         vjust = 0.5, 
+                                         hjust = 0.3)) +
+        labs(title = "Average Home Scores for All NFL Teams",
+             subtitle = "From 1966-67 to 2019-20",
+             x = "Team",
+             y = "Average Home Score")
     })
 
 })
