@@ -25,14 +25,15 @@ theme = shinytheme("flatly"),
 
     # Application title
     tabPanel("About",
-             p("Hello World!", a("Link", 
-    href = "https://www.youtube.com/watch?v=Yw6u6YkTgQ4&ab_channel=LouieZong")),
-             h1("Sentience!")
-             ),
+             p("Here is the link to my", a("Github.", 
+    href = "https://github.com/alexanderkpark")),
+             h1("Welcome to my project!")
+             p("")),
     
     # Another tab panel
     tabPanel("Data",
-             plotOutput("NFLHomeAvg")
+             plotOutput("NFLHomeAvg"),
+             plotOutput("NBAHomeAvg")
              )
 
 ))
