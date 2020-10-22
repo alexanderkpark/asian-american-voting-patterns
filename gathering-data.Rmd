@@ -11,7 +11,7 @@ library(tidyverse)
 library(readxl)
 library(janitor)
 require("knitr")
-# opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
+opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
 ```
 
 ```{r nfl}
@@ -22,11 +22,13 @@ require("knitr")
 nfl_scores_1966 <- read_csv("data/spreadspoke_scores.csv")
 
 # Create object avg_nfl_home_score that is the average score that home teams
-# have had over the years.
+# have had over the years. Save to RDS.
 
 avg_nfl_home_score <- nfl_scores_1966 %>%
   group_by(team_home) %>%
   summarize(avg_home = mean(score_home), .groups = "drop")
+
+saveRDS(avg_nfl_home_score, file = "nfl_scores")
 
 ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
@@ -48,12 +50,14 @@ nba_scores_2004 <- read_csv("data/nba2004/games.csv") %>%
   clean_names()
 
 # Create object avg_nba_home_score that is the average score that home teams
-# have had over the years.
+# have had over the years. Save to RDS.
 
 avg_nba_home_score <- nba_scores_2004 %>%
   select(home_team_id, pts_home) %>%
   group_by(home_team_id) %>%
   summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop")
+
+saveRDS(avg_nba_home_score, file = "nba_scores")
 
 ggplot(avg_nba_home_score, aes(home_team_id, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
