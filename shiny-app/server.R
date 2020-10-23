@@ -28,7 +28,7 @@ shinyServer(function(input, output) {
       
       #Just read in data for NBA!
       
-      ggplot(avg_nba_home_score, aes(home_team_id, avg_home)) + 
+      ggplot(avg_nba_home_score, aes(name, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 

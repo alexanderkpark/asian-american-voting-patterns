@@ -11,7 +11,7 @@ library(tidyverse)
 library(readxl)
 library(janitor)
 require("knitr")
-opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
+# opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
 ```
 
 ```{r nfl}
@@ -49,17 +49,30 @@ ggplot(avg_nfl_home_score, aes(team_home, avg_home)) +
 nba_scores_2004 <- read_csv("data/nba2004/games.csv") %>%
   clean_names()
 
+nba_names_2004 <- read_csv("data/nba2004/teams.csv") %>%
+  clean_names()
+
 # Create object avg_nba_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
 
 avg_nba_home_score <- nba_scores_2004 %>%
   select(home_team_id, pts_home) %>%
-  group_by(home_team_id) %>%
+  rename(team_id = home_team_id) %>%
+  group_by(team_id) %>%
   summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop")
+
+nba_names_2004 <- nba_names_2004 %>%
+  select(city, nickname, team_id) %>%
+  unite(name, c("city", "nickname"), sep = " ")
+
+avg_nba_home_score <- left_join(avg_nba_home_score, 
+                                nba_names_2004, 
+                                by = "team_id") %>%
+  select(name, avg_home)
 
 saveRDS(avg_nba_home_score, file = "nba_scores")
 
-ggplot(avg_nba_home_score, aes(home_team_id, avg_home)) + 
+ggplot(avg_nba_home_score, aes(name, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
