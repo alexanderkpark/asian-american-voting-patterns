@@ -136,4 +136,15 @@ ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
 
 ```
 
+Make dashboard of interactive interface with selections for different teams and different years.
 
+Tab 1: Data Explanation
+Tab 2: Interesting Cases (maybe static plots, with paragraphs explaining what's interesting)
+Tab 3: Models
+Tab 4: About
+
+Model: 
+1. Not a causal model (no manipulation), only predictive model. Two conditions: home and away.
+2. y axis is point difference of game. Outcome is point margin. stan_glm() usable.
+- Cool graphic opportunities for this as well
+- pivot_longer(): unit of analysis --> two rows: one row for the home team, and another from the away team. Almost exactly analagous to Week 9 lectures (control vs. treatment is analagous to home and away)
