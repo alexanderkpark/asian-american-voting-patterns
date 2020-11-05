@@ -2,6 +2,7 @@
 
 avg_nfl_home_score <- readRDS(file = "nfl_scores")
 avg_nba_home_score <- readRDS(file = "nba_scores")
+avg_mlb_home_score <- readRDS(file = "mlb_scores")
 
 # Define server logic required to draw graphs.
 shinyServer(function(input, output) {
