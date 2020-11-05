@@ -7,6 +7,7 @@ avg_nba_home_score <- readRDS(file = "nba_scores")
 shinyServer(function(input, output) {
 
   # NFLPlot made
+  
     output$NFLHomeAvg <- renderPlot({
       
       # Just read in data for NFL!
@@ -37,6 +38,39 @@ shinyServer(function(input, output) {
              subtitle = "From 2004 to Feb. 2020",
              x = "Team",
              y = "Average Home Score")
+    })
+    
+  #MLBPlot Made
+    
+    output$MLBHomeAvg <- renderPlot({
+      
+      #Just read in data for MLB!
+      
+      ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
+        geom_col(color = "white", fill = "dodgerblue") + 
+        theme(axis.text.x = element_text(angle = 90, 
+                                         vjust = 0.5,
+                                         hjust = 0.3)) +
+        scale_x_discrete(labels = c("Anaheim Angels", "Arizona Diamondbacks", 
+                                    "Atlanta Braves", "Baltimore Orioles",
+                                    "Boston Red Sox", "Chicago Cubs",
+                                    "Chicago White Sox", "Cincinnati Reds",
+                                    "Cleveland Indians", "Colorado Rockies",
+                                    "Detroit Tigers", "Miami (Florida) Marlins",
+                                    "Houston Astros", "Kansas City Royals",
+                                    "Los Angeles Dodgers", "Milwaukee Brewers",
+                                    "Minnesota Twins", "New York Mets",
+                                    "New York Yankees", "Oakland Athletics",
+                                    "Philadelphia Phillies", "Pittsburgh Pirates",
+                                    "San Diego Padres", "Seattle Mariners",
+                                    "San Francisco Giants", "St Louis Cardinals",
+                                    "Tampa Bay Rays", "Texas Rangers",
+                                    "Toronto Blue Jays", "Washington Nationals")) +
+        labs(title = "Average Home Scores for All MLB Teams",
+             subtitle = "From 1947 (Racial Integration) to Oct. 2020",
+             x = "Team",
+             y = "Average Home Score")
+      
     })
 
 })

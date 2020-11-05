@@ -47,6 +47,6 @@ theme = shinytheme("flatly"),
     tabPanel("Data",
              plotOutput("NFLHomeAvg"),
              plotOutput("NBAHomeAvg")
-             )
+             plotOutput("MLBHomeAvg"))
 
 ))
