@@ -49,6 +49,8 @@ ggplot(avg_nfl_home_score, aes(team_home, avg_home)) +
 nba_scores_2004 <- read_csv("data/nba2004/games.csv") %>%
   clean_names()
 
+# Create object nba_names_2004 to organize NBA team names.
+
 nba_names_2004 <- read_csv("data/nba2004/teams.csv") %>%
   clean_names()
 
@@ -82,4 +84,31 @@ ggplot(avg_nba_home_score, aes(name, avg_home)) +
        x = "Team",
        y = "Average Home Score")
 ```
+
+```{r mlb}
+
+# Create object mlb_scores_1947 that has all scores from MLB games from 1947 (when the MLB became racially integrated) to October 2019.
+
+# Create object mlb_names_1947 to organize MLB team names.
+
+mlb_scores_1947 <- read_csv("raw_data/mlbscores/mlb_elo.csv") %>%
+  clean_names() %>%
+  rename(home_team = team1,
+         away_team = team2,
+         home_score = score1,
+         away_score = score2) %>%
+  filter(season >= 1947)
+
+# Create object avg_mlb_home_score that is the average score that home teams
+# have had over the years. Save to RDS.
+
+avg_mlb_home_score <- mlb_scores_1947 %>%
+  select(home_team, home_score) %>%
+  group_by(home_team) %>%
+  summarize(avg_home = mean(home_score, na.rm = TRUE), .groups = "drop")
+
+saveRDS(avg_mlb_home_score, file = "mlb_scores")
+
+```
+
 
