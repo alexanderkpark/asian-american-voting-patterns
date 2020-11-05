@@ -91,7 +91,7 @@ ggplot(avg_nba_home_score, aes(name, avg_home)) +
 
 # Create object mlb_names_1947 to organize MLB team names.
 
-mlb_scores_1947 <- read_csv("raw_data/mlbscores/mlb_elo.csv") %>%
+mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv") %>%
   clean_names() %>%
   rename(home_team = team1,
          away_team = team2,
