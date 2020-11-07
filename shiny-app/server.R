@@ -14,7 +14,7 @@ shinyServer(function(input, output) {
       # Just read in data for NFL!
       
       ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
-        geom_col(color = "white", fill = "dodgerblue") +
+        geom_col(color = "white", fill = "navyblue") +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
@@ -31,7 +31,7 @@ shinyServer(function(input, output) {
       #Just read in data for NBA!
       
       ggplot(avg_nba_home_score, aes(name, avg_home)) + 
-        geom_col(color = "white", fill = "dodgerblue") +
+        geom_col(color = "white", fill = "green4") +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
@@ -48,7 +48,7 @@ shinyServer(function(input, output) {
       #Just read in data for MLB!
       
       ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
-        geom_col(color = "white", fill = "dodgerblue") + 
+        geom_col(color = "white", fill = "red4") + 
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5,
                                          hjust = 0.3)) +
