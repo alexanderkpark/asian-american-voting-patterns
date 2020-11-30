@@ -22,12 +22,14 @@ shinyUI(navbarPage(
 theme = shinytheme("flatly"),
     
 #Here, I am setting the title of my Shiny App.
-"Home Field Advantage",
+"Home Field Advantage in the NFL, MLB, and NBA",
 
-    # Application title
+########## ABOUT ##########
+
+    # About Tab setup
     tabPanel("About",
              p("Here is the link to my", a("Github.", 
-    href = "https://github.com/alexanderkpark")),
+    href = "https://github.com/alexanderkpark/home-field-advantage")),
              h1("Welcome to my project!"),
              p("This project will analyze in which league out of the four big 
                American leagues - NFL, MLB, NBA, NHL - home field advantage 
@@ -43,7 +45,9 @@ theme = shinytheme("flatly"),
                as have a leg up on friends whenever I have to predict who will 
                win and who will lose a given game.")),
     
-    # Another tab panel
+########## DATA ##########
+
+    # Data Tab setup
     tabPanel("Data",
              plotOutput("NFLHomeAvg"),
              plotOutput("NBAHomeAvg"),

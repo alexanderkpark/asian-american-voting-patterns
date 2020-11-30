@@ -1,8 +1,8 @@
 # Read in RDS.
 
-avg_nfl_home_score <- readRDS(file = "nfl_scores")
-avg_nba_home_score <- readRDS(file = "nba_scores")
-avg_mlb_home_score <- readRDS(file = "mlb_scores")
+avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores")
+avg_nba_home_score <- readRDS(file = "nba_avg_home_scores")
+avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores")
 
 # Define server logic required to draw graphs.
 shinyServer(function(input, output) {
@@ -11,7 +11,7 @@ shinyServer(function(input, output) {
   
     output$NFLHomeAvg <- renderPlot({
       
-      # Just read in data for NFL!
+      # Made NFL Home Avg Score Plot
       
       ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
         geom_col(color = "white", fill = "navyblue") +
@@ -19,16 +19,16 @@ shinyServer(function(input, output) {
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
         labs(title = "Average Home Scores for All NFL Teams",
-             subtitle = "From 1966-67 to 2019-20",
+             subtitle = "From 1966 Season to 2019 Season",
              x = "Team",
              y = "Average Home Score")
     })
     
-  #NBAPlot made
+  # NBAPlot made
     
     output$NBAHomeAvg <- renderPlot({
       
-      #Just read in data for NBA!
+      # Made NBa Home Avg Score Plot
       
       ggplot(avg_nba_home_score, aes(name, avg_home)) + 
         geom_col(color = "white", fill = "green4") +
@@ -36,16 +36,16 @@ shinyServer(function(input, output) {
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
         labs(title = "Average Home Scores for All NBA Teams",
-             subtitle = "From 2004 to Feb. 2020",
+             subtitle = "From 2003 Season to March 2020 (pre-Covid)",
              x = "Team",
              y = "Average Home Score")
     })
     
-  #MLBPlot Made
+  # MLBPlot Made
     
     output$MLBHomeAvg <- renderPlot({
       
-      #Just read in data for MLB!
+      # Made MLB Home Avg Score Plot
       
       ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
         geom_col(color = "white", fill = "red4") + 
@@ -72,9 +72,12 @@ shinyServer(function(input, output) {
                                     "Toronto Blue Jays", 
                                     "Washington Nationals")) +
         labs(title = "Average Home Scores for All MLB Teams",
-             subtitle = "From 1947 (Racial Integration) to Oct. 2020",
+             subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
              x = "Team",
              y = "Average Home Score")
+      
+# I have elected to have the subtitle go over the line so as not to disturb how
+# it will show up on the website.
       
     })
 

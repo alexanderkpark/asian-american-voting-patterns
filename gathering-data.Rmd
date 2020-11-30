@@ -10,16 +10,19 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
 library(janitor)
+library(rstanarm)
 require("knitr")
-# opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
+# opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage")
 ```
+
+# NFL
 
 ```{r nfl}
 
 # Create object nfl_scores_1966 that has all scores from NFL games from 1966-67
 # to 2019-2020.
 
-nfl_scores_1966 <- read_csv("data/spreadspoke_scores.csv")
+nfl_scores_1966 <- read_csv("raw_data/nflscores1966/spreadspoke_scores.csv")
 
 # Create object avg_nfl_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
@@ -42,35 +45,37 @@ ggplot(avg_nfl_home_score, aes(team_home, avg_home)) +
 
 ```
 
-```{r nba}
-# Create object nba_scores_2004 that has all scores from NFL games from 2004
-# to February 2020.
+# NBA
 
-nba_scores_2004 <- read_csv("data/nba2004/games.csv") %>%
-  clean_names()
+```{r nba}
 
 # Create object nba_names_2004 to organize NBA team names.
 
-nba_names_2004 <- read_csv("data/nba2004/teams.csv") %>%
+nba_names_2004 <- read_csv("raw_data/nbascores2004-feb2020/teams.csv") %>%
   clean_names()
-
-# Create object avg_nba_home_score that is the average score that home teams
-# have had over the years. Save to RDS.
-
-avg_nba_home_score <- nba_scores_2004 %>%
-  select(home_team_id, pts_home) %>%
-  rename(team_id = home_team_id) %>%
-  group_by(team_id) %>%
-  summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop")
 
 nba_names_2004 <- nba_names_2004 %>%
   select(city, nickname, team_id) %>%
   unite(name, c("city", "nickname"), sep = " ")
 
-avg_nba_home_score <- left_join(avg_nba_home_score, 
-                                nba_names_2004, 
-                                by = "team_id") %>%
-  select(name, avg_home)
+# Create object nba_scores_2004 that has all scores from NFL games from 2004
+# to February 2020.
+
+nba_scores_2004 <- read_csv("raw_data/nbascores2004-feb2020/games.csv") %>%
+  clean_names() %>%
+  rename(team_id = home_team_id) %>%
+  select(team_id, season, pts_home, pts_away)
+
+nba_scores_2004 <- left_join(nba_scores_2004, nba_names_2004, by = "team_id")
+  
+
+# Create object avg_nba_home_score that is the average score that home teams
+# have had over the years. Save to RDS.
+
+avg_nba_home_score <- nba_scores_2004 %>%
+  select(name, pts_home) %>%
+  group_by(name) %>%
+  summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop")
 
 saveRDS(avg_nba_home_score, file = "nba_scores")
 
@@ -85,19 +90,22 @@ ggplot(avg_nba_home_score, aes(name, avg_home)) +
        y = "Average Home Score")
 ```
 
+# MLB
+
 ```{r mlb}
 
 # Create object mlb_scores_1947 that has all scores from MLB games from 1947 (when the MLB became racially integrated) to October 2019.
 
 # Create object mlb_names_1947 to organize MLB team names.
 
-mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv") %>%
+mlb_scores_1947 <- read_csv("raw_data/mlbscores/mlb_elo.csv") %>%
   clean_names() %>%
   rename(home_team = team1,
          away_team = team2,
          home_score = score1,
          away_score = score2) %>%
-  filter(season >= 1947)
+  filter(season >= 1947) %>%
+  filter(season != 2020)
 
 # Create object avg_mlb_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
