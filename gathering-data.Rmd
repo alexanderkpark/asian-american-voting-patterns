@@ -31,7 +31,7 @@ avg_nfl_home_score <- nfl_scores_1966 %>%
   group_by(team_home) %>%
   summarize(avg_home = mean(score_home), .groups = "drop")
 
-saveRDS(avg_nfl_home_score, file = "nfl_scores")
+saveRDS(avg_nfl_home_score, file = "nfl_avg_home_scores")
 
 ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
@@ -59,27 +59,36 @@ nba_names_2004 <- nba_names_2004 %>%
   unite(name, c("city", "nickname"), sep = " ")
 
 # Create object nba_scores_2004 that has all scores from NFL games from 2004
-# to February 2020.
+# to March 2020.
 
 nba_scores_2004 <- read_csv("raw_data/nbascores2004-feb2020/games.csv") %>%
   clean_names() %>%
   rename(team_id = home_team_id) %>%
-  select(team_id, season, pts_home, pts_away)
+  select(team_id, visitor_team_id, season, pts_home, pts_away)
 
-nba_scores_2004 <- left_join(nba_scores_2004, nba_names_2004, by = "team_id")
+nba_scores_2004 <- left_join(nba_scores_2004, nba_names_2004, by = "team_id") %>%
+  rename(home_team = name)
+
+nba_names_2004_away <- nba_names_2004 %>%
+  rename(visitor_team_id = team_id)
   
+nba_scores_2004 <- left_join(nba_scores_2004, 
+                             nba_names_2004_away, 
+                             by = "visitor_team_id") %>%
+  rename(away_team = name) %>%
+  select(home_team, away_team, season, pts_home, pts_away)
 
 # Create object avg_nba_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
 
 avg_nba_home_score <- nba_scores_2004 %>%
-  select(name, pts_home) %>%
-  group_by(name) %>%
+  select(home_team, pts_home) %>%
+  group_by(home_team) %>%
   summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop")
 
-saveRDS(avg_nba_home_score, file = "nba_scores")
+saveRDS(avg_nba_home_score, file = "nba_avg_home_scores")
 
-ggplot(avg_nba_home_score, aes(name, avg_home)) + 
+ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
         geom_col(color = "white", fill = "dodgerblue") +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
@@ -115,7 +124,7 @@ avg_mlb_home_score <- mlb_scores_1947 %>%
   group_by(home_team) %>%
   summarize(avg_home = mean(home_score, na.rm = TRUE), .groups = "drop")
 
-saveRDS(avg_mlb_home_score, file = "mlb_scores")
+saveRDS(avg_mlb_home_score, file = "mlb_avg_home_scores")
 
 ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
         geom_col(color = "white", fill = "dodgerblue") + 
@@ -144,11 +153,106 @@ ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
 
 ```
 
+# Models
+
+$$ score\_margin = \beta_0 + \beta_1 home_i + \epsilon_i$$
+
+```{r nfl model}
+
+# Here, I make the NFL model using stan_glm() in order to predict the difference
+# in scores between home and away games for the league, on the whole.
+
+nfl_model_data_home <- nfl_scores_1966 %>%
+  select(team_home, score_home) %>%
+  mutate(home = 1) %>%
+  rename(team = team_home,
+         score = score_home)
+
+nfl_model_data_away <- nfl_scores_1966 %>%
+  select(team_away, score_away) %>%
+  mutate(home = 0) %>%
+  rename(team = team_away,
+         score = score_away)
+
+nfl_model_data <- full_join(nfl_model_data_home, nfl_model_data_away)
+  
+
+nfl_model <- stan_glm(score ~ home,
+                      data = nfl_model_data,
+                      refresh = 0)
+
+print(nfl_model, digits = 4)
+
+saveRDS(nfl_model, file = "nfl_model")
+
+```
+
+```{r mlb model}
+
+# Here, I make the MLB model using stan_glm() in order to predict the difference
+# in scores between home and away games for the league, on the whole.
+
+mlb_model_data_home <- mlb_scores_1947 %>%
+  select(home_team, home_score) %>%
+  mutate(home = 1) %>%
+  rename(team = home_team,
+         score = home_score)
+
+mlb_model_data_away <- mlb_scores_1947 %>%
+  select(away_team, away_score) %>%
+  mutate(home = 0) %>%
+  rename(team = away_team,
+         score = away_score)
+
+mlb_model_data <- full_join(mlb_model_data_home, mlb_model_data_away)
+
+mlb_model <- stan_glm(score ~ home,
+                      data = mlb_model_data,
+                      refresh = 0)
+
+print(mlb_model, digits = 4)
+
+saveRDS(mlb_model, file = "mlb_model")
+
+```
+
+```{r nba model}
+
+# Here, I make the NBA model using stan_glm() in order to predict the difference
+# in scores between home and away games for the league, on the whole.
+
+nba_model_data_home <- nba_scores_2004 %>%
+  select(home_team, pts_home) %>%
+  mutate(home = 1) %>%
+  rename(team = home_team,
+         score = pts_home)
+
+nba_model_data_away <- nba_scores_2004 %>%
+  select(away_team, pts_away) %>%
+  mutate(home = 0) %>%
+  rename(team = away_team,
+         score = pts_away)
+
+nba_model_data <- full_join(nba_model_data_home, nba_model_data_away)
+
+nba_model <- stan_glm(score ~ home,
+                      data = nba_model_data,
+                      refresh = 0)
+
+print(nba_model, digits = 4)
+
+saveRDS(nba_model, file = "nba_model")
+
+```
+
+
 Make dashboard of interactive interface with selections for different teams and different years.
 
 Tab 1: Data Explanation
+- This tab will also house interactive portion where you will be able to see average home scores of teams across the years.
 Tab 2: Interesting Cases (maybe static plots, with paragraphs explaining what's interesting)
 Tab 3: Models
+- This tab will also house interactive portion where you will be able to determine the score margin for different teams.
 Tab 4: About
 
 Model: 
