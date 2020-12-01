@@ -30,7 +30,7 @@ shinyServer(function(input, output) {
       
       # Made NBa Home Avg Score Plot
       
-      ggplot(avg_nba_home_score, aes(name, avg_home)) + 
+      ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
         geom_col(color = "white", fill = "green4") +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
