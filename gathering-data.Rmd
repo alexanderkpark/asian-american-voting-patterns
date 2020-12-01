@@ -12,7 +12,7 @@ library(readxl)
 library(janitor)
 library(rstanarm)
 require("knitr")
-# opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage")
+opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
 ```
 
 # NFL
@@ -22,7 +22,7 @@ require("knitr")
 # Create object nfl_scores_1966 that has all scores from NFL games from 1966-67
 # to 2019-2020.
 
-nfl_scores_1966 <- read_csv("raw_data/nflscores1966/spreadspoke_scores.csv")
+nfl_scores_1966 <- read_csv("data/nflscores1966/spreadspoke_scores.csv")
 
 # Create object avg_nfl_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
@@ -51,7 +51,7 @@ ggplot(avg_nfl_home_score, aes(team_home, avg_home)) +
 
 # Create object nba_names_2004 to organize NBA team names.
 
-nba_names_2004 <- read_csv("raw_data/nbascores2004-feb2020/teams.csv") %>%
+nba_names_2004 <- read_csv("data/nba2004/teams.csv") %>%
   clean_names()
 
 nba_names_2004 <- nba_names_2004 %>%
@@ -61,7 +61,7 @@ nba_names_2004 <- nba_names_2004 %>%
 # Create object nba_scores_2004 that has all scores from NFL games from 2004
 # to March 2020.
 
-nba_scores_2004 <- read_csv("raw_data/nbascores2004-feb2020/games.csv") %>%
+nba_scores_2004 <- read_csv("data/nba2004/games.csv") %>%
   clean_names() %>%
   rename(team_id = home_team_id) %>%
   select(team_id, visitor_team_id, season, pts_home, pts_away)
@@ -107,7 +107,7 @@ ggplot(avg_nba_home_score, aes(home_team, avg_home)) +
 
 # Create object mlb_names_1947 to organize MLB team names.
 
-mlb_scores_1947 <- read_csv("raw_data/mlbscores/mlb_elo.csv") %>%
+mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv") %>%
   clean_names() %>%
   rename(home_team = team1,
          away_team = team2,
