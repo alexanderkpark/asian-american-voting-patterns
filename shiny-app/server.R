@@ -36,7 +36,7 @@ shinyServer(function(input, output) {
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
         labs(title = "Average Home Scores for All NBA Teams",
-             subtitle = "From 2003 Season to March 2020 (pre-Covid)",
+             subtitle = "From 2004 Season to March 2020 (pre-Covid)",
              x = "Team",
              y = "Average Home Score")
     })

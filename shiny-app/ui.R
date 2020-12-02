@@ -37,43 +37,73 @@ theme = shinytheme("flatly"),
                 And Why Does It Matter, Anyway?"),
              p(strong("Home field advantage"), "is the supposed benefit that a 
              team enjoys when they play in their home stadium as opposed to when 
-             they go and play in other venues as visitors. The concept of 
-             \"home field advantage\" has been taken as a maxim for years by 
-             players, coaches, management, and fans alike. In fact, home field 
-             advantage is so ingrained in sports culture that virtually all 
-             American sports leagues – from high school tournaments all the way 
-             up to Big Four – reward home field privileges throughout the 
-             playoffs to the top seeded team from the regular season. Recently,
-             though, there are growing murmurs in the sports world that", 
+             they go and play in other venues as visitors. This benefit is 
+             attributed to a variety of factors, including fans and referee 
+             bias. The concept of home field advantage has been taken as a 
+             maxim for years by players, coaches, management, and fans alike. 
+             In fact, home field advantage is so ingrained in sports culture 
+             that virtually all American sports leagues – from high school 
+             tournaments all the way up to Big Four – award home field 
+             privileges throughout the playoffs to the top seeded team from the 
+             regular season. Recently, though, there are growing murmurs in the 
+             sports world that", 
              a("home field advantage is not what it used to be.", href = "https://www.nytimes.com/2020/01/10/sports/football/road-team-advantage.html"),
              "So,", strong("does home field advantage actually matter?")),
              
              
-             # Motivations Section
+             # Motivations Section. Text extends beyond the line when it is a
+             # long link.
              
              h1("The Purpose of this Project"),
-             p("This project will analyze in which league out of the four big 
-               American leagues - NFL, MLB, NBA, NHL - home field advantage 
-               matters the most. Home field advantage is a common sports logic 
-               that the team who is playing in their home stadium gets a 
-               significant advantage over the team who is visiting. As a sports 
-               fan, I wanted to see how true this sports logic is. I will do 
-               so by analyzing score differences between home games and away 
-               games, team's overall records at home vs. away, quantifying 
-               these metrics, and then trying to see if these differences are 
-               statistically significant. In finding this out, I hope to make a 
-               contribution to how sports are watched by fans in the US, as well 
-               as have a leg up on friends whenever I have to predict who will 
-               win and who will lose a given game."),
+             p("The purpose of this project is to explore whether home field 
+             advantage actually matters – and more. If home field advantage does
+             matter, how many more points can teams in the NFL, NBA, and MLB 
+             expect to get when playing at home as opposed to when they play as 
+             visitors? How has home field advantage in these three leagues 
+             changed over time? This project will endeavor to provide answers 
+             to these questions by analyzing data on home vs. away scores of 
+             teams in all three leagues throughout the years."),
+             
+             p("All of the questions posed above have become more relevant in 
+             the wake of the COVID-19 pandemic, as American sports leagues have 
+             been forced to put on games with little to no fan presence in the 
+             stadiums. Not only have these COVID regulations erased the 
+             opportunity for sports fans to go see the teams they love, but they 
+             have also", a("diminished the sports watching experience on TV as
+             well.", href = "https://www.nytimes.com/2020/05/20/sports/coronavirus-sports-fans.html"),
+             "Moreover, athletes have claimed that they", a("depend on the 
+             energy of fans during their games,", href = "https://apnews.com/article/523715605c0353939e563cd57f604284"), 
+             "meaning the lack of fans in stadiums could impact athletic 
+             performance on the field as well. Recognizing the impact of 
+             COVID-19,", strong("this project will use data up to the last games 
+             in each of the three leagues that were not impacted by COVID
+             regulations.")), 
+             
+             p(em("PSA: COVID-19 is an extremely deadly disease which has 
+             killed almost 1.5 million people worldwide (as of December 2, 2020) 
+             and has impacted the lives of countless others. Fighting the 
+             virus is infinitely more important than any fan experience at a 
+             sports game. Follow COVID regulations wherever they are present to 
+             do your part in ensuring that fans around the world can return to
+             stadiums to support their teams soon.")),
+
              
              # Graphs of Average Home Scores for All Leagues
              
              h1("Average Home Scores of Teams in the NFL, NBA, and MLB Over the 
                 Years"),
+             p("Here are some visualizations of the average home scores of all
+               of the teams in the NFL, NBA, and MLB over the years. The other
+               tabs of this project will contain a variety of visualizations in 
+               an effort to analyze home field advantage across these three 
+               leagues."),
+             
              h2("NFL – National Football League"),
              plotOutput("NFLHomeAvg"),
+             
              h2("NBA – National Basketball Association"),
              plotOutput("NBAHomeAvg"),
+             
              h2("MLB – Major League Baseball"),
              plotOutput("MLBHomeAvg")),
 
@@ -113,13 +143,16 @@ tabPanel("About",
          
          h1("The Data"),
          h3("NFL Data"),
-         p("")
+         p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
+         user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")),
          
          h3("NBA Data"),
-         
+         p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle
+         user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")),
          
          h3("MLB Data"),
-         
+         p("I obtained MLB scores from the 1947 season onwards from", 
+           a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")),
          
          h3("GitHub"),
          p("Here is the link to this project's", a("GitHub repository.", 
