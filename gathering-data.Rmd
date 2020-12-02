@@ -155,7 +155,7 @@ ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
 
 # Models
 
-$$ score\_margin = \beta_0 + \beta_1 home_i + \epsilon_i$$
+$$ score = \beta_0 + \beta_1 home_i + \epsilon_i $$
 
 ```{r nfl model}
 

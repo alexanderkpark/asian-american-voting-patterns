@@ -123,6 +123,9 @@ tabPanel("HFA by League",
          h1("Linear Regressions for Each League with Score as Output and 
             Home as Predictor"),
          
+         h2("The Equation"),
+         uiOutput("reg_eq"),
+         
          h2("NFL Model"),
          tableOutput("NFLModelTable"),
          

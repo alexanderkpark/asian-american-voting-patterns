@@ -91,6 +91,15 @@ shinyServer(function(input, output) {
     nba_model <- readRDS(file = "nba_model")
     mlb_model <- readRDS(file = "mlb_model")
     
+    # reg_eq or Regression Equation made in Latex. Equation goes over the line
+    # so as not to disturb display in app.
+    
+    output$reg_eq <- renderUI({
+      
+      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
+    
+    })
+    
     # NFLModelTable made.
     
     output$NFLModelTable <- render_gt({
