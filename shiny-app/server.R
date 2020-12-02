@@ -1,3 +1,5 @@
+########## INTRODUCTION ##########
+
 # Read in RDS.
 
 avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores")
@@ -28,7 +30,7 @@ shinyServer(function(input, output) {
     
     output$NBAHomeAvg <- renderPlot({
       
-      # Made NBa Home Avg Score Plot
+      # Made NBA Home Avg Score Plot
       
       ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
         geom_col(color = "white", fill = "green4") +
@@ -81,4 +83,69 @@ shinyServer(function(input, output) {
       
     })
 
+########## HFA BY LEAGUE ##########
+
+# Read in RDS.
+    
+    nfl_model <- readRDS(file = "nfl_model")
+    nba_model <- readRDS(file = "nba_model")
+    mlb_model <- readRDS(file = "mlb_model")
+    
+    # NFLModelTable made.
+    
+    output$NFLModelTable <- render_gt({
+      
+      # Make NFL Model Table. Text extends beyond the line when it is a long
+      # link.
+      
+      tbl_regression(nfl_model, intercept = TRUE) %>%
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of NFL Scores",
+                   subtitle = "The Effect of Home Field on Score") %>%
+        tab_source_note("Source: https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
+      
+    })
+    
+    # NBAModelTable made.
+    
+    output$NBAModelTable <- render_gt({
+      
+      # Make NBA Model Table.
+      
+      tbl_regression(nba_model, intercept = TRUE) %>%
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of NBA Scores",
+                   subtitle = "The Effect of Home Court on Score") %>%
+        tab_source_note("Source: https://www.kaggle.com/nathanlauga/nba-games")
+      
+    })
+    
+    # MLBModelTable made.
+    
+    output$MLBModelTable <- render_gt({
+      
+      # Make MLB Model Table.
+      
+      tbl_regression(mlb_model, intercept = TRUE) %>%
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of MLB Scores",
+                   subtitle = "The Effect of Home Field on Score") %>%
+        tab_source_note("Source: https://data.fivethirtyeight.com/")
+      
+    })
+
+########## HFA BY TEAM ##########
+    
+    
+
+########## INTERESTING CASES ##########
+
+    
+    
 })

@@ -185,6 +185,14 @@ print(nfl_model, digits = 4)
 
 saveRDS(nfl_model, file = "nfl_model")
 
+tbl_regression(nfl_model, intercept = TRUE) %>%
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of NFL Scores",
+                   subtitle = "The Effect of Home Field on Score") %>%
+        tab_source_note("Source: https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
+
 ```
 
 ```{r mlb model}

@@ -14,6 +14,9 @@ library(shinythemes)
 library(tidyverse)
 library(readxl)
 library(janitor)
+library(gt)
+library(gtsummary)
+library(broom.mixed)
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
@@ -105,7 +108,35 @@ theme = shinytheme("flatly"),
              plotOutput("NBAHomeAvg"),
              
              h2("MLB – Major League Baseball"),
-             plotOutput("MLBHomeAvg")),
+             plotOutput("MLBHomeAvg")
+             
+),
+
+########## HFA BY LEAGUE ##########
+
+# HFA by League Tab setup.
+
+tabPanel("HFA by League",
+         
+         # Tables of League Models
+         
+         h1("Linear Regressions for Each League with Score as Output and 
+            Home as Predictor"),
+         
+         h2("NFL Model"),
+         tableOutput("NFLModelTable"),
+         
+         h2("NBA Model"),
+         tableOutput("NBAModelTable"),
+         
+         h2("MLB Model"),
+         tableOutput("MLBModelTable")
+         
+),
+
+########## HFA BY TEAM ##########
+
+########## INTERESTING CASES ##########
 
 ########## ABOUT ##########
 
