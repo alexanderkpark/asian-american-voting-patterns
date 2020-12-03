@@ -124,8 +124,8 @@ tabPanel("NFL",
          h1("Linear Regressions for the NFL with Score as Output and Home as 
             Predictor"),
          
-         h2("The Equation"),
-         uiOutput("reg_eq"),
+         # h2("The Equation"),
+         # uiOutput("reg_eq"),
          
          h2("NFL Model"),
          tableOutput("NFLModelTable")
@@ -143,8 +143,8 @@ tabPanel("NBA",
          h1("Linear Regression for the NBA with Score as Output and Home as 
             Predictor"),
          
-         h2("The Equation"),
-         uiOutput("reg_eq"),
+         # h2("The Equation"),
+         # uiOutput("reg_eq"),
          
          
          h2("NBA Model"),
@@ -163,12 +163,12 @@ tabPanel("MLB: A Deeper Dive",
          h1("Linear Regression for the MLB with Score as Output and Home, 
              Attendance, and their Interaction as Predictors"),
          
-         h2("The Equation"),
-         uiOutput("mlb_reg_eq"),
+         # h2("The Equation"),
+         # uiOutput("mlb_reg_eq"),
          
          
          h2("MLB Complex Model"),
-         tableOutput("MLBComplexModelTable"),
+         tableOutput("MLBComplexModelTable")
          
 ),
 

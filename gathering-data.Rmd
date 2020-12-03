@@ -369,6 +369,16 @@ saveRDS(mlb_model_complex, file = "mlb_model_complex.RDS")
 
 test <- readRDS(file = "mlb_model_complex.RDS")
 
+
+tbl_regression(mlb_model_complex, intercept = TRUE) %>% 
+  as_gt() %>%
+  fmt_number(columns = vars(estimate, std.error),
+                     decimals = 4) %>%
+          tab_header(title = "Regression of MLB Scores",
+                     subtitle = "The Effect of Home, Attendance, and their Interaction on Score") %>%
+          tab_source_note("Sources: https://data.fivethirtyeight.com/ &
+                          http://www.seanlahman.com/baseball-archive/statistics/")
+
 ```
 
 ```{r nba model}

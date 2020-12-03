@@ -92,22 +92,26 @@ shinyServer(function(input, output) {
     # reg_eq or Regression Equation made in Latex. Equation goes over the line
     # so as not to disturb display in app.
     
-    output$reg_eq <- renderUI({
+    # output$reg_eq <- renderUI({
+    #   
+    #   withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
       
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
-      
-    })
+    # })
     
     # NFLModelTable made.
     
     output$NFLModelTable <- render_gt({
-      
+
       # Make NFL Model Table. Text extends beyond the line when it is a long
       # link.
-      nfl_model %>%
-        as_tibble() %>%
-        slice(1) %>%
-        as_gt()
+      
+      tbl_regression(nfl_model, intercept = TRUE) %>%
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of NFL Scores",
+                   subtitle = "The Effect of Home Field on Score") %>%
+        tab_source_note("Source: https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
       
     })
     
@@ -117,22 +121,25 @@ shinyServer(function(input, output) {
     # reg_eq or Regression Equation made in Latex. Equation goes over the line
     # so as not to disturb display in app.
     
-    output$reg_eq <- renderUI({
+    # output$reg_eq <- renderUI({
+    #   
+    #   withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
       
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
-      
-    })
+    # })
     
     # NBAModelTable made.
     
     output$NBAModelTable <- render_gt({
-      
+
       # Make NBA Model Table.
-      
-      nba_model %>%
-        as_tibble() %>%
-        slice(1) %>%
-        as_gt()
+
+      tbl_regression(nba_model, intercept = TRUE) %>% 
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of NBA Scores",
+                   subtitle = "The Effect of Home on Score") %>%
+        tab_source_note("Source: https://www.kaggle.com/nathanlauga/nba-games")
       
     })
     
@@ -141,22 +148,26 @@ shinyServer(function(input, output) {
     # mlb_reg_eq or MLB Regression Equation made in Latex. Equation goes over
     # the line so as not to disturb display in app.
     
-    output$reg_eq <- renderUI({
+    # output$reg_eq <- renderUI({
+    #   
+    #   withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\beta_3 home_i * attendance_i + \\epsilon_i $$"))
       
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\beta_3 home_i * attendance_i + \\epsilon_i $$"))
-      
-    })
+    # })
     
     # MLBComplexModelTable made.
     
     output$MLBComplexModelTable <- render_gt({
-      
+
       # Make MLB Complex Model Table. Links go over the line.
-     
-      mlb_complex_model %>%
-        as_tibble() %>%
-        slice(1) %>%
-        as_gt()
+
+      tbl_regression(mlb_model_complex, intercept = TRUE) %>% 
+        as_gt() %>%
+        fmt_number(columns = vars(estimate, std.error),
+                   decimals = 4) %>%
+        tab_header(title = "Regression of MLB Scores",
+                   subtitle = "The Effect of Home, Attendance, and their Interaction on Score") %>%
+        tab_source_note("Sources: https://data.fivethirtyeight.com/ &
+                          http://www.seanlahman.com/baseball-archive/statistics/")
      
     })
     
