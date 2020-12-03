@@ -115,68 +115,68 @@ shinyUI(
 
 ########## NFL ##########
 
-    # NFL Tab setup.
+# NFL Tab setup.
 
-    tabPanel("NFL",
+tabPanel("NFL",
          
-            # NFL Model Table
+         # NFL Model Table
          
-            h1("Linear Regressions for the NFL with Score as Output and Home as 
+         h1("Linear Regressions for the NFL with Score as Output and Home as 
             Predictor"),
          
-            h2("The Equation"),
-            uiOutput("reg_eq"),
+         h2("The Equation"),
+         uiOutput("reg_eq"),
          
-            h2("NFL Model"),
-            tableOutput("NFLModelTable")
+         h2("NFL Model"),
+         tableOutput("NFLModelTable")
          
-            ),
+),
 
 ########## NBA ##########
 
-    # NBA Tab setup.
+# NBA Tab setup.
 
-    tabPanel("NBA",
+tabPanel("NBA",
          
-            # NBA Model Table
+         # NBA Model Table
          
-            h1("Linear Regression for the NBA with Score as Output and Home as 
+         h1("Linear Regression for the NBA with Score as Output and Home as 
             Predictor"),
-            
-            h2("The Equation"),
-            uiOutput("reg_eq"),
+         
+         h2("The Equation"),
+         uiOutput("reg_eq"),
          
          
-            h2("NBA Model"),
-            tableOutput("NBAModelTable")
+         h2("NBA Model"),
+         tableOutput("NBAModelTable")
          
-            ),
+),
 
 ########## MLB: A DEEPER DIVE ##########
 
 # MLB Tab setup.
 
-    tabPanel("MLB: A Deeper Dive",
-             
-             # MLB Complex Model Table
-             
-             h1("Linear Regression for the MLB with Score as Output and Home, 
+tabPanel("MLB: A Deeper Dive",
+         
+         # MLB Complex Model Table
+         
+         h1("Linear Regression for the MLB with Score as Output and Home, 
              Attendance, and their Interaction as Predictors"),
-             
-             h2("The Equation"),
-             uiOutput("mlb_reg_eq"),
-            
-             
-             h2("MLB Complex Model"),
-             tableOutput("MLBComplexModelTable"),
-             
-             ),
+         
+         h2("The Equation"),
+         uiOutput("mlb_reg_eq"),
+         
+         
+         h2("MLB Complex Model"),
+         tableOutput("MLBComplexModelTable"),
+         
+),
 
 ########## ABOUT ##########
 
 # About Tab setup. 
 
-    tabPanel("About",
+tabPanel("About",
          
          # About Me Section. Text extends beyond the line when it is a long
          # link.
@@ -189,8 +189,8 @@ shinyUI(
          Celtics. Besides sports, I have passions for American and Korean 
          politics, U.S. foreign policy, and the processes of and motivations 
          behind democratization. You can reach me at", 
-         a("apark@college.harvard.edu", href = "mailto:apark@college.harvard.edu"),
-         "."),
+           a("apark@college.harvard.edu", href = "mailto:apark@college.harvard.edu"),
+           "."),
          
          # Project Motivations Section
          
@@ -225,17 +225,17 @@ shinyUI(
          
          h3("GitHub"),
          p("Here is the link to this project's", a("GitHub repository.", 
-                                       href = "https://github.com/alexanderkpark/home-field-advantage")),
+                                                   href = "https://github.com/alexanderkpark/home-field-advantage")),
          
          # Acknowledgements Section.
          
          h1("Acknowledgements"),
          p("I am grateful for the guidance that", strong("Wyatt Hurt"), "and",
-         strong("Tyler Simko"), "have given me throughout this semester. 
+           strong("Tyler Simko"), "have given me throughout this semester. 
          Without their instruction and advice, I would not have been able to 
          develop this project and start my journey in the field of data 
          science.")
-       
-         )
+         
+)
 
 ))
