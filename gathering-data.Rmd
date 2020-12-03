@@ -43,6 +43,8 @@ ggplot(avg_nfl_home_score, aes(team_home, avg_home)) +
        x = "Team",
        y = "Average Home Score")
 
+
+
 ```
 
 # NBA
@@ -97,6 +99,7 @@ ggplot(avg_nba_home_score, aes(home_team, avg_home)) +
        subtitle = "From 2004 to Feb. 2020",
        x = "Team",
        y = "Average Home Score")
+
 ```
 
 # MLB
@@ -136,7 +139,7 @@ ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
                               "Boston Red Sox", "Chicago Cubs",
                               "Chicago White Sox", "Cincinnati Reds",
                               "Cleveland Indians", "Colorado Rockies",
-                              "Detroit Tigers", "Miami (Florida) Marlins",
+                              "Detroit Tigers", "Miami Marlins",
                               "Houston Astros", "Kansas City Royals",
                               "Los Angeles Dodgers", "Milwaukee Brewers",
                               "Minnesota Twins", "New York Mets",
@@ -196,6 +199,63 @@ tbl_regression(nfl_model, intercept = TRUE) %>%
 ```
 
 ```{r mlb model}
+
+# Here, I gather MLB attendance data.
+
+mlb_attendance_raw <- read_csv("data/mlbscores/Teams.csv", 
+                               col_types = cols(teamID = col_character())) %>%
+  filter(yearID >= 1947) %>%
+  filter(yearID != 2020) %>%
+  select(yearID, Ghome, attendance, teamID, name) %>%
+  mutate(avg_attendance = attendance / Ghome)
+
+# Here, I further clean the mlb_scores dataset
+
+mlb_scores <- mlb_scores_1947 %>%
+  select(date, season, home_team, away_team, home_score, away_score)
+
+# Here, I sort out MLB team names.
+
+mlb_attendance_names <- mlb_attendance_raw %>%
+  distinct(teamID, name)
+
+mlb_scores_names <- mlb_scores %>%
+  distinct(home_team)
+
+# Here, I edit mlb_attendance_raw to reflect the modern names of teams
+
+mlb_attendance <- mlb_attendance_raw %>%
+  mutate(team = case_when(teamID == "BRO" ~ "LAD",
+                          teamID == "BSN" ~ "ATL",
+                          teamID == "CHA" ~ "CHW",
+                          teamID == "NY1" ~ "SFG",
+                          teamID == "NYA" ~ "NYY",
+                          teamID == "PHA" ~ "OAK",
+                          teamID == "SLA" ~ "BAL",
+                          teamID == "WS1" ~ "MIN",
+                          teamID == "ML1" ~ "ATL",
+                          teamID == "KS1" ~ "OAK",
+                          teamID == "LAN" ~ "LAD",
+                          teamID == "WS2" ~ "TEX",
+                          teamID == "NYN" ~ "NYM",
+                          teamID == "CAL" ~ "ANA",
+                          teamID == "KCA" ~ "KCR",
+                          teamID == "MON" ~ "WSN",
+                          teamID == "SDN" ~ "SDP",
+                          teamID == "SE1" ~ "MIL",
+                          teamID == "ML4" ~ "MIL",
+                          teamID == "FLO" ~ "FLA",
+                          teamID == "TBA" ~ "TBD",
+                          teamID == "LAA" ~ "ANA",
+                          teamID == "WAS" ~ "WSN",
+                          teamID == "MIA" ~ "FLA",
+                          TRUE ~ teamID)) %>%
+  select(yearID, team, attendance, avg_attendance) %>%
+  
+
+# Here, I combine both mlb_scores and mlb_attendance.
+
+mlb_combined <- 
 
 # Here, I make the MLB model using stan_glm() in order to predict the difference
 # in scores between home and away games for the league, on the whole.
@@ -261,7 +321,11 @@ Tab 1: Data Explanation
 Tab 2: Interesting Cases (maybe static plots, with paragraphs explaining what's interesting)
 Tab 3: Models
 - This tab will also house interactive portion where you will be able to determine the score margin for different teams.
+Tab 4: MLB Model
 Tab 4: About
+
+Tab for each league
+- Exploratory Data Visualization
 
 Model: 
 1. Not a causal model (no manipulation), only predictive model. Two conditions: home and away.
