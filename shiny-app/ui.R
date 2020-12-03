@@ -8,15 +8,16 @@ library(janitor)
 library(gt)
 library(gtsummary)
 library(broom.mixed)
+library(rstanarm)
 
 # Read in RDS.
 
-avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores")
-avg_nba_home_score <- readRDS(file = "nba_avg_home_scores")
-avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores")
-nfl_model <- readRDS(file = "nfl_model")
-nba_model <- readRDS(file = "nba_model")
-mlb_complex_model <- readRDS(file = "mlb_model_complex")
+avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores.RDS")
+avg_nba_home_score <- readRDS(file = "nba_avg_home_scores.RDS")
+avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores.RDS")
+nfl_model <- readRDS(file = "nfl_model.RDS")
+nba_model <- readRDS(file = "nba_model.RDS")
+mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
 
 # Define UI for application that draws a histogram
 shinyUI(

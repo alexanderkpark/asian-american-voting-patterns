@@ -160,7 +160,7 @@ shinyServer(function(input, output) {
 
       # Make MLB Complex Model Table. Links go over the line.
 
-      tbl_regression(mlb_model_complex, intercept = TRUE) %>% 
+      tbl_regression(mlb_complex_model, intercept = TRUE) %>% 
         as_gt() %>%
         fmt_number(columns = vars(estimate, std.error),
                    decimals = 4) %>%
