@@ -19,21 +19,20 @@ library(gtsummary)
 library(broom.mixed)
 
 # Define UI for application that draws a histogram
-shinyUI(navbarPage(
+shinyUI(
+    navbarPage(
     
 # Here, I am setting the theme for my Shiny App.
-theme = shinytheme("flatly"),
+        theme = shinytheme("flatly"),
     
 #Here, I am setting the title of my Shiny App.
-"Home Field Advantage in the NFL, MLB, and NBA",
+        "Home Field Advantage in the NFL, MLB, and NBA",
     
 ########## INTRODUCTION ##########
 
     # Introduction Tab setup
 
     tabPanel("Introduction",
-             
-             # Setting layout of the 
              
              # Background Section. Text extends beyond the line when it is a
              # long link.
