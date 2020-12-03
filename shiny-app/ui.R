@@ -1,12 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 ########## PREP ##########
 
 library(shiny)
@@ -17,6 +8,16 @@ library(janitor)
 library(gt)
 library(gtsummary)
 library(broom.mixed)
+
+# Read in RDS.
+
+avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores")
+avg_nba_home_score <- readRDS(file = "nba_avg_home_scores")
+avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores")
+nfl_model <- readRDS(file = "nfl_model")
+nba_model <- readRDS(file = "nba_model")
+mlb_complex_model <- readRDS(file = "mlb_model_complex")
+mlb_simple_model <- readRDS(file = "mlb_model_simple")
 
 # Define UI for application that draws a histogram
 shinyUI(

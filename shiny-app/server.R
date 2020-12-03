@@ -166,8 +166,7 @@ shinyServer(function(input, output) {
           fmt_number(columns = vars(estimate, std.error),
                      decimals = 4) %>%
           tab_header(title = "Regression of MLB Scores",
-                     subtitle = "The Effect of Home, Attendance, and their 
-                     Interaction on Score") %>%
+                     subtitle = "The Effect of Home, Attendance, and their Interaction on Score") %>%
           tab_source_note("Sources: https://data.fivethirtyeight.com/ &
                           http://www.seanlahman.com/baseball-archive/statistics/")
         

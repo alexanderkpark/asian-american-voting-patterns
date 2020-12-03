@@ -221,7 +221,7 @@ mlb_scores_raw <- mlb_scores_1947 %>%
 mlb_attendance_names <- mlb_attendance_raw %>%
   distinct(teamID, name)
 
-mlb_scores_names <- mlb_scores %>%
+mlb_scores_names <- mlb_scores_raw %>%
   distinct(home_team)
 
 # Here, I edit mlb_attendance_raw to reflect the modern names of teams. I also
@@ -374,6 +374,14 @@ mlb_model_simple <- stan_glm(score ~ home,
 print(mlb_model2, digits = 4)
 
 saveRDS(mlb_model_simple, file = "mlb_model_simple")
+
+tbl_regression(mlb_model_simple, intercept = TRUE) %>%
+          as_gt() %>%
+          fmt_number(columns = vars(estimate, std.error),
+                     decimals = 4) %>%
+          tab_header(title = "Regression of MLB Scores",
+                     subtitle = "The Effect of Home, Attendance, and their Interaction on Score") %>%
+          tab_source_note("Sources: https://data.fivethirtyeight.com/ & http://www.seanlahman.com/baseball-archive/statistics/") 
 
 ```
 
