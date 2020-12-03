@@ -1,15 +1,5 @@
 ########## INTRODUCTION ##########
 
-# Read in RDS.
-
-avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores")
-avg_nba_home_score <- readRDS(file = "nba_avg_home_scores")
-avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores")
-nfl_model <- readRDS(file = "nfl_model")
-nba_model <- readRDS(file = "nba_model")
-mlb_complex_model <- readRDS(file = "mlb_model_complex")
-mlb_simple_model <- readRDS(file = "mlb_model_simple")
-
 # Define server logic required to draw graphs.
 shinyServer(function(input, output) {
 
@@ -171,30 +161,5 @@ shinyServer(function(input, output) {
                           http://www.seanlahman.com/baseball-archive/statistics/")
         
       })
-    
-    # reg_eq or Regression Equation made in Latex. Equation goes over the line
-    # so as not to disturb display in app.
-    
-    output$reg_eq <- renderUI({
-      
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
-      
-    })
-    
-    # MLBSimpleModelTable made.
-    
-    output$MLBSimpleModelTable <- render_gt({
-      
-      # Make MLB Simple Model Table.
-      
-      tbl_regression(mlb_simple_model, intercept = TRUE) %>%
-        as_gt() %>%
-        fmt_number(columns = vars(estimate, std.error),
-                   decimals = 4) %>%
-        tab_header(title = "Regression of MLB Scores",
-                   subtitle = "The Effect of Home Field on Score") %>%
-        tab_source_note("Source: https://data.fivethirtyeight.com/")
-      
-    })
     
 })

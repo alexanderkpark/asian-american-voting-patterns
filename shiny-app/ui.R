@@ -17,7 +17,6 @@ avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores")
 nfl_model <- readRDS(file = "nfl_model")
 nba_model <- readRDS(file = "nba_model")
 mlb_complex_model <- readRDS(file = "mlb_model_complex")
-mlb_simple_model <- readRDS(file = "mlb_model_simple")
 
 # Define UI for application that draws a histogram
 shinyUI(
@@ -170,18 +169,6 @@ shinyUI(
              
              h2("MLB Complex Model"),
              tableOutput("MLBComplexModelTable"),
-             
-             #MLB Simple Model Table
-             
-             h1("Linear Regression for the MLB with Score as Output and Home as 
-                a Predictor"),
-             
-             h2("The Equation"),
-             uiOutput("reg_eq"),
-             
-             
-             h2("MLB Simple Model"),
-             tableOutput("MLBSimpleModelTable")
              
              ),
 
