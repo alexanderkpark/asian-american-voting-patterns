@@ -128,7 +128,7 @@ shinyUI(
             uiOutput("reg_eq"),
          
             h2("NFL Model"),
-            tableOutput("NFLModelTable"),
+            tableOutput("NFLModelTable")
          
             ),
 
@@ -148,7 +148,7 @@ shinyUI(
          
          
             h2("NBA Model"),
-            tableOutput("NBAModelTable"),
+            tableOutput("NBAModelTable")
          
             ),
 
@@ -165,7 +165,7 @@ shinyUI(
              
              h2("The Equation"),
              uiOutput("mlb_reg_eq"),
-             
+            
              
              h2("MLB Complex Model"),
              tableOutput("MLBComplexModelTable"),
@@ -180,7 +180,7 @@ shinyUI(
              
              
              h2("MLB Simple Model"),
-             tableOutput("MLBSimpleModelTable"),
+             tableOutput("MLBSimpleModelTable")
              
              ),
 
