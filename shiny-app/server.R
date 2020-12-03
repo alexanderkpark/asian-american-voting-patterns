@@ -54,13 +54,14 @@ shinyServer(function(input, output) {
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5,
                                          hjust = 0.3)) +
-        scale_x_discrete(labels = c("Anaheim Angels", "Arizona Diamondbacks", 
+        scale_x_discrete(labels = c("Los Angeles Angels", 
+                                    "Arizona Diamondbacks", 
                                     "Atlanta Braves", "Baltimore Orioles",
                                     "Boston Red Sox", "Chicago Cubs",
                                     "Chicago White Sox", "Cincinnati Reds",
                                     "Cleveland Indians", "Colorado Rockies",
                                     "Detroit Tigers", 
-                                    "Miami (Florida) Marlins",
+                                    "Miami Marlins",
                                     "Houston Astros", "Kansas City Royals",
                                     "Los Angeles Dodgers", "Milwaukee Brewers",
                                     "Minnesota Twins", "New York Mets",
@@ -83,13 +84,11 @@ shinyServer(function(input, output) {
       
     })
 
-########## HFA BY LEAGUE ##########
+########## NFL ##########
 
 # Read in RDS.
     
     nfl_model <- readRDS(file = "nfl_model")
-    nba_model <- readRDS(file = "nba_model")
-    mlb_model <- readRDS(file = "mlb_model")
     
     # reg_eq or Regression Equation made in Latex. Equation goes over the line
     # so as not to disturb display in app.
@@ -117,29 +116,88 @@ shinyServer(function(input, output) {
       
     })
     
-    # NBAModelTable made.
+
+########## NBA ##########
     
-    output$NBAModelTable <- render_gt({
+  # Read in RDS
+    
+    nba_model <- readRDS(file = "nba_model")
+    
+    # reg_eq or Regression Equation made in Latex. Equation goes over the line
+    # so as not to disturb display in app.
+    
+    output$reg_eq <- renderUI({
       
-      # Make NBA Model Table.
+      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
       
-      tbl_regression(nba_model, intercept = TRUE) %>%
-        as_gt() %>%
-        fmt_number(columns = vars(estimate, std.error),
-                   decimals = 4) %>%
-        tab_header(title = "Regression of NBA Scores",
-                   subtitle = "The Effect of Home Court on Score") %>%
-        tab_source_note("Source: https://www.kaggle.com/nathanlauga/nba-games")
+    })
+      
+      # NBAModelTable made.
+      
+      output$NBAModelTable <- render_gt({
+        
+        # Make NBA Model Table.
+        
+        tbl_regression(nba_model, intercept = TRUE) %>%
+          as_gt() %>%
+          fmt_number(columns = vars(estimate, std.error),
+                     decimals = 4) %>%
+          tab_header(title = "Regression of NBA Scores",
+                     subtitle = "The Effect of Home Court on Score") %>%
+          tab_source_note("Source: https://www.kaggle.com/nathanlauga/nba-games")
+        
+      })
+
+########## MLB: A DEEPER DIVE ##########
+
+    # Read in RDS
+    
+    mlb_complex_model <- readRDS(file = "mlb_model_complex")
+    mlb_simple_model <- readRDS(file = "mlb_model_simple")
+    
+    # mlb_reg_eq or MLB Regression Equation made in Latex. Equation goes over
+    # the line so as not to disturb display in app.
+    
+    output$reg_eq <- renderUI({
+      
+      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\beta_3 home_i * attendance_i + \\epsilon_i $$"))
+      
+    })
+      
+    # MLBComplexModelTable made.
+      
+    output$MLBComplexModelTable <- render_gt({
+        
+        # Make MLB Complex Model Table. Links go over the line.
+        
+        tbl_regression(mlb_complex_model, intercept = TRUE) %>%
+          as_gt() %>%
+          fmt_number(columns = vars(estimate, std.error),
+                     decimals = 4) %>%
+          tab_header(title = "Regression of MLB Scores",
+                     subtitle = "The Effect of Home, Attendance, and their 
+                     Interaction on Score") %>%
+          tab_source_note("Sources: https://data.fivethirtyeight.com/ &
+                          http://www.seanlahman.com/baseball-archive/statistics/")
+        
+      })
+    
+    # reg_eq or Regression Equation made in Latex. Equation goes over the line
+    # so as not to disturb display in app.
+    
+    output$reg_eq <- renderUI({
+      
+      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
       
     })
     
-    # MLBModelTable made.
+    # MLBSimpleModelTable made.
     
-    output$MLBModelTable <- render_gt({
+    output$MLBSimpleModelTable <- render_gt({
       
-      # Make MLB Model Table.
+      # Make MLB Simple Model Table.
       
-      tbl_regression(mlb_model, intercept = TRUE) %>%
+      tbl_regression(mlb_simple_model, intercept = TRUE) %>%
         as_gt() %>%
         fmt_number(columns = vars(estimate, std.error),
                    decimals = 4) %>%
@@ -148,13 +206,5 @@ shinyServer(function(input, output) {
         tab_source_note("Source: https://data.fivethirtyeight.com/")
       
     })
-
-########## HFA BY TEAM ##########
-    
-    
-
-########## INTERESTING CASES ##########
-
-    
     
 })

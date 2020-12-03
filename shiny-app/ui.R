@@ -33,6 +33,8 @@ theme = shinytheme("flatly"),
 
     tabPanel("Introduction",
              
+             # Setting layout of the 
+             
              # Background Section. Text extends beyond the line when it is a
              # long link.
              
@@ -112,40 +114,82 @@ theme = shinytheme("flatly"),
              
 ),
 
-########## HFA BY LEAGUE ##########
+########## NFL ##########
 
-# HFA by League Tab setup.
+    # NFL Tab setup.
 
-tabPanel("HFA by League",
+    tabPanel("NFL",
          
-         # Tables of League Models
+            # NFL Model Table
          
-         h1("Linear Regressions for Each League with Score as Output and 
-            Home as Predictor"),
+            h1("Linear Regressions for the NFL with Score as Output and Home as 
+            Predictor"),
          
-         h2("The Equation"),
-         uiOutput("reg_eq"),
+            h2("The Equation"),
+            uiOutput("reg_eq"),
          
-         h2("NFL Model"),
-         tableOutput("NFLModelTable"),
+            h2("NFL Model"),
+            tableOutput("NFLModelTable"),
          
-         h2("NBA Model"),
-         tableOutput("NBAModelTable"),
-         
-         h2("MLB Model"),
-         tableOutput("MLBModelTable")
-         
-),
+            ),
 
-########## HFA BY TEAM ##########
+########## NBA ##########
 
-########## INTERESTING CASES ##########
+    # NBA Tab setup.
+
+    tabPanel("NBA",
+         
+            # NBA Model Table
+         
+            h1("Linear Regression for the NBA with Score as Output and Home as 
+            Predictor"),
+            
+            h2("The Equation"),
+            uiOutput("reg_eq"),
+         
+         
+            h2("NBA Model"),
+            tableOutput("NBAModelTable"),
+         
+            ),
+
+########## MLB: A DEEPER DIVE ##########
+
+# MLB Tab setup.
+
+    tabPanel("MLB: A Deeper Dive",
+             
+             # MLB Complex Model Table
+             
+             h1("Linear Regression for the MLB with Score as Output and Home, 
+             Attendance, and their Interaction as Predictors"),
+             
+             h2("The Equation"),
+             uiOutput("mlb_reg_eq"),
+             
+             
+             h2("MLB Complex Model"),
+             tableOutput("MLBComplexModelTable"),
+             
+             #MLB Simple Model Table
+             
+             h1("Linear Regression for the MLB with Score as Output and Home as 
+                a Predictor"),
+             
+             h2("The Equation"),
+             uiOutput("reg_eq"),
+             
+             
+             h2("MLB Simple Model"),
+             tableOutput("MLBSimpleModelTable"),
+             
+             ),
 
 ########## ABOUT ##########
 
 # About Tab setup. 
 
-tabPanel("About",
+    tabPanel("About",
          
          # About Me Section. Text extends beyond the line when it is a long
          # link.
@@ -176,6 +220,7 @@ tabPanel("About",
          # Data Section. Text extends beyond the line when it is a long link.
          
          h1("The Data"),
+         
          h3("NFL Data"),
          p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
          user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")),
@@ -187,6 +232,9 @@ tabPanel("About",
          h3("MLB Data"),
          p("I obtained MLB scores from the 1947 season onwards from", 
            a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")),
+         
+         p("I obtained MLB attendance data from the 1947 season onwards from",
+           a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")),
          
          h3("GitHub"),
          p("Here is the link to this project's", a("GitHub repository.", 
