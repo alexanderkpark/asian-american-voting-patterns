@@ -38,7 +38,7 @@ shinyUI(
              # Background Section. Text extends beyond the line when it is a
              # long link.
              
-             h1("What is Home Field Advantage? 
+             h2("What is Home Field Advantage? 
                 And Why Does It Matter, Anyway?"),
              p(strong("Home field advantage"), "is the supposed benefit that a 
              team enjoys when they play in their home stadium as opposed to when 
@@ -59,7 +59,7 @@ shinyUI(
              # Motivations Section. Text extends beyond the line when it is a
              # long link.
              
-             h1("The Purpose of this Project"),
+             h2("The Purpose of this Project"),
              p("The purpose of this project is to explore whether home field 
              advantage actually matters – and more. If home field advantage does
              matter, how many more points can teams in the NFL, NBA, and MLB 
@@ -95,13 +95,16 @@ shinyUI(
              
              # Graphs of Average Home Scores for All Leagues
              
-             h1("Average Home Scores of Teams in the NFL, NBA, and MLB Over the 
+             h2("Average Home Scores of Teams in the NFL, NBA, and MLB Over the 
                 Years"),
              p("Here are some visualizations of the average home scores of all
                of the teams in the NFL, NBA, and MLB over the years. The other
                tabs of this project will contain a variety of visualizations in 
                an effort to analyze home field advantage across these three 
                leagues."),
+             
+             # Creating interactive graph display, where the user can choose to
+             # view home or away graphs for the three leagues.
              
              h2("NFL – National Football League"),
              plotOutput("NFLHomeAvg"),

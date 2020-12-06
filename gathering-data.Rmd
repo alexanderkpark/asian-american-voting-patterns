@@ -397,14 +397,16 @@ saveRDS(mlb_combined, file = "mlb_combined.RDS")
 # on every 1000+ fans are in attendance.
 
 mlb_model_data_home <- mlb_combined %>%
-  select(home_team, home_score, avg_attendance) %>%
+  select(home_team, home_score, away_score, avg_attendance) %>%
+  mutate(score_diff = home_score - away_score) %>%
   mutate(home = 1) %>%
   mutate(attendance = avg_attendance / 1000) %>%
   rename(team = home_team,
          score = home_score)
 
 mlb_model_data_away <- mlb_combined %>%
-  select(away_team, away_score, avg_attendance) %>%
+  select(away_team, away_score, home_score, avg_attendance) %>%
+  mutate(score_diff = away_score - home_score) %>%
   mutate(home = 0) %>%
   mutate(attendance = avg_attendance / 1000) %>%
   rename(team = away_team,
