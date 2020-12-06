@@ -126,17 +126,73 @@ shinyUI(
 
 tabPanel("NFL",
          
-         # NFL Model Table
-         
          h1("Linear Regressions for the NFL with Score as Output and Home as 
             Predictor"),
          
-         # h2("The Equation"),
-         # uiOutput("reg_eq"),
+         sidebarLayout( 
+            
+             sidebarPanel(
+                 selectInput(inputId = "user_nfl_team", 
+                             label = "Team", 
+                             choices = c("Arizona Cardinals",
+                                         "Atlanta Falcons",
+                                         "Baltimore Ravens",
+                                         "Buffalo Bills",
+                                         "Carolina Panthers",
+                                         "Chicago Bears",
+                                         "Cincinnati Bengals",
+                                         "Cleveland Browns",
+                                         "Dallas Cowboys",
+                                         "Denver Broncos",
+                                         "Detroit Lions",
+                                         "Green Bay Packers",
+                                         "Houston Texans",
+                                         "Indianapolis Colts",
+                                         "Jacksonville Jaguars",
+                                         "Kansas City Chiefs",
+                                         "Las Vegas Raiders",
+                                         "Los Angeles Chargers",
+                                         "Los Angeles Rams",
+                                         "Miami Dolphins",
+                                         "Minnesota Vikings",
+                                         "New England Patriots",
+                                         "New Orleans Saints",
+                                         "New York Giants",
+                                         "New York Jets",
+                                         "Philadelphia Eagles",
+                                         "Pittsburgh Steelers",
+                                         "San Francisco 49ers",
+                                         "Seattle Seahawks",
+                                         "Tampa Bay Buccaneers",
+                                         "Tennessee Titans",
+                                         "Washington Football Team"),
+                             selected = "New England Patriots"),
+                 
+                 sliderInput(inputId = "user_nfl_season",
+                             label = "Season(s)",
+                             min = 1966,
+                             max = 2019,
+                             value = c(1966, 2019),
+                             sep = "")
+                 
+             ),
+         
+        # NFL Model Table
+         
+         mainPanel(
          
          h2("NFL Model"),
-         tableOutput("NFLModelTable")
+         tableOutput("NFLModelTable"),
          
+         # NFL Interactive Graph
+         
+         h2("NFL Interactive"),
+         plotOutput("NFLModelInteractive")
+         ),
+        
+
+        
+)
 ),
 
 ########## NBA ##########

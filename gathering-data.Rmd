@@ -282,19 +282,22 @@ $$ score = \beta_0 + \beta_1 home_i + \epsilon_i $$
 # in scores between home and away games for the league, on the whole.
 
 nfl_model_data_home <- nfl_scores_1966 %>%
-  select(team_home, score_home) %>%
+  select(team_home, score_home, schedule_season) %>%
   mutate(home = 1) %>%
   rename(team = team_home,
-         score = score_home)
+         score = score_home,
+         season = schedule_season)
 
 nfl_model_data_away <- nfl_scores_1966 %>%
-  select(team_away, score_away) %>%
+  select(team_away, score_away, schedule_season) %>%
   mutate(home = 0) %>%
   rename(team = team_away,
-         score = score_away)
+         score = score_away,
+         season = schedule_season)
 
-nfl_model_data <- full_join(nfl_model_data_home, nfl_model_data_away)
+nfl_model_data <- bind_rows(nfl_model_data_home, nfl_model_data_away)
   
+saveRDS(nfl_model_data, file = "nfl_model_data.RDS")
 
 nfl_model <- stan_glm(score ~ home,
                       data = nfl_model_data,
@@ -304,13 +307,33 @@ print(nfl_model, digits = 4)
 
 saveRDS(nfl_model, file = "nfl_model.RDS")
 
-tbl_regression(nfl_model, intercept = TRUE) %>%
-        as_gt() %>%
-        fmt_number(columns = vars(estimate, std.error),
-                   decimals = 4) %>%
-        tab_header(title = "Regression of NFL Scores",
-                   subtitle = "The Effect of Home Field on Score") %>%
-        tab_source_note("Source: https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
+nfl_model_int <- stan_glm(score ~ home,
+                              data = nfl_model_data,
+                              refresh = 0) %>%
+          as_tibble() %>%
+          rename("mu" = "(Intercept)") %>%
+          mutate(predicted_home = mu + home) %>%
+          mutate(mu_median = median(mu)) %>%
+          mutate(predicted_home_median = median(predicted_home)) %>%
+  pivot_longer(cols = c(mu, predicted_home),
+               names_to = "parameter",
+               values_to = "values")
+
+ggplot(nfl_model_int, aes(values)) +
+  geom_histogram(aes(y = after_stat(count/sum(count)), fill = parameter),
+                 color = "white",
+                 position = "identity",
+                 bins = 100,
+                 alpha = 0.5) +
+  geom_vline(xintercept = nfl_model_int$mu_median, 
+             color = "red",
+             lty = "dashed") +
+  geom_vline(xintercept = nfl_model_int$predicted_home_median, 
+             color = "blue",
+             lty = "dashed") +
+  scale_fill_manual(name = "Home Status", 
+                    labels = c("Away", "Home"),
+                    values = c("red4", "navyblue"))
 
 ```
 
@@ -397,22 +420,21 @@ saveRDS(mlb_combined, file = "mlb_combined.RDS")
 # on every 1000+ fans are in attendance.
 
 mlb_model_data_home <- mlb_combined %>%
-  select(home_team, home_score, away_score, avg_attendance) %>%
-  mutate(score_diff = home_score - away_score) %>%
+  select(home_team, home_score, avg_attendance) %>%
   mutate(home = 1) %>%
   mutate(attendance = avg_attendance / 1000) %>%
   rename(team = home_team,
          score = home_score)
 
 mlb_model_data_away <- mlb_combined %>%
-  select(away_team, away_score, home_score, avg_attendance) %>%
-  mutate(score_diff = away_score - home_score) %>%
+  select(away_team, away_score, avg_attendance) %>%
   mutate(home = 0) %>%
   mutate(attendance = avg_attendance / 1000) %>%
   rename(team = away_team,
          score = away_score)
 
-mlb_model_data <- full_join(mlb_model_data_home, mlb_model_data_away)
+mlb_model_data <- bind_rows(mlb_model_data_home, mlb_model_data_away) %>%
+  select(team, score, home, attendance)
 
 mlb_model_complex <- stan_glm(score ~ home + attendance + home * attendance,
                       data = mlb_model_data,
@@ -441,7 +463,7 @@ nba_model_data_away <- nba_scores_2004 %>%
   rename(team = away_team,
          score = pts_away)
 
-nba_model_data <- full_join(nba_model_data_home, nba_model_data_away)
+nba_model_data <- bind_rows(nba_model_data_home, nba_model_data_away)
 
 nba_model <- stan_glm(score ~ home,
                       data = nba_model_data,
@@ -451,217 +473,6 @@ print(nba_model, digits = 4)
 
 saveRDS(nba_model, file = "nba_model.RDS")
 
-```
-
-```{r test}
-########## NFL ##########
-
-    # NFL Tab setup.
-
-    tabPanel("NFL",
-         
-            # NFL Model Table
-         
-            h1("Linear Regressions for the NFL with Score as Output and Home as 
-            Predictor"),
-         
-            h2("The Equation"),
-            uiOutput("reg_eq"),
-         
-            h2("NFL Model"),
-            tableOutput("NFLModelTable")
-         
-            ),
-
-########## NBA ##########
-
-    # NBA Tab setup.
-
-    tabPanel("NBA",
-         
-            # NBA Model Table
-         
-            h1("Linear Regression for the NBA with Score as Output and Home as 
-            Predictor"),
-            
-            h2("The Equation"),
-            uiOutput("reg_eq"),
-         
-         
-            h2("NBA Model"),
-            tableOutput("NBAModelTable")
-         
-            ),
-
-########## MLB: A DEEPER DIVE ##########
-
-# MLB Tab setup.
-
-    tabPanel("MLB: A Deeper Dive",
-             
-             # MLB Complex Model Table
-             
-             h1("Linear Regression for the MLB with Score as Output and Home, 
-             Attendance, and their Interaction as Predictors"),
-             
-             h2("The Equation"),
-             uiOutput("mlb_reg_eq"),
-            
-             
-             h2("MLB Complex Model"),
-             tableOutput("MLBComplexModelTable"),
-             
-             ),
-
-########## ABOUT ##########
-
-# About Tab setup. 
-
-    tabPanel("About",
-         
-         # About Me Section. Text extends beyond the line when it is a long
-         # link.
-         
-         h1("About Me"),
-         p("My name is Alexander Park and I am pursuing an A.B. in Government 
-         with a specialization in Public Policy and a secondary in Economics at 
-         Harvard University. I will graduate in the spring of 2023. I am a 
-         lifelong Boston sports fan, especially of the Patriots, Red Sox, and 
-         Celtics. Besides sports, I have passions for American and Korean 
-         politics, U.S. foreign policy, and the processes of and motivations 
-         behind democratization. You can reach me at", 
-         a("apark@college.harvard.edu", href = "mailto:apark@college.harvard.edu"),
-         "."),
-         
-         # Project Motivations Section
-         
-         h1("Project Motivations"),
-         p("This is my final project for GOV 50: Data at Harvard University. As 
-         a Boston sports fan, I am used to having home field advantage in the 
-         playoffs. Therefore, I wanted to use data analysis to determine 
-         quantitatively how much home field advantage actually matters in my 
-         three favorite leagues: the NFL, NBA, and MLB. In finding all of this 
-         out, I hope to contribute to the sports-watching experience for fans 
-         around the country and the world – especially for my fellow 
-         Bostonians."),
-         
-         # Data Section. Text extends beyond the line when it is a long link.
-         
-         h1("The Data"),
-         
-         h3("NFL Data"),
-         p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
-         user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")),
-         
-         h3("NBA Data"),
-         p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle
-         user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")),
-         
-         h3("MLB Data"),
-         p("I obtained MLB scores from the 1947 season onwards from", 
-           a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")),
-         
-         p("I obtained MLB attendance data from the 1947 season onwards from",
-           a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")),
-         
-         h3("GitHub"),
-         p("Here is the link to this project's", a("GitHub repository.", 
-                                       href = "https://github.com/alexanderkpark/home-field-advantage")),
-         
-         # Acknowledgements Section.
-         
-         h1("Acknowledgements"),
-         p("I am grateful for the guidance that", strong("Wyatt Hurt"), "and",
-         strong("Tyler Simko"), "have given me throughout this semester. 
-         Without their instruction and advice, I would not have been able to 
-         develop this project and start my journey in the field of data 
-         science.")
-       
-         )
-
-########## NFL ##########
-    
-    # reg_eq or Regression Equation made in Latex. Equation goes over the line
-    # so as not to disturb display in app.
-    
-    output$reg_eq <- renderUI({
-      
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
-    
-    })
-    
-    # NFLModelTable made.
-    
-    output$NFLModelTable <- render_gt({
-      
-      # Make NFL Model Table. Text extends beyond the line when it is a long
-      # link.
-      
-      tbl_regression(nfl_model, intercept = TRUE) %>%
-        as_gt() %>%
-        fmt_number(columns = vars(estimate, std.error),
-                   decimals = 4) %>%
-        tab_header(title = "Regression of NFL Scores",
-                   subtitle = "The Effect of Home Field on Score") %>%
-        tab_source_note("Source: https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
-      
-    })
-    
-
-########## NBA ##########
-    
-    # reg_eq or Regression Equation made in Latex. Equation goes over the line
-    # so as not to disturb display in app.
-    
-    output$reg_eq <- renderUI({
-      
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
-      
-    })
-      
-      # NBAModelTable made.
-      
-      output$NBAModelTable <- render_gt({
-        
-        # Make NBA Model Table.
-        
-        tbl_regression(nba_model, intercept = TRUE) %>%
-          as_gt() %>%
-          fmt_number(columns = vars(estimate, std.error),
-                     decimals = 4) %>%
-          tab_header(title = "Regression of NBA Scores",
-                     subtitle = "The Effect of Home Court on Score") %>%
-          tab_source_note("Source: https://www.kaggle.com/nathanlauga/nba-games")
-        
-      })
-
-########## MLB: A DEEPER DIVE ##########
-    
-    # mlb_reg_eq or MLB Regression Equation made in Latex. Equation goes over
-    # the line so as not to disturb display in app.
-    
-    output$reg_eq <- renderUI({
-      
-      withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\beta_3 home_i * attendance_i + \\epsilon_i $$"))
-      
-    })
-      
-    # MLBComplexModelTable made.
-      
-    output$MLBComplexModelTable <- render_gt({
-        
-        # Make MLB Complex Model Table. Links go over the line.
-        
-        tbl_regression(mlb_complex_model, intercept = TRUE) %>%
-          as_gt() %>%
-          fmt_number(columns = vars(estimate, std.error),
-                     decimals = 4) %>%
-          tab_header(title = "Regression of MLB Scores",
-                     subtitle = "The Effect of Home, Attendance, and their Interaction on Score") %>%
-          tab_source_note("Sources: https://data.fivethirtyeight.com/ &
-                          http://www.seanlahman.com/baseball-archive/statistics/")
-        
-      })
 ```
 
 
@@ -685,3 +496,4 @@ Model:
 2. y axis is point difference of game. Outcome is point margin. stan_glm() usable.
 - Cool graphic opportunities for this as well
 - pivot_longer(): unit of analysis --> two rows: one row for the home team, and another from the away team. Almost exactly analagous to Week 9 lectures (control vs. treatment is analagous to home and away)
+3. Specify that I am looking at Offensive Output only!

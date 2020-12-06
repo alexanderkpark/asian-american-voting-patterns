@@ -9,6 +9,7 @@ avg_nba_away_score <- readRDS(file = "nba_avg_away_scores.RDS")
 avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores.RDS")
 avg_mlb_away_score <- readRDS(file = "mlb_avg_away_scores.RDS")
 nfl_model <- readRDS(file = "nfl_model.RDS")
+nfl_model_data <- readRDS(file = "nfl_model_data.RDS")
 nba_model <- readRDS(file = "nba_model.RDS")
 mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
 
@@ -131,6 +132,48 @@ shinyServer(function(input, output) {
                    subtitle = "The Effect of Home Field on Score") %>%
         tab_source_note("Source: https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
       
+    })
+      
+      output$NFLModelInteractive <- renderPlot({
+        
+        # Make NFL Model Interactive Graph Text extends beyond the line when it
+        # is a long link.
+        
+        nfl_model_data_int <- nfl_model_data %>%
+          filter(season %in% input$user_nfl_season,
+                 team == input$user_nfl_team)
+        
+        # Creating NFL interactive model data.
+        
+        nfl_model_int <- stan_glm(score ~ home,
+                                  data = nfl_model_data_int,
+                                  refresh = 0) %>%
+          as_tibble() %>%
+          rename("mu" = "(Intercept)") %>%
+          mutate(predicted_home = mu + home) %>%
+          mutate(mu_median = median(mu)) %>%
+          mutate(predicted_home_median = median(predicted_home)) %>%
+          pivot_longer(cols = c(mu, predicted_home),
+                       names_to = "parameter",
+                       values_to = "values")
+        
+        # Creating NFL interactive model graph.
+        
+        ggplot(nfl_model_int, aes(values)) +
+          geom_histogram(aes(y = after_stat(count/sum(count)), 
+                             fill = parameter),
+                         color = "white",
+                         position = "identity",
+                         bins = 100,
+                         alpha = 0.5) +
+          geom_vline(xintercept = nfl_model_int$mu_median, 
+                     color = "red") +
+          geom_vline(xintercept = nfl_model_int$predicted_home_median, 
+                     color = "blue") +
+          scale_fill_manual(name = "Home Status", 
+                            labels = c("Away", "Home"),
+                            values = c("red4", "navyblue"))
+          
     })
     
 ########## NBA ##########
