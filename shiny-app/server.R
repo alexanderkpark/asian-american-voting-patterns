@@ -3,20 +3,21 @@
 # Read in RDS.
 
 avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores.RDS")
+avg_nfl_away_score <- readRDS(file = "nfl_avg_away_scores.RDS")
 avg_nba_home_score <- readRDS(file = "nba_avg_home_scores.RDS")
+avg_nba_away_score <- readRDS(file = "nba_avg_away_scores.RDS")
 avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores.RDS")
+avg_mlb_away_score <- readRDS(file = "mlb_avg_away_scores.RDS")
 nfl_model <- readRDS(file = "nfl_model.RDS")
 nba_model <- readRDS(file = "nba_model.RDS")
 mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
 
 # Define server logic required to draw graphs.
 shinyServer(function(input, output) {
-
-  # NFLPlot made
+  
+  # Bar graph of average NFL home scores made.
   
     output$NFLHomeAvg <- renderPlot({
-      
-      # Made NFL Home Avg Score Plot
       
       ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
         geom_col(color = "white", fill = "navyblue") +
@@ -29,11 +30,25 @@ shinyServer(function(input, output) {
              y = "Average Home Score")
     })
     
-  # NBAPlot made
+  # Bar graph of average NFL away scores made.
+      
+    output$NFLAwayAvg <- renderPlot({
+      
+      ggplot(avg_nfl_away_score, aes(team_away, avg_away)) + 
+        geom_col(color = "white", fill = "navyblue") +
+        theme(axis.text.x = element_text(angle = 90, 
+                                         vjust = 0.5, 
+                                         hjust = 0.3)) +
+        labs(title = "Average Away Scores for All NFL Teams",
+             subtitle = "From 1966 Season to 2019 Season",
+             x = "Team",
+             y = "Average Away Score")
+      
+    })
+    
+  # Bar graph of average NBA home away scores made.
     
     output$NBAHomeAvg <- renderPlot({
-      
-      # Made NBA Home Avg Score Plot
       
       ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
         geom_col(color = "white", fill = "green4") +
@@ -46,37 +61,30 @@ shinyServer(function(input, output) {
              y = "Average Home Score")
     })
     
-  # MLBPlot Made
+  # Bar graph of average NBA away scores made.
+    
+    output$NBAAwayAvg <- renderPlot({
+      
+      ggplot(avg_nba_away_score, aes(away_team, avg_away)) + 
+        geom_col(color = "white", fill = "green4") +
+        theme(axis.text.x = element_text(angle = 90, 
+                                         vjust = 0.5, 
+                                         hjust = 0.3)) +
+        labs(title = "Average Away Scores for All NBA Teams",
+             subtitle = "From 2004 Season to March 2020 (pre-Covid)",
+             x = "Team",
+             y = "Average Away Score")
+    })
+    
+  # Bar graph of average MLB home scores made.
     
     output$MLBHomeAvg <- renderPlot({
-      
-      # Made MLB Home Avg Score Plot
       
       ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
         geom_col(color = "white", fill = "red4") + 
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5,
                                          hjust = 0.3)) +
-        scale_x_discrete(labels = c("Los Angeles Angels", 
-                                    "Arizona Diamondbacks", 
-                                    "Atlanta Braves", "Baltimore Orioles",
-                                    "Boston Red Sox", "Chicago Cubs",
-                                    "Chicago White Sox", "Cincinnati Reds",
-                                    "Cleveland Indians", "Colorado Rockies",
-                                    "Detroit Tigers", 
-                                    "Miami Marlins",
-                                    "Houston Astros", "Kansas City Royals",
-                                    "Los Angeles Dodgers", "Milwaukee Brewers",
-                                    "Minnesota Twins", "New York Mets",
-                                    "New York Yankees", "Oakland Athletics",
-                                    "Philadelphia Phillies", 
-                                    "Pittsburgh Pirates",
-                                    "San Diego Padres", "Seattle Mariners",
-                                    "San Francisco Giants", 
-                                    "St Louis Cardinals",
-                                    "Tampa Bay Rays", "Texas Rangers",
-                                    "Toronto Blue Jays", 
-                                    "Washington Nationals")) +
         labs(title = "Average Home Scores for All MLB Teams",
              subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
              x = "Team",
@@ -86,17 +94,27 @@ shinyServer(function(input, output) {
 # it will show up on the website.
       
     })
+    
+  # Bar graph of average MLB away scores made.
 
-    ########## NFL ##########
-    
-    # reg_eq or Regression Equation made in Latex. Equation goes over the line
-    # so as not to disturb display in app.
-    
-    # output$reg_eq <- renderUI({
-    #   
-    #   withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
+    output$MLBAwayAvg <- renderPlot({
       
-    # })
+      ggplot(avg_mlb_away_score, aes(away_team, avg_away)) +
+        geom_col(color = "white", fill = "red4") + 
+        theme(axis.text.x = element_text(angle = 90, 
+                                         vjust = 0.5,
+                                         hjust = 0.3)) +
+        labs(title = "Average Away Scores for All MLB Teams",
+             subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
+             x = "Team",
+             y = "Average Away Score")
+      
+      # I have elected to have the subtitle go over the line so as not to disturb how
+      # it will show up on the website.
+      
+    })
+    
+########## NFL ##########
     
     # NFLModelTable made.
     
@@ -115,17 +133,7 @@ shinyServer(function(input, output) {
       
     })
     
-    
-    ########## NBA ##########
-    
-    # reg_eq or Regression Equation made in Latex. Equation goes over the line
-    # so as not to disturb display in app.
-    
-    # output$reg_eq <- renderUI({
-    #   
-    #   withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\epsilon_i $$"))
-      
-    # })
+########## NBA ##########
     
     # NBAModelTable made.
     
@@ -143,16 +151,7 @@ shinyServer(function(input, output) {
       
     })
     
-    ########## MLB: A DEEPER DIVE ##########
-    
-    # mlb_reg_eq or MLB Regression Equation made in Latex. Equation goes over
-    # the line so as not to disturb display in app.
-    
-    # output$reg_eq <- renderUI({
-    #   
-    #   withMathJax(sprintf("$$ score = \\beta_0 + \\beta_1 home_i + \\beta_3 home_i * attendance_i + \\epsilon_i $$"))
-      
-    # })
+########## MLB: A DEEPER DIVE ##########
     
     # MLBComplexModelTable made.
     

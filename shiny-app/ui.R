@@ -105,12 +105,15 @@ shinyUI(
              
              h2("NFL – National Football League"),
              plotOutput("NFLHomeAvg"),
+             plotOutput("NFLAwayAvg"),
              
              h2("NBA – National Basketball Association"),
              plotOutput("NBAHomeAvg"),
+             plotOutput("NBAAwayAvg"),
              
              h2("MLB – Major League Baseball"),
-             plotOutput("MLBHomeAvg")
+             plotOutput("MLBHomeAvg"),
+             plotOutput("MLBAwayAvg")
              
 ),
 

@@ -20,9 +20,74 @@ opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
 ```{r nfl}
 
 # Create object nfl_scores_1966 that has all scores from NFL games from 1966-67
-# to 2019-2020.
+# to 2019-2020. I clean this up by assigning data for defunct teams to teams
+# that succeeded them.
 
-nfl_scores_1966 <- read_csv("data/nflscores1966/spreadspoke_scores.csv")
+nfl_scores_1966 <- read_csv("data/nflscores1966/spreadspoke_scores.csv",
+                            col_types = cols(schedule_date = col_character(),
+                                             schedule_season = col_double(),
+                                             schedule_week = col_character(),
+                                             schedule_playoff = col_logical(),
+                                             team_home = col_character(),
+                                             score_home = col_double(),
+                                             score_away = col_double(),
+                                             team_away = col_character(),
+                                             team_favorite_id = col_character(),
+                                             spread_favorite = col_double(),
+                                             over_under_line = col_double(),
+                                             stadium = col_character(),
+                                             stadium_neutral = col_logical(),
+                                             weather_temperature = col_double(),
+                                             weather_wind_mph = col_double(),
+                                             weather_humidity = col_character(),
+                                             weather_detail = 
+                                               col_character())) %>%
+  mutate(team_home = case_when(team_home == "Baltimore Colts" ~ 
+                                 "Indianapolis Colts",
+                               team_home == "Boston Patriots" ~
+                                 "New England Patriots",
+                               team_home == "Houston Oilers" ~
+                                 "Tennessee Titans",
+                               team_home == "Phoenix Cardinals" ~
+                                 "Arizona Cardinals",
+                               team_home == "Los Angeles Raiders" ~ 
+                                 "Las Vegas Raiders",
+                               team_home == "Oakland Raiders" ~
+                                 "Las Vegas Raiders",
+                               team_home == "Tennessee Oilers" ~
+                                 "Tennessee Titans",
+                               team_home == "Washington Redskins" ~
+                                 "Washington Football Team",
+                               team_home == "San Diego Chargers" ~
+                                 "Los Angeles Chargers",
+                               team_home == "St. Louis Cardinals" ~
+                                 "Arizona Cardinals",
+                               team_home == "St. Louis Rams" ~
+                                 "Los Angeles Rams",
+                               TRUE ~ team_home)) %>%
+  mutate(team_away = case_when(team_away == "Baltimore Colts" ~ 
+                                 "Indianapolis Colts",
+                               team_away == "Boston Patriots" ~
+                                 "New England Patriots",
+                               team_away == "Houston Oilers" ~
+                                 "Tennessee Titans",
+                               team_away == "Phoenix Cardinals" ~
+                                 "Arizona Cardinals",
+                               team_away == "Los Angeles Raiders" ~ 
+                                 "Las Vegas Raiders",
+                               team_away == "Oakland Raiders" ~
+                                 "Las Vegas Raiders",
+                               team_away == "Tennessee Oilers" ~
+                                 "Tennessee Titans",
+                               team_away == "Washington Redskins" ~
+                                 "Washington Football Team",
+                               team_away == "San Diego Chargers" ~
+                                 "Los Angeles Chargers",
+                               team_away == "St. Louis Cardinals" ~
+                                 "Arizona Cardinals",
+                               team_away == "St. Louis Rams" ~
+                                 "Los Angeles Rams",
+                               TRUE ~ team_away))
 
 # Create object avg_nfl_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
@@ -33,17 +98,14 @@ avg_nfl_home_score <- nfl_scores_1966 %>%
 
 saveRDS(avg_nfl_home_score, file = "nfl_avg_home_scores.RDS")
 
-ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
-        geom_col(color = "white", fill = "dodgerblue") +
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5, 
-                                         hjust = 0.3)) +
-  labs(title = "Average Home Scores for All NFL Teams",
-       subtitle = "From 1966-67 to 2019-20",
-       x = "Team",
-       y = "Average Home Score")
+# Create object avg_nfl_away_score that is the average score that away teams
+# have had over the years. Save to RDS.
 
+avg_nfl_away_score <- nfl_scores_1966 %>%
+  group_by(team_away) %>%
+  summarize(avg_away = mean(score_away), .groups = "drop")
 
+saveRDS(avg_nfl_away_score, file = "nfl_avg_away_scores.RDS")
 
 ```
 
@@ -60,7 +122,7 @@ nba_names_2004 <- nba_names_2004 %>%
   select(city, nickname, team_id) %>%
   unite(name, c("city", "nickname"), sep = " ")
 
-# Create object nba_scores_2004 that has all scores from NFL games from 2004
+# Create object nba_scores_2004 that has all scores from NBA games from 2004
 # to March 2020.
 
 nba_scores_2004 <- read_csv("data/nba2004/games.csv") %>%
@@ -90,15 +152,15 @@ avg_nba_home_score <- nba_scores_2004 %>%
 
 saveRDS(avg_nba_home_score, file = "nba_avg_home_scores.RDS")
 
-ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
-        geom_col(color = "white", fill = "dodgerblue") +
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5, 
-                                         hjust = 0.3)) +
-  labs(title = "Average Home Scores for All NBA Teams",
-       subtitle = "From 2004 to Feb. 2020",
-       x = "Team",
-       y = "Average Home Score")
+# Create object avg_nba_home_score that is the average score that away teams
+# have had over the years. Save to RDS.
+
+avg_nba_away_score <- nba_scores_2004 %>%
+  select(away_team, pts_away) %>%
+  group_by(away_team) %>%
+  summarize(avg_away = mean(pts_away, na.rm = TRUE), .groups = "drop")
+
+saveRDS(avg_nba_away_score, file = "nba_avg_away_scores.RDS")
 
 ```
 
@@ -106,18 +168,87 @@ ggplot(avg_nba_home_score, aes(home_team, avg_home)) +
 
 ```{r mlb}
 
-# Create object mlb_scores_1947 that has all scores from MLB games from 1947 (when the MLB became racially integrated) to October 2019.
-
-# Create object mlb_names_1947 to organize MLB team names.
-
-mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv") %>%
+# Create object mlb_scores_1947 that has all scores from MLB games from 1947
+# (when the MLB became racially integrated) to October 2019 (pre-Covid). I clean
+# the data to display team names instead of team IDs.
+  
+mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv", 
+                            col_types = cols(.default = col_double(),
+                                             date = col_date(format = ""),
+                                             playoff = col_character(),
+                                             team1 = col_character(),
+                                             team2 = col_character(),
+                                             pitcher1 = col_character(),
+                                             pitcher2 = col_character())) %>%
   clean_names() %>%
-  rename(home_team = team1,
-         away_team = team2,
+  rename(home_team_id = team1,
+         away_team_id = team2,
          home_score = score1,
          away_score = score2) %>%
   filter(season >= 1947) %>%
-  filter(season != 2020)
+  filter(season != 2020) %>%
+  mutate(home_team = case_when(home_team_id == "HOU" ~ "Houston Astros",
+                               home_team_id == "WSN" ~ "Washington Nationals",
+                               home_team_id == "NYY" ~ "New York Yankees",
+                               home_team_id == "STL" ~ "St. Louis Cardinals",
+                               home_team_id == "LAD" ~ "Los Angeles Dodgers",
+                               home_team_id == "ATL" ~ "Atlanta Braves",
+                               home_team_id == "TBD" ~ "Tampa Bay Rays",
+                               home_team_id == "MIN" ~ "Minnesota Twins",
+                               home_team_id == "OAK" ~ "Oakland Athletics",
+                               home_team_id == "KCR" ~ "Kansas City Royals",
+                               home_team_id == "SEA" ~ "Seattle Mariners",
+                               home_team_id == "NYM" ~ "New York Mets",
+                               home_team_id == "COL" ~ "Colorado Rockies",
+                               home_team_id == "CHW" ~ "Chicago White Sox",
+                               home_team_id == "ARI" ~ "Arizona Diamondbacks",
+                               home_team_id == "TOR" ~ "Toronot Blue Jays",
+                               home_team_id == "ANA" ~ "Anahiem Angels",
+                               home_team_id == "TEX" ~ "Texas Rangers",
+                               home_team_id == "SFG" ~ "San Francisco Giants",
+                               home_team_id == "PIT" ~ "Pittsburgh Pirates",
+                               home_team_id == "PHI" ~ "Philadelphia Phillies",
+                               home_team_id == "BOS" ~ "Boston Red Sox",
+                               home_team_id == "SDP" ~ "San Diego Padres",
+                               home_team_id == "DET" ~ "Detroit Tigers",
+                               home_team_id == "CIN" ~ "Cincinnati Reds",
+                               home_team_id == "CLE" ~ "Cleveland Indians",
+                               home_team_id == "CHC" ~ "Chicago Cubs",
+                               home_team_id == "MIL" ~ "Milwaukee Brewers",
+                               home_team_id == "FLA" ~ "Miami Marlins",
+                               home_team_id == "BAL" ~ "Baltimore Orioles",
+                               TRUE ~ home_team_id)) %>%
+  mutate(away_team = case_when(away_team_id == "HOU" ~ "Houston Astros",
+                               away_team_id == "WSN" ~ "Washington Nationals",
+                               away_team_id == "NYY" ~ "New York Yankees",
+                               away_team_id == "STL" ~ "St. Louis Cardinals",
+                               away_team_id == "LAD" ~ "Los Angeles Dodgers",
+                               away_team_id == "ATL" ~ "Atlanta Braves",
+                               away_team_id == "TBD" ~ "Tampa Bay Rays",
+                               away_team_id == "MIN" ~ "Minnesota Twins",
+                               away_team_id == "OAK" ~ "Oakland Athletics",
+                               away_team_id == "KCR" ~ "Kansas City Royals",
+                               away_team_id == "SEA" ~ "Seattle Mariners",
+                               away_team_id == "NYM" ~ "New York Mets",
+                               away_team_id == "COL" ~ "Colorado Rockies",
+                               away_team_id == "CHW" ~ "Chicago White Sox",
+                               away_team_id == "ARI" ~ "Arizona Diamondbacks",
+                               away_team_id == "TOR" ~ "Toronot Blue Jays",
+                               away_team_id == "ANA" ~ "Anahiem Angels",
+                               away_team_id == "TEX" ~ "Texas Rangers",
+                               away_team_id == "SFG" ~ "San Francisco Giants",
+                               away_team_id == "PIT" ~ "Pittsburgh Pirates",
+                               away_team_id == "PHI" ~ "Philadelphia Phillies",
+                               away_team_id == "BOS" ~ "Boston Red Sox",
+                               away_team_id == "SDP" ~ "San Diego Padres",
+                               away_team_id == "DET" ~ "Detroit Tigers",
+                               away_team_id == "CIN" ~ "Cincinnati Reds",
+                               away_team_id == "CLE" ~ "Cleveland Indians",
+                               away_team_id == "CHC" ~ "Chicago Cubs",
+                               away_team_id == "MIL" ~ "Milwaukee Brewers",
+                               away_team_id == "FLA" ~ "Miami Marlins",
+                               away_team_id == "BAL" ~ "Baltimore Orioles",
+                               TRUE ~ away_team_id))
 
 # Create object avg_mlb_home_score that is the average score that home teams
 # have had over the years. Save to RDS.
@@ -129,30 +260,15 @@ avg_mlb_home_score <- mlb_scores_1947 %>%
 
 saveRDS(avg_mlb_home_score, file = "mlb_avg_home_scores.RDS")
 
-ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
-        geom_col(color = "white", fill = "dodgerblue") + 
-  theme(axis.text.x = element_text(angle = 90, 
-                                   vjust = 0.5,
-                                   hjust = 0.3)) +
-  scale_x_discrete(labels = c("Anaheim Angels", "Arizona Diamondbacks", 
-                              "Atlanta Braves", "Baltimore Orioles",
-                              "Boston Red Sox", "Chicago Cubs",
-                              "Chicago White Sox", "Cincinnati Reds",
-                              "Cleveland Indians", "Colorado Rockies",
-                              "Detroit Tigers", "Miami Marlins",
-                              "Houston Astros", "Kansas City Royals",
-                              "Los Angeles Dodgers", "Milwaukee Brewers",
-                              "Minnesota Twins", "New York Mets",
-                              "New York Yankees", "Oakland Athletics",
-                              "Philadelphia Phillies", "Pittsburgh Pirates",
-                              "San Diego Padres", "Seattle Mariners",
-                              "San Francisco Giants", "St Louis Cardinals",
-                              "Tampa Bay Rays", "Texas Rangers",
-                              "Toronto Blue Jays", "Washington Nationals")) +
-  labs(title = "Average Home Scores for All MLB Teams",
-       subtitle = "From 1947 (Racial Integration) to Oct. 2020",
-       x = "Team",
-       y = "Average Home Score")
+# Create object avg_mlb_away_score that is the average score that away teams
+# have had over the years. Save to RDS.
+
+avg_mlb_away_score <- mlb_scores_1947 %>%
+  select(away_team, away_score) %>%
+  group_by(away_team) %>%
+  summarize(avg_away = mean(away_score, na.rm = TRUE), .groups = "drop")
+
+saveRDS(avg_mlb_away_score, file = "mlb_avg_away_scores.RDS")
 
 ```
 
@@ -214,15 +330,14 @@ mlb_attendance_raw <- read_csv("data/mlbscores/Teams.csv",
 # Here, I further clean the mlb_scores dataset
 
 mlb_scores_raw <- mlb_scores_1947 %>%
-  select(date, season, home_team, away_team, home_score, away_score)
-
-# Here, I sort out MLB team names.
-
-mlb_attendance_names <- mlb_attendance_raw %>%
-  distinct(teamID, name)
-
-mlb_scores_names <- mlb_scores_raw %>%
-  distinct(home_team)
+  select(date, 
+         season, 
+         home_team_id, 
+         away_team_id,
+         home_team,
+         away_team,
+         home_score, 
+         away_score)
 
 # Here, I edit mlb_attendance_raw to reflect the modern names of teams. I also
 # create marker columns in mlb_attendance and mlb_scores for easy combining
@@ -258,79 +373,17 @@ mlb_attendance <- mlb_attendance_raw %>%
   mutate(marker = str_c(yearID, team, sep = " "))
 
 mlb_scores <- mlb_scores_raw %>%
-  mutate(marker = str_c(season, home_team, sep = " "))
+  mutate(marker = str_c(season, home_team_id, sep = " "))
 
 # Here, I combine both mlb_scores and mlb_attendance.
 
 mlb_combined <- left_join(mlb_scores, mlb_attendance, by = "marker") %>%
-  select(season, 
-         home_team, 
-         away_team, 
-         home_score, 
-         away_score, 
-         avg_attendance) %>%
-  mutate(home_team_name = case_when(home_team == "ANA" ~ "Los Angeles Angels",
-                                    home_team == "ARI" ~ "Arizona Diamondbacks",
-                                    home_team == "ATL" ~ "Atlanta Braves",
-                                    home_team == "BAL" ~ "Baltimore Orioles",
-                                    home_team == "BOS" ~ "Boston Red Sox",
-                                    home_team == "CHC" ~ "Chicago Cubs",
-                                    home_team == "CHW" ~ "Chicago White Sox",
-                                    home_team == "CIN" ~ "Cincinnati Reds",
-                                    home_team == "CLE" ~ "Cleveland Indians",
-                                    home_team == "COL" ~ "Colorado Rockies",
-                                    home_team == "DET" ~ "Detroit Tigers",
-                                    home_team == "FLA" ~ "Miami Marlins",
-                                    home_team == "HOU" ~ "Houston Astros",
-                                    home_team == "KCR" ~ "Kansas City Royals",
-                                    home_team == "LAD" ~ "Los Angeles Dodgers",
-                                    home_team == "MIL" ~ "Milwaukee Brewers",
-                                    home_team == "MIN" ~ "Minnesota Twins",
-                                    home_team == "NYM" ~ "New York Mets",
-                                    home_team == "NYY" ~ "New York Yankees",
-                                    home_team == "OAK" ~ "Oakland Athletics",
-                                    home_team == "PHI" ~ "Philadelphia Phillies",
-                                    home_team == "PIT" ~ "Pittsburgh Pirates",
-                                    home_team == "SDP" ~ "San Diego Padres",
-                                    home_team == "SEA" ~ "Seattle Mariners",
-                                    home_team == "SFG" ~ "San Francisco Giants",
-                                    home_team == "STL" ~ "St. Louis Cardinals",
-                                    home_team == "TBD" ~ "Tampa Bay Rays",
-                                    home_team == "TEX" ~ "Texas Rangers",
-                                    home_team == "TOR" ~ "Toronto Blue Jays",
-                                    home_team == "WSN" ~ "Washington Nationals",
-                                    TRUE ~ home_team)) %>%
-  mutate(away_team_name = case_when(away_team == "ANA" ~ "Los Angeles Angels",
-                                    away_team == "ARI" ~ "Arizona Diamondbacks",
-                                    away_team == "ATL" ~ "Atlanta Braves",
-                                    away_team == "BAL" ~ "Baltimore Orioles",
-                                    away_team == "BOS" ~ "Boston Red Sox",
-                                    away_team == "CHC" ~ "Chicago Cubs",
-                                    away_team == "CHW" ~ "Chicago White Sox",
-                                    away_team == "CIN" ~ "Cincinnati Reds",
-                                    away_team == "CLE" ~ "Cleveland Indians",
-                                    away_team == "COL" ~ "Colorado Rockies",
-                                    away_team == "DET" ~ "Detroit Tigers",
-                                    away_team == "FLA" ~ "Miami Marlins",
-                                    away_team == "HOU" ~ "Houston Astros",
-                                    away_team == "KCR" ~ "Kansas City Royals",
-                                    away_team == "LAD" ~ "Los Angeles Dodgers",
-                                    away_team == "MIL" ~ "Milwaukee Brewers",
-                                    away_team == "MIN" ~ "Minnesota Twins",
-                                    away_team == "NYM" ~ "New York Mets",
-                                    away_team == "NYY" ~ "New York Yankees",
-                                    away_team == "OAK" ~ "Oakland Athletics",
-                                    away_team == "PHI" ~ "Philadelphia Phillies",
-                                    away_team == "PIT" ~ "Pittsburgh Pirates",
-                                    away_team == "SDP" ~ "San Diego Padres",
-                                    away_team == "SEA" ~ "Seattle Mariners",
-                                    away_team == "SFG" ~ "San Francisco Giants",
-                                    away_team == "STL" ~ "St. Louis Cardinals",
-                                    away_team == "TBD" ~ "Tampa Bay Rays",
-                                    away_team == "TEX" ~ "Texas Rangers",
-                                    away_team == "TOR" ~ "Toronto Blue Jays",
-                                    away_team == "WSN" ~ "Washington Nationals",
-                                    TRUE ~ away_team))
+  select(season,
+         home_team,
+         away_team,
+         home_score,
+         away_score,
+         avg_attendance)
 
 # Make RDS
 
@@ -366,18 +419,6 @@ mlb_model_complex <- stan_glm(score ~ home + attendance + home * attendance,
 print(mlb_model_complex, digits = 4)
 
 saveRDS(mlb_model_complex, file = "mlb_model_complex.RDS")
-
-test <- readRDS(file = "mlb_model_complex.RDS")
-
-
-tbl_regression(mlb_model_complex, intercept = TRUE) %>% 
-  as_gt() %>%
-  fmt_number(columns = vars(estimate, std.error),
-                     decimals = 4) %>%
-          tab_header(title = "Regression of MLB Scores",
-                     subtitle = "The Effect of Home, Attendance, and their Interaction on Score") %>%
-          tab_source_note("Sources: https://data.fivethirtyeight.com/ &
-                          http://www.seanlahman.com/baseball-archive/statistics/")
 
 ```
 
