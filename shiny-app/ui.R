@@ -12,9 +12,7 @@ library(rstanarm)
 
 # Read in RDS.
 
-avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores.RDS")
-avg_nba_home_score <- readRDS(file = "nba_avg_home_scores.RDS")
-avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores.RDS")
+combined_league_data <- readRDS(file = "combined_league_data.RDS")
 nfl_model <- readRDS(file = "nfl_model.RDS")
 nba_model <- readRDS(file = "nba_model.RDS")
 mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
@@ -37,7 +35,7 @@ shinyUI(
              
              fluidPage(
 
-                 fluidRow(column(6,
+                 fluidRow(column(8,
                  
                                  # Background Section. Text extends beyond the
                                  # line when it is a long link.
@@ -93,7 +91,7 @@ shinyUI(
                                    opportunity for sports fans to go see the 
                                    teams they love, but they have also", 
                                    a("diminished the sports watching experience 
-                                     on TV aswell.", href = "https://www.nytimes.com/2020/05/20/sports/coronavirus-sports-fans.html"),
+                                     on TV as well.", href = "https://www.nytimes.com/2020/05/20/sports/coronavirus-sports-fans.html"),
                                    "Moreover, athletes have claimed that they", 
                                    a("depend on the energy of fans during their 
                                      games,", href = "https://apnews.com/article/523715605c0353939e563cd57f604284"), 
@@ -115,17 +113,34 @@ shinyUI(
                                       regulations wherever they are present to 
                                       do your part in ensuring that fans around 
                                       the world can return to stadiums to 
-                                      support their teams soon.")),
+                                      support their teams soon."))
                                  
                                  ),
-                 
-                 column(4,
-                 
-                        # How to navigate this app section.
+                          
+                            column(4,
+                                   
+                        # Placeholder text.
                         
-                        h3("How to Navigate this Project"),
+                        h2("Placeholder text")
                         
-                        p("This project is divided into seperate tabs for each
+                        )
+                 
+                 ),
+                     
+                fluidRow(column(4,
+                                
+                        # Placeholder text.
+                        
+                        h2("Placeholder text")
+                     ),
+                     
+                     column(8,
+                        
+                            # How to navigate this app section.
+                            
+                            h2("How to Navigate this Project"),
+                            
+                            p("This project is divided into seperate tabs for each
                         league – NFL, NBA, and MLB. Each tab contains 
                         an interactive visualization where you will be able to 
                           choose a team and a range of seasons to view 
@@ -135,27 +150,27 @@ shinyUI(
                           that were developed using data from the leagues. Each 
                           model produces predictions for the entire league 
                           across all of the seasons I have data for."),
-                        
-                        p("Confused? Never fear! I have provided detailed 
+                            
+                            p("Confused? Never fear! I have provided detailed 
                           analysis and reasoning for all of my models, and I 
                           will thoroughly discuss the meaning and significance 
                           of my outputs."),
-                        
-                        # Disclaimers section.
-                        
-                        h3("Disclaimers"),
-                        
-                        h4("Score as Model Output"),
-                        
-                        p("For the purposes of this project, I use", 
-                          strong("the amount of points/runs a team would score – 
+                            
+                            # Disclaimers section.
+                            
+                            h2("Disclaimers"),
+                            
+                            h4("Score as Model Output"),
+                            
+                            p("For the purposes of this project, I use", 
+                              strong("the amount of points/runs a team would score – 
                           referred to in my models as \"score\" as the output of
                           my models."), "This means that I will", em("mostly"), 
-                          "be predicting the potential benefits of home field 
+                              "be predicting the potential benefits of home field 
                           advantage towards", strong("offensive output.")),
-                        
-                        p("This disclaimer is important to understand, as",
-                          em("the amount of points a team scores does NOT 
+                            
+                            p("This disclaimer is important to understand, as",
+                              em("the amount of points a team scores does NOT 
                           strongly take into account the defensive performance of 
                           a team."), "This statement is least true for the NFL, 
                           where there are direct defensive opportunities to 
@@ -170,44 +185,86 @@ shinyUI(
                           good defense may also lead to greater time possessing 
                           the ball, which in turn can oftentimes lead to higher 
                           scores."),
-                        
-                        p("For the MLB, however,", em("the number of runs a team
+                            
+                            p("For the MLB, however,", em("the number of runs a team
                          scores only provides as to how the team performed 
                          offensively."), "How many runs scored provides no 
                           information as to how the pitchers pitched or how the 
                           defense played. When viewing the MLB models, it is 
                           therefore", em("very important you keep this 
-                        disclaimer regarding score as the output in mind!"))
-                        
-                        )
+                        disclaimer regarding score as the output in mind!")),
+                            
+                            h4("Range of Data"),
+                            
+                            p("This project draws on data from the NFL, NBA, and 
+                        MLB. However, the amount of data I was able to find for 
+                        each league differed. For the NFL, I have data starting 
+                        from the 1966 season. For the NBA, I have data starting 
+                        from the 2003 season. And for the MLB, I have data for 
+                        the entire history of the league. However, I have 
+                        chosen to limit my analysis of the MLB to games from 
+                        the 1947 season-onwards, as this was the season when 
+                        racial integration was achieved in the league. Finally, 
+                        as mentioned earlier, this project will not deal with 
+                        data from games impacted by COVID regulations.")
+                            
+                            
+                     )
+                     
+                     )
                  
-                 )),
+                 ),
              
              
-             # Graphs of Average Home Scores for All Leagues
+             h2("Average Scores Home and Away for Teams in the NFL, NBA, 
+                        and MLB Over the Years"),
              
-             h2("Average Home Scores of Teams in the NFL, NBA, and MLB Over the 
-                Years"),
-             p("Here are some visualizations of the average home scores of all
-               of the teams in the NFL, NBA, and MLB over the full range of 
-               seasons I have data for."),
+             # Creating sidebar for NFL interactive model inputs.
              
-             # Creating interactive graph display, where the user can choose to
-             # view home or away graphs for the three leagues.
+             sidebarLayout( 
+                 
+                 sidebarPanel(
+                     h3("Choose League"),
+                     
+                     p("Choose a league from the dropdown menu to view the 
+                       average home and away scores for every team in that 
+                       league over the years."),
+                     
+                     # Specifying inputs for interactive model. You can choose
+                     # home or away to see average scores across the season
+                     # based on those conditions.
+                     
+                     selectInput(inputId = "user_league",
+                                 label = "League",
+                                 choices = c("MLB",
+                                             "NBA",
+                                             "NFL"),
+                                 selected = "NFL"),
+                     
+                     p(strong("MLB"), 
+                     "data from 1947 season (racial integration) to 2019 
+                       season (pre-COVID)."),
+                     
+                     p(strong("NBA"),
+                       "data from 2003 season to March 2020 (pre-Covid)."),
+                     
+                     p(strong("NFL"),
+                       "NFL data from 1966 season to 2019 season (pre-COVID).")
+                     
+                 ),
+                 
+                 mainPanel(
+                     
+                     # Displaying Average Score Graph.
+                     
+                     plotOutput("AvgScoreInteractive")
+                     
+                 )
+                 
+                 )
              
-             h2("NFL – National Football League"),
-             plotOutput("NFLHomeAvg"),
-             plotOutput("NFLAwayAvg"),
+    ),
              
-             h2("NBA – National Basketball Association"),
-             plotOutput("NBAHomeAvg"),
-             plotOutput("NBAAwayAvg"),
-             
-             h2("MLB – Major League Baseball"),
-             plotOutput("MLBHomeAvg"),
-             plotOutput("MLBAwayAvg")
-             
-),
 
 ########## NFL ##########
 
@@ -281,12 +338,12 @@ tabPanel("NFL",
             
          # Displaying NFL Interactive Graph.
          
-         h3("NFL Teams Interactive Model"),
+         h3("NFL Model by Team and Season"),
          plotOutput("NFLModelInteractive"),
          
          # Displaying NFL Model Table.
              
-        h3("NFL Model"),
+        h3("NFL Model as a League from the 1966 Season to the 2019 Season"),
         tableOutput("NFLModelTable")
         )
         
@@ -362,8 +419,7 @@ tabPanel("About",
          quantitatively how much home field advantage actually matters in my 
          three favorite leagues: the NFL, NBA, and MLB. In finding all of this 
          out, I hope to contribute to the sports-watching experience for fans 
-         around the country and the world – especially for my fellow 
-         Bostonians."),
+         around the country and the world."),
          
          # Data Section. Text extends beyond the line when it is a long link.
          

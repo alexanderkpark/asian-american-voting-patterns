@@ -90,22 +90,28 @@ nfl_scores_1966 <- read_csv("data/nflscores1966/spreadspoke_scores.csv",
                                TRUE ~ team_away))
 
 # Create object avg_nfl_home_score that is the average score that home teams
-# have had over the years. Save to RDS.
+# have had over the years. Specify that teams are at home
 
 avg_nfl_home_score <- nfl_scores_1966 %>%
   group_by(team_home) %>%
-  summarize(avg_home = mean(score_home), .groups = "drop")
-
-saveRDS(avg_nfl_home_score, file = "nfl_avg_home_scores.RDS")
+  summarize(avg_home = mean(score_home), .groups = "drop") %>%
+  rename(team = team_home,
+         score = avg_home) %>%
+  mutate(condition = "Home")
 
 # Create object avg_nfl_away_score that is the average score that away teams
-# have had over the years. Save to RDS.
+# have had over the years. Specify that teams are away.
 
 avg_nfl_away_score <- nfl_scores_1966 %>%
   group_by(team_away) %>%
-  summarize(avg_away = mean(score_away), .groups = "drop")
+  summarize(avg_away = mean(score_away), .groups = "drop") %>%
+  rename(team = team_away,
+         score = avg_away) %>%
+  mutate(condition = "Away")
 
-saveRDS(avg_nfl_away_score, file = "nfl_avg_away_scores.RDS")
+avg_nfl_score <- bind_rows(avg_nfl_home_score, 
+                            avg_nfl_away_score) %>%
+  mutate(league = "NFL")
 
 ```
 
@@ -143,24 +149,30 @@ nba_scores_2004 <- left_join(nba_scores_2004,
   select(home_team, away_team, season, pts_home, pts_away)
 
 # Create object avg_nba_home_score that is the average score that home teams
-# have had over the years. Save to RDS.
+# have had over the years. 
 
 avg_nba_home_score <- nba_scores_2004 %>%
   select(home_team, pts_home) %>%
   group_by(home_team) %>%
-  summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop")
-
-saveRDS(avg_nba_home_score, file = "nba_avg_home_scores.RDS")
+  summarize(avg_home = mean(pts_home, na.rm = TRUE), .groups = "drop") %>%
+  rename(team = home_team,
+         score = avg_home) %>%
+  mutate(condition = "Home")
 
 # Create object avg_nba_home_score that is the average score that away teams
-# have had over the years. Save to RDS.
+# have had over the years. 
 
 avg_nba_away_score <- nba_scores_2004 %>%
   select(away_team, pts_away) %>%
   group_by(away_team) %>%
-  summarize(avg_away = mean(pts_away, na.rm = TRUE), .groups = "drop")
+  summarize(avg_away = mean(pts_away, na.rm = TRUE), .groups = "drop") %>%
+  rename(team = away_team,
+         score = avg_away) %>%
+  mutate(condition = "Away")
 
-saveRDS(avg_nba_away_score, file = "nba_avg_away_scores.RDS")
+avg_nba_score <- bind_rows(avg_nba_home_score, 
+                            avg_nba_away_score) %>%
+  mutate(league = "NBA")
 
 ```
 
@@ -256,21 +268,45 @@ mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv",
 avg_mlb_home_score <- mlb_scores_1947 %>%
   select(home_team, home_score) %>%
   group_by(home_team) %>%
-  summarize(avg_home = mean(home_score, na.rm = TRUE), .groups = "drop")
-
-saveRDS(avg_mlb_home_score, file = "mlb_avg_home_scores.RDS")
+  summarize(avg_home = mean(home_score, na.rm = TRUE), .groups = "drop") %>%
+  rename(team = home_team,
+         score = avg_home) %>%
+  mutate(condition = "Home")
 
 # Create object avg_mlb_away_score that is the average score that away teams
-# have had over the years. Save to RDS.
+# have had over the years.
 
 avg_mlb_away_score <- mlb_scores_1947 %>%
   select(away_team, away_score) %>%
   group_by(away_team) %>%
-  summarize(avg_away = mean(away_score, na.rm = TRUE), .groups = "drop")
+  summarize(avg_away = mean(away_score, na.rm = TRUE), .groups = "drop") %>%
+  rename(team = away_team,
+         score = avg_away) %>%
+  mutate(condition = "Away")
 
-saveRDS(avg_mlb_away_score, file = "mlb_avg_away_scores.RDS")
+avg_mlb_score <- bind_rows(avg_mlb_home_score, 
+                            avg_mlb_away_score) %>%
+  mutate(league = "MLB")
 
 ```
+
+# Combining NFL, NBA, and MLB Data
+
+```{r combining}
+
+# Here, I am combining the NFL, NBA, and MLB average score tibbles for the
+# purposes of the interactive graph on the first tab of my project.
+
+combined_league_data <- bind_rows(avg_nfl_score,
+                                  avg_nba_score,
+                                  avg_mlb_score)
+
+# Saving RDS.
+
+saveRDS(combined_league_data, file = "combined_league_data.RDS")
+
+```
+
 
 # Models
 

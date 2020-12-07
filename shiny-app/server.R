@@ -2,12 +2,7 @@
 
 # Read in RDS.
 
-avg_nfl_home_score <- readRDS(file = "nfl_avg_home_scores.RDS")
-avg_nfl_away_score <- readRDS(file = "nfl_avg_away_scores.RDS")
-avg_nba_home_score <- readRDS(file = "nba_avg_home_scores.RDS")
-avg_nba_away_score <- readRDS(file = "nba_avg_away_scores.RDS")
-avg_mlb_home_score <- readRDS(file = "mlb_avg_home_scores.RDS")
-avg_mlb_away_score <- readRDS(file = "mlb_avg_away_scores.RDS")
+combined_league_data <- readRDS(file = "combined_league_data.RDS")
 nfl_model <- readRDS(file = "nfl_model.RDS")
 nfl_model_data <- readRDS(file = "nfl_model_data.RDS")
 nba_model <- readRDS(file = "nba_model.RDS")
@@ -18,102 +13,58 @@ shinyServer(function(input, output) {
   
   # Bar graph of average NFL home scores made.
   
-    output$NFLHomeAvg <- renderPlot({
+    output$AvgScoreInteractive <- renderPlot({
       
-      ggplot(avg_nfl_home_score, aes(team_home, avg_home)) + 
-        geom_col(color = "white", fill = "navyblue") +
+      combined_league_data_int <- combined_league_data %>%
+        filter(league == input$user_league)
+      
+      ggplot(combined_league_data_int, aes(team, score, fill = condition)) +
+        geom_col(position = "dodge", color = "white") +
+        scale_fill_manual(name = "Home Status", 
+                          labels = c("Away", "Home"),
+                          values = c("salmon", "deepskyblue4")) +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
-        labs(title = "Average Home Scores for All NFL Teams",
-             subtitle = "From 1966 Season to 2019 Season",
-             x = "Team",
-             y = "Average Home Score")
-    })
-    
-  # Bar graph of average NFL away scores made.
-      
-    output$NFLAwayAvg <- renderPlot({
-      
-      ggplot(avg_nfl_away_score, aes(team_away, avg_away)) + 
-        geom_col(color = "white", fill = "navyblue") +
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5, 
-                                         hjust = 0.3)) +
-        labs(title = "Average Away Scores for All NFL Teams",
-             subtitle = "From 1966 Season to 2019 Season",
-             x = "Team",
-             y = "Average Away Score")
+        labs(x = "Team",
+             y = "Average Score")
       
     })
     
-  # Bar graph of average NBA home away scores made.
     
-    output$NBAHomeAvg <- renderPlot({
-      
-      ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
-        geom_col(color = "white", fill = "green4") +
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5, 
-                                         hjust = 0.3)) +
-        labs(title = "Average Home Scores for All NBA Teams",
-             subtitle = "From 2004 Season to March 2020 (pre-Covid)",
-             x = "Team",
-             y = "Average Home Score")
-    })
-    
-  # Bar graph of average NBA away scores made.
-    
-    output$NBAAwayAvg <- renderPlot({
-      
-      ggplot(avg_nba_away_score, aes(away_team, avg_away)) + 
-        geom_col(color = "white", fill = "green4") +
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5, 
-                                         hjust = 0.3)) +
-        labs(title = "Average Away Scores for All NBA Teams",
-             subtitle = "From 2004 Season to March 2020 (pre-Covid)",
-             x = "Team",
-             y = "Average Away Score")
-    })
-    
-  # Bar graph of average MLB home scores made.
-    
-    output$MLBHomeAvg <- renderPlot({
-      
-      ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
-        geom_col(color = "white", fill = "red4") + 
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5,
-                                         hjust = 0.3)) +
-        labs(title = "Average Home Scores for All MLB Teams",
-             subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
-             x = "Team",
-             y = "Average Home Score")
-      
-# I have elected to have the subtitle go over the line so as not to disturb how
-# it will show up on the website.
-      
-    })
-    
-  # Bar graph of average MLB away scores made.
-
-    output$MLBAwayAvg <- renderPlot({
-      
-      ggplot(avg_mlb_away_score, aes(away_team, avg_away)) +
-        geom_col(color = "white", fill = "red4") + 
-        theme(axis.text.x = element_text(angle = 90, 
-                                         vjust = 0.5,
-                                         hjust = 0.3)) +
-        labs(title = "Average Away Scores for All MLB Teams",
-             subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
-             x = "Team",
-             y = "Average Away Score")
-      
-      # I have elected to have the subtitle go over the line so as not to disturb how
-      # it will show up on the website.
-      
-    })
+#   # Bar graph of average NBA home away scores made.
+#     
+#     output$NBAAvgScoreInteractive <- renderPlot({
+#       
+#       ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
+#         geom_col(color = "white", fill = "green4") +
+#         theme(axis.text.x = element_text(angle = 90, 
+#                                          vjust = 0.5, 
+#                                          hjust = 0.3)) +
+#         labs(title = "Average Home Scores for All NBA Teams",
+#              subtitle = "From 2004 Season to March 2020 (pre-Covid)",
+#              x = "Team",
+#              y = "Average Home Score")
+#     })
+#     
+#   # Bar graph of average MLB home scores made.
+#     
+#     output$MLBAvgScoreInteractive <- renderPlot({
+#       
+#       ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
+#         geom_col(color = "white", fill = "red4") + 
+#         theme(axis.text.x = element_text(angle = 90, 
+#                                          vjust = 0.5,
+#                                          hjust = 0.3)) +
+#         labs(title = "Average Home Scores for All MLB Teams",
+#              subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
+#              x = "Team",
+#              y = "Average Home Score")
+#       
+# # I have elected to have the subtitle go over the line so as not to disturb how
+# # it will show up on the website.
+#       
+#     })
     
 ########## NFL ##########
     
