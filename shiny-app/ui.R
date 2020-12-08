@@ -110,21 +110,40 @@ shinyUI(
                                  
                                  ),
                           
-                            column(4,
+                            column(4, align = "center",
                                    
-                        # Placeholder text.
+                        # Render images.
                         
-                        h2("Placeholder text")
+                        imageOutput("NFLLogo"),
+                        
+                        imageOutput("NBALogo"),
+                        
+                        # Citing image sources. In the case of long links, code
+                        # goes over the line.
+                        
+                        p("Image Sources:",
+                          a("NFL Logo,", href = "https://static.nfl.com/static/content/public/static/wildcat/assets/img/application-shell/shield/default.svg"),
+                          a("NBA Logo."), href = "https://mediacentral.nba.com/wp-content/uploads/logos/NBA.jpg")
                         
                         )
                  
                  ),
                      
-                fluidRow(column(4,
+                fluidRow(column(4, align = "center",
                                 
-                        # Placeholder text.
+                        # Render images.
                         
-                        h2("Placeholder text")
+                        imageOutput("MLBLogo"),
+                        
+                        imageOutput("FenwayScoreboard"),
+                        
+                        # Citing image sources. In the case of long links, code
+                        # goes over the line.
+                        
+                        p("Image Sources:",
+                          a("MLB Logo,", href = "https://en.wikipedia.org/wiki/File:Major_League_Baseball_logo.svg"),
+                          a("Fenway Scoreboard."), href = "https://apnews.com/article/a8058fe68efb46bf91aa649f32c5464c")
+                        
                      ),
                      
                      column(8,
@@ -222,6 +241,12 @@ shinyUI(
              h2("Average Scores Home and Away for Teams in the NFL, NBA, 
                         and MLB Over the Years"),
              
+             p("As you can see, average home scores are higher than average 
+                   away scores for the vast majority of teams across these 
+                   three leagues. In the following tabs, we will take a closer 
+                   look into just how important home field advantage is for each 
+                   league AND for each team!"),
+             
              # Creating sidebar for NFL interactive model inputs.
              
              sidebarLayout( 
@@ -264,14 +289,8 @@ shinyUI(
                      
                  )
                  
-                 ),
-                 
-                 p("As you can see, average home scores are higher than average 
-                   away scores for the vast majority of teams across these 
-                   three leagues. In the following tabs, we will take a closer 
-                   look into just how important home field advantage is for each 
-                   league AND for each team!")
-             
+                 )
+
     ),
              
 

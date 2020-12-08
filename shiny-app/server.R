@@ -1,4 +1,4 @@
-########## INTRODUCTION ##########
+########## SETUP ##########
 
 # Read in RDS.
 
@@ -13,6 +13,38 @@ mlb_model_data <- readRDS(file = "mlb_model_data.RDS")
 # Define server logic required to draw graphs.
 shinyServer(function(input, output) {
   
+########## INTRODUCTION ##########
+  
+  # Images for rendering on Intro Page.
+  
+  output$NFLLogo <- renderImage({
+    list(src = "www/nfl_logo.png",
+         width = 256,
+         height = 350,
+         alt = "Error displaying image")
+  }, deleteFile = FALSE)
+  
+  output$NBALogo <- renderImage({
+    list(src = "www/nba_logo.png",
+         width = 135,
+         height = 296,
+         alt = "Error displaying image")
+  }, deleteFile = FALSE)
+  
+  output$MLBLogo <- renderImage({
+    list(src = "www/mlb_logo.png",
+         width = 350,
+         height = 190,
+         alt = "Error displaying image")
+  }, deleteFile = FALSE)
+  
+  output$FenwayScoreboard <- renderImage({
+    list(src = "www/fenway.jpeg",
+         width = 400,
+         height = 228,
+         alt = "Error displaying image")
+  }, deleteFile = FALSE)
+  
   # Bar graph of average NFL home scores made.
   
     output$AvgScoreInteractive <- renderPlot({
@@ -25,11 +57,12 @@ shinyServer(function(input, output) {
         scale_fill_manual(name = "Home Status", 
                           labels = c("Away", "Home"),
                           values = c("salmon", "deepskyblue4")) +
+        theme_bw() +
         theme(axis.text.x = element_text(angle = 90, 
                                          vjust = 0.5, 
                                          hjust = 0.3)) +
         labs(x = "Team",
-             y = "Average Score")
+             y = "Average Score") 
       
     })
     
@@ -94,7 +127,8 @@ shinyServer(function(input, output) {
                             values = c("red4", "navyblue")) +
           labs(title = "Posterior Probability Distribution of Home and Away Scores",
                x = "Score",
-               y = "Probability")
+               y = "Probability") +
+          theme_bw()
         
         # I have elected to have the title text go over the line so as to
         # preserve the formatting of the title on the Shiny app.  
@@ -161,7 +195,8 @@ shinyServer(function(input, output) {
                             values = c("gray12", "green4")) +
           labs(title = "Posterior Probability Distribution of Home and Away Scores",
                x = "Score",
-               y = "Probability")
+               y = "Probability") +
+          theme_bw()
 
     # I have elected to have the title text go over the line so as to
     # preserve the formatting of the title on the Shiny app.
@@ -246,7 +281,8 @@ shinyServer(function(input, output) {
                                        "red4")) +
           labs(title = "Posterior Probability Distribution of Home and Away Scores",
                x = "Score",
-               y = "Probability")
+               y = "Probability") +
+          theme_bw()
         
         # I have elected to have the title text go over the line so as to
         # preserve the formatting of the title on the Shiny app.
