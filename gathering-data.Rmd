@@ -199,6 +199,8 @@ mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv",
          away_score = score2) %>%
   filter(season >= 1947) %>%
   filter(season != 2020) %>%
+  mutate(home_team_id = case_when(home_team_id == "ANA" ~ "LAA",
+                                  TRUE ~ home_team_id)) %>%
   mutate(home_team = case_when(home_team_id == "HOU" ~ "Houston Astros",
                                home_team_id == "WSN" ~ "Washington Nationals",
                                home_team_id == "NYY" ~ "New York Yankees",
@@ -215,7 +217,7 @@ mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv",
                                home_team_id == "CHW" ~ "Chicago White Sox",
                                home_team_id == "ARI" ~ "Arizona Diamondbacks",
                                home_team_id == "TOR" ~ "Toronot Blue Jays",
-                               home_team_id == "ANA" ~ "Anahiem Angels",
+                               home_team_id == "LAA" ~ "Los Angeles Angels",
                                home_team_id == "TEX" ~ "Texas Rangers",
                                home_team_id == "SFG" ~ "San Francisco Giants",
                                home_team_id == "PIT" ~ "Pittsburgh Pirates",
@@ -246,7 +248,7 @@ mlb_scores_1947 <- read_csv("data/mlbscores/mlb_elo.csv",
                                away_team_id == "CHW" ~ "Chicago White Sox",
                                away_team_id == "ARI" ~ "Arizona Diamondbacks",
                                away_team_id == "TOR" ~ "Toronot Blue Jays",
-                               away_team_id == "ANA" ~ "Anahiem Angels",
+                               away_team_id == "LAA" ~ "Lost Angeles Angels",
                                away_team_id == "TEX" ~ "Texas Rangers",
                                away_team_id == "SFG" ~ "San Francisco Giants",
                                away_team_id == "PIT" ~ "Pittsburgh Pirates",
@@ -416,7 +418,7 @@ mlb_attendance <- mlb_attendance_raw %>%
                           teamID == "LAN" ~ "LAD",
                           teamID == "WS2" ~ "TEX",
                           teamID == "NYN" ~ "NYM",
-                          teamID == "CAL" ~ "ANA",
+                          teamID == "CAL" ~ "LAA",
                           teamID == "KCA" ~ "KCR",
                           teamID == "MON" ~ "WSN",
                           teamID == "SDN" ~ "SDP",
@@ -424,7 +426,6 @@ mlb_attendance <- mlb_attendance_raw %>%
                           teamID == "ML4" ~ "MIL",
                           teamID == "FLO" ~ "FLA",
                           teamID == "TBA" ~ "TBD",
-                          teamID == "LAA" ~ "ANA",
                           teamID == "WAS" ~ "WSN",
                           teamID == "MIA" ~ "FLA",
                           TRUE ~ teamID)) %>%
@@ -456,21 +457,25 @@ saveRDS(mlb_combined, file = "mlb_combined.RDS")
 # on every 1000+ fans are in attendance.
 
 mlb_model_data_home <- mlb_combined %>%
-  select(home_team, home_score, avg_attendance) %>%
+  select(home_team, home_score, avg_attendance, season) %>%
   mutate(home = 1) %>%
   mutate(attendance = avg_attendance / 1000) %>%
   rename(team = home_team,
          score = home_score)
 
 mlb_model_data_away <- mlb_combined %>%
-  select(away_team, away_score, avg_attendance) %>%
+  select(away_team, away_score, avg_attendance, season) %>%
   mutate(home = 0) %>%
   mutate(attendance = avg_attendance / 1000) %>%
   rename(team = away_team,
          score = away_score)
 
 mlb_model_data <- bind_rows(mlb_model_data_home, mlb_model_data_away) %>%
-  select(team, score, home, attendance)
+  select(team, score, home, attendance, season)
+
+# Save RDS for mlb_model_data.
+
+saveRDS(mlb_model_data, file = "mlb_model_data.RDS")
 
 mlb_model_complex <- stan_glm(score ~ home + attendance + home * attendance,
                       data = mlb_model_data,
@@ -488,16 +493,22 @@ saveRDS(mlb_model_complex, file = "mlb_model_complex.RDS")
 # in scores between home and away games for the league, on the whole.
 
 nba_model_data_home <- nba_scores_2004 %>%
-  select(home_team, pts_home) %>%
+  select(home_team, 
+         pts_home,
+         season) %>%
   mutate(home = 1) %>%
   rename(team = home_team,
          score = pts_home)
 
 nba_model_data_away <- nba_scores_2004 %>%
-  select(away_team, pts_away) %>%
+  select(away_team, 
+         pts_away,
+         season) %>%
   mutate(home = 0) %>%
   rename(team = away_team,
          score = pts_away)
+
+# Here, I make the tibble for the NBA model.
 
 nba_model_data <- bind_rows(nba_model_data_home, nba_model_data_away)
 
@@ -507,7 +518,13 @@ nba_model <- stan_glm(score ~ home,
 
 print(nba_model, digits = 4)
 
+# Save RDS of NBA model.
+
 saveRDS(nba_model, file = "nba_model.RDS")
+
+# Save RDS of nba_model_data for use with interactive graphic.
+
+saveRDS(nba_model_data, file = "nba_model_data.RDS")
 
 ```
 

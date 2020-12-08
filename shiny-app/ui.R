@@ -10,13 +10,6 @@ library(gtsummary)
 library(broom.mixed)
 library(rstanarm)
 
-# Read in RDS.
-
-combined_league_data <- readRDS(file = "combined_league_data.RDS")
-nfl_model <- readRDS(file = "nfl_model.RDS")
-nba_model <- readRDS(file = "nba_model.RDS")
-mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
-
 # Define UI for application that draws a histogram
 shinyUI(
     navbarPage(
@@ -271,15 +264,17 @@ shinyUI(
 # NFL Tab setup.
 
 tabPanel("NFL",
-         
-         h2("Linear Regressions for the NFL with Score as Output and Home as 
-            Predictor"),
              
+         h2("Model of Linear Regression for the NFL with Score as Output and 
+         Home as Predictor"),
+         
          # Creating sidebar for interactive model inputs.
          
          sidebarLayout( 
             
              sidebarPanel(
+                 
+                 h3("NFL Dashboard"),
                  
                  p("Choose a team and a range of seasons to view a posterior 
                    distribution of predicted home scores and predicted away 
@@ -338,16 +333,18 @@ tabPanel("NFL",
             
          # Displaying NFL Interactive Graph.
          
-         h3("NFL Model by Team and Season"),
-         plotOutput("NFLModelInteractive"),
+        h3("NFL Predicted Home and Away Scores"),
+         plotOutput("NFLModelInteractive")
          
+        )
+        
+         ),
+        
          # Displaying NFL Model Table.
              
         h3("NFL Model as a League from the 1966 Season to the 2019 Season"),
         tableOutput("NFLModelTable")
-        )
         
-)
 ),
 
 ########## NBA ##########
@@ -356,16 +353,82 @@ tabPanel("NFL",
 
 tabPanel("NBA",
          
-         # NBA Model Table
-         
-         h1("Linear Regression for the NBA with Score as Output and Home as 
+         h2("Linear Regression for the NBA with Score as Output and Home as 
             Predictor"),
          
-         # h2("The Equation"),
-         # uiOutput("reg_eq"),
+         # Creating sidebar for interactive model inputs.
+
+         sidebarLayout(
+
+             sidebarPanel(
+
+                 h3("NBA Dashboard"),
+
+                 p("Choose a team and a range of seasons to view a posterior
+                   distribution of predicted home scores and predicted away
+                   scores."),
+
+                 # Specifying inputs for interactive model. You can choose a
+                 # team and a range of seasons to display a posterior
+                 # distribution of home vs. away predicted scores.
+
+                 selectInput(inputId = "user_nba_team",
+                             label = "Team",
+                             choices = c("Atlanta Hawks",
+                                         "Boston Celtics",
+                                         "Brooklyn Nets",
+                                         "Charlotte Hornets",
+                                         "Chicago Bulls",
+                                         "Cleveland Cavaliers",
+                                         "Dallas Mavericks",
+                                         "Denver Nuggets",
+                                         "Detroit Pistons",
+                                         "Golden State Warriors",
+                                         "Houston Rockets",
+                                         "Indiana Pacers",
+                                         "Los Angeles Clippers",
+                                         "Los Angeles Lakers",
+                                         "Memphis Grizzlies",
+                                         "Miami Heat",
+                                         "Milwaukee Bucks",
+                                         "Minnesota Timberwolves",
+                                         "New Orleans Pelicans",
+                                         "New York Knicks",
+                                         "Oklahoma City Thunder",
+                                         "Orlando Magic",
+                                         "Philadelphia 76ers",
+                                         "Phoenix Suns",
+                                         "Portland Trail Blazers",
+                                         "Sacramento Kings",
+                                         "San Antonio Spurs",
+                                         "Toronto Raptors",
+                                         "Utah Jazz",
+                                         "Washington Wizards"),
+                             selected = "Boston Celtics"),
+
+                 sliderInput(inputId = "user_nba_season",
+                             label = "Season(s)",
+                             min = 2003,
+                             max = 2020,
+                             value = c(2003, 2020),
+                             sep = "")
+
+             ),
+
+             mainPanel(
+
+                 # Displaying NBA Interactive Graph.
+
+                 h3("NBA Predicted Home and Away Scores"),
+                 plotOutput("NBAModelInteractive")
+
+             )
+
+         ),
          
+         # NBA Model Table.
          
-         h2("NBA Model"),
+         h3("NBA Model as a League from the 2003 Season to March 2020"),
          tableOutput("NBAModelTable")
          
 ),
@@ -376,16 +439,82 @@ tabPanel("NBA",
 
 tabPanel("MLB: A Deeper Dive",
          
-         # MLB Complex Model Table
-         
-         h1("Linear Regression for the MLB with Score as Output and Home, 
+         h2("Linear Regression for the MLB with Score as Output and Home, 
              Attendance, and their Interaction as Predictors"),
          
-         # h2("The Equation"),
-         # uiOutput("mlb_reg_eq"),
+         # Creating sidebar for interactive model inputs.
          
+         sidebarLayout(
+             
+             sidebarPanel(
+                 
+                 h3("MLB Dashboard"),
+                 
+                 p("Choose a team and a range of seasons to view a posterior
+                   distribution of predicted home scores and predicted away
+                   scores."),
+                 
+                 # Specifying inputs for interactive model. You can choose a
+                 # team and a range of seasons to display a posterior
+                 # distribution of home vs. away predicted scores.
+                 
+                 selectInput(inputId = "user_mlb_team",
+                             label = "Team",
+                             choices = c("Arizona Diamondbacks",
+                                         "Atlanta Braves",
+                                         "Baltimore Orioles",
+                                         "Boston Red Sox",
+                                         "Chicago Cubs",
+                                         "Chicago White Sox",
+                                         "Cincinnati Reds",
+                                         "Cleveland Indians",
+                                         "Colorado Rockies",
+                                         "Detroit Tigers",
+                                         "Houston Astros",
+                                         "Kansas City Royals",
+                                         "Los Angeles Angels",
+                                         "Los Angeles Dodgers",
+                                         "Miami Marlins",
+                                         "Milwaukee Brewers",
+                                         "Minnesota Twins",
+                                         "New York Yankees",
+                                         "New York Mets",
+                                         "Oakland Athletics",
+                                         "Philadelphia Phillies",
+                                         "Pittsburgh Pirates",
+                                         "San Diego Padres",
+                                         "San Francisco Giants",
+                                         "Seattle Mariners",
+                                         "St. Louis Cardinals",
+                                         "Tampa Bay Rays",
+                                         "Texas Rangers",
+                                         "Toronto Blue Jays",
+                                         "Washington Nationals"),
+                             selected = "Boston Red Sox"),
+                 
+                 sliderInput(inputId = "user_mlb_season",
+                             label = "Season(s)",
+                             min = 1947,
+                             max = 2019,
+                             value = c(1947, 2020),
+                             sep = "")
+                 
+             ),
+             
+             mainPanel(
+                 
+                 # Displaying MLB Interactive Graph.
+                 
+                 h3("MLB Predicted Home and Away Scores"),
+                 plotOutput("MLBModelInteractive")
+                 
+             )
+             
+         ),
          
-         h2("MLB Complex Model"),
+         # MLB Complex Model Table
+         
+         h3("MLB Model as a League from the 1947 Season to the 2019 Season"),
          tableOutput("MLBComplexModelTable")
          
 ),
@@ -399,7 +528,7 @@ tabPanel("About",
          # About Me Section. Text extends beyond the line when it is a long
          # link.
          
-         h1("About Me"),
+         h2("About Me"),
          p("My name is Alexander Park and I am pursuing an A.B. in Government 
          with a specialization in Public Policy and a secondary in Economics at 
          Harvard University. I will graduate in the spring of 2023. I am a 
@@ -412,7 +541,7 @@ tabPanel("About",
          
          # Project Motivations Section
          
-         h1("Project Motivations"),
+         h2("Project Motivations"),
          p("This is my final project for GOV 50: Data at Harvard University. As 
          a Boston sports fan, I am used to having home field advantage in the 
          playoffs. Therefore, I wanted to use data analysis to determine 
@@ -423,7 +552,7 @@ tabPanel("About",
          
          # Data Section. Text extends beyond the line when it is a long link.
          
-         h1("The Data"),
+         h2("The Data"),
          
          h3("NFL Data"),
          p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
@@ -446,7 +575,7 @@ tabPanel("About",
          
          # Acknowledgements Section.
          
-         h1("Acknowledgements"),
+         h2("Acknowledgements"),
          p("I am grateful for the guidance that", strong("Wyatt Hurt"), "and",
            strong("Tyler Simko"), "have given me throughout this semester. 
          Without their instruction and advice, I would not have been able to 

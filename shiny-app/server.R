@@ -6,7 +6,9 @@ combined_league_data <- readRDS(file = "combined_league_data.RDS")
 nfl_model <- readRDS(file = "nfl_model.RDS")
 nfl_model_data <- readRDS(file = "nfl_model_data.RDS")
 nba_model <- readRDS(file = "nba_model.RDS")
+nba_model_data <- readRDS(file = "nba_model_data.RDS")
 mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
+mlb_model_data <- readRDS(file = "mlb_model_data.RDS")
 
 # Define server logic required to draw graphs.
 shinyServer(function(input, output) {
@@ -31,41 +33,6 @@ shinyServer(function(input, output) {
       
     })
     
-    
-#   # Bar graph of average NBA home away scores made.
-#     
-#     output$NBAAvgScoreInteractive <- renderPlot({
-#       
-#       ggplot(avg_nba_home_score, aes(home_team, avg_home)) + 
-#         geom_col(color = "white", fill = "green4") +
-#         theme(axis.text.x = element_text(angle = 90, 
-#                                          vjust = 0.5, 
-#                                          hjust = 0.3)) +
-#         labs(title = "Average Home Scores for All NBA Teams",
-#              subtitle = "From 2004 Season to March 2020 (pre-Covid)",
-#              x = "Team",
-#              y = "Average Home Score")
-#     })
-#     
-#   # Bar graph of average MLB home scores made.
-#     
-#     output$MLBAvgScoreInteractive <- renderPlot({
-#       
-#       ggplot(avg_mlb_home_score, aes(home_team, avg_home)) +
-#         geom_col(color = "white", fill = "red4") + 
-#         theme(axis.text.x = element_text(angle = 90, 
-#                                          vjust = 0.5,
-#                                          hjust = 0.3)) +
-#         labs(title = "Average Home Scores for All MLB Teams",
-#              subtitle = "From 1947 Season (Racial Integration) to 2019 Season (pre-Covid)",
-#              x = "Team",
-#              y = "Average Home Score")
-#       
-# # I have elected to have the subtitle go over the line so as not to disturb how
-# # it will show up on the website.
-#       
-#     })
-    
 ########## NFL ##########
     
     # NFLModelTable made.
@@ -85,10 +52,11 @@ shinyServer(function(input, output) {
       
     })
       
+    # NFLModelInteractive made.
+    
       output$NFLModelInteractive <- renderPlot({
         
-        # Make NFL Model Interactive Graph Text extends beyond the line when it
-        # is a long link.
+        # Make NFL Model Interactive.
         
         nfl_model_data_int <- nfl_model_data %>%
           filter(season %in% input$user_nfl_season,
@@ -123,8 +91,14 @@ shinyServer(function(input, output) {
                      color = "blue") +
           scale_fill_manual(name = "Home Status", 
                             labels = c("Away", "Home"),
-                            values = c("red4", "navyblue"))
-          
+                            values = c("red4", "navyblue")) +
+          labs(title = "Posterior Probability Distribution of Home and Away Scores",
+               x = "Score",
+               y = "Probability")
+        
+        # I have elected to have the title text go over the line so as to
+        # preserve the formatting of the title on the Shiny app.  
+        
     })
     
 ########## NBA ##########
@@ -144,6 +118,55 @@ shinyServer(function(input, output) {
         tab_source_note("Source: https://www.kaggle.com/nathanlauga/nba-games")
       
     })
+      
+    # NBAModelInteractive made.
+
+      output$NBAModelInteractive <- renderPlot({
+
+        # Make NBA Model Interactive Graph.
+
+        nba_model_data_int <- nba_model_data %>%
+          filter(season %in% input$user_nba_season,
+                 team == input$user_nba_team)
+
+        # Creating NBA interactive model data.
+
+        nba_model_int <- stan_glm(score ~ home,
+                                  data = nba_model_data_int,
+                                  refresh = 0) %>%
+          as_tibble() %>%
+          rename("mu" = "(Intercept)") %>%
+          mutate(predicted_home = mu + home) %>%
+          mutate(mu_median = median(mu)) %>%
+          mutate(predicted_home_median = median(predicted_home)) %>%
+          pivot_longer(cols = c(mu, predicted_home),
+                       names_to = "parameter",
+                       values_to = "values")
+
+        # Creating NBA interactive model graph.
+
+        ggplot(nba_model_int, aes(values)) +
+          geom_histogram(aes(y = after_stat(count/sum(count)),
+                             fill = parameter),
+                         color = "white",
+                         position = "identity",
+                         bins = 100,
+                         alpha = 0.5) +
+          geom_vline(xintercept = nba_model_int$mu_median,
+                     color = "black") +
+          geom_vline(xintercept = nba_model_int$predicted_home_median,
+                     color = "springgreen1") +
+          scale_fill_manual(name = "Home Status",
+                            labels = c("Away", "Home"),
+                            values = c("gray12", "green4")) +
+          labs(title = "Posterior Probability Distribution of Home and Away Scores",
+               x = "Score",
+               y = "Probability")
+
+    # I have elected to have the title text go over the line so as to
+    # preserve the formatting of the title on the Shiny app.
+
+     })
     
 ########## MLB: A DEEPER DIVE ##########
     
@@ -163,5 +186,54 @@ shinyServer(function(input, output) {
                           http://www.seanlahman.com/baseball-archive/statistics/")
      
     })
-    
+   
+      # MLBModelInteractive made.
+      
+      output$MLBModelInteractive <- renderPlot({
+        
+        # Make MLB Model Interactive Graph.
+        
+        mlb_model_data_int <- mlb_model_data %>%
+          filter(season %in% input$user_mlb_season,
+                 team == input$user_mlb_team)
+        
+        # Creating MLB interactive model data.
+        
+        mlb_model_int <- stan_glm(score ~ home + attendance + home * attendance,
+                                  data = mlb_model_data_int,
+                                  refresh = 0) %>%
+          as_tibble() %>%
+          rename("mu" = "(Intercept)") %>%
+          mutate(predicted_home = mu + home) %>%
+          mutate(mu_median = median(mu)) %>%
+          mutate(predicted_home_median = median(predicted_home)) %>%
+          pivot_longer(cols = c(mu, predicted_home),
+                       names_to = "parameter",
+                       values_to = "values")
+        
+        # Creating MLB interactive model graph.
+        
+        ggplot(mlb_model_int, aes(values)) +
+          geom_histogram(aes(y = after_stat(count/sum(count)),
+                             fill = parameter),
+                         color = "white",
+                         position = "identity",
+                         bins = 100,
+                         alpha = 0.5) +
+          geom_vline(xintercept = mlb_model_int$mu_median,
+                     color = "blue") +
+          geom_vline(xintercept = mlb_model_int$predicted_home_median,
+                     color = "red") +
+          scale_fill_manual(name = "Home Status",
+                            labels = c("Away", "Home"),
+                            values = c("navyblue", "red4")) +
+          labs(title = "Posterior Probability Distribution of Home and Away Scores",
+               x = "Score",
+               y = "Probability")
+        
+        # I have elected to have the title text go over the line so as to
+        # preserve the formatting of the title on the Shiny app.
+        
+      })  
+       
 })
