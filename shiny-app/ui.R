@@ -264,7 +264,13 @@ shinyUI(
                      
                  )
                  
-                 )
+                 ),
+                 
+                 p("As you can see, average home scores are higher than average 
+                   away scores for the vast majority of teams across these 
+                   three leagues. In the following tabs, we will take a closer 
+                   look into just how important home field advantage is for each 
+                   league AND for each team!")
              
     ),
              
@@ -335,7 +341,7 @@ tabPanel("NFL",
                              min = 1966,
                              max = 2019,
                              value = c(1966, 2019),
-                             sep = "")
+                             sep = ""),
                  
                  h4("Season Limits"),
                  
@@ -567,63 +573,76 @@ tabPanel("MLB: A Deeper Dive",
 
 tabPanel("About",
          
-         # About Me Section. Text extends beyond the line when it is a long
-         # link.
-         
-         h2("About Me"),
-         p("My name is Alexander Park and I am pursuing an A.B. in Government 
+         fluidPage(
+             
+             fluidRow(column(8,
+                
+                # About Me Section. Text extends beyond the line when it is a long
+                # link.
+                             
+                h2("About Me"),
+                p("My name is Alexander Park and I am pursuing an A.B. in Government 
          with a specialization in Public Policy and a secondary in Economics at 
          Harvard University. I will graduate in the spring of 2023. I am a 
          lifelong Boston sports fan, especially of the Patriots, Red Sox, and 
          Celtics. Besides sports, I have passions for American and Korean 
          politics, U.S. foreign policy, and the processes of and motivations 
-         behind democratization. You can reach me at", 
-           a("apark@college.harvard.edu", href = "mailto:apark@college.harvard.edu"),
-           "."),
-         
-         # Project Motivations Section
-         
-         h2("Project Motivations"),
-         p("This is my final project for GOV 50: Data at Harvard University. As 
+         behind democratization. You can reach me at", a("apark@college.harvard.edu", href = "mailto:apark@college.harvard.edu"),
+        "."),
+        
+        # Project Motivations Section
+        
+        h2("Project Motivations"),
+        p("This is my final project for GOV 50: Data at Harvard University. As 
          a Boston sports fan, I am used to having home field advantage in the 
          playoffs. Therefore, I wanted to use data analysis to determine 
          quantitatively how much home field advantage actually matters in my 
          three favorite leagues: the NFL, NBA, and MLB. In finding all of this 
          out, I hope to contribute to the sports-watching experience for fans 
          around the country and the world."),
-         
-         # Data Section. Text extends beyond the line when it is a long link.
-         
-         h2("The Data"),
-         
-         h3("NFL Data"),
-         p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
-         user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")),
-         
-         h3("NBA Data"),
-         p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle
-         user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")),
-         
-         h3("MLB Data"),
-         p("I obtained MLB scores from the 1947 season onwards from", 
-           a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")),
-         
-         p("I obtained MLB attendance data from the 1947 season onwards from",
-           a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")),
-         
-         h3("GitHub"),
-         p("Here is the link to this project's", a("GitHub repository.", 
-                                                   href = "https://github.com/alexanderkpark/home-field-advantage")),
-         
-         # Acknowledgements Section.
-         
-         h2("Acknowledgements"),
-         p("I am grateful for the guidance that", strong("Wyatt Hurt"), "and",
-           strong("Tyler Simko"), "have given me throughout this semester. 
+        
+        # Acknowledgements Section.
+        
+        h2("Acknowledgements"),
+        p("I am grateful for the guidance that", strong("Wyatt Hurt"), "and",
+          strong("Tyler Simko"), "have given me throughout this semester. 
          Without their instruction and advice, I would not have been able to 
          develop this project and start my journey in the field of data 
          science.")
-         
+                             
+             ),
+             
+             column(4,
+            
+            # Data Section. Text extends beyond the line when it is a long link.
+            
+            h2("The Data"),
+            
+            h3("NFL Data"),
+            p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
+         user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")),
+            
+            h3("NBA Data"),
+            p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle
+         user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")),
+            
+            h3("MLB Data"),
+            p("I obtained MLB scores from the 1947 season onwards from", 
+              a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")),
+            
+            p("I obtained MLB attendance data from the 1947 season onwards from",
+              a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")),
+            
+            h3("GitHub"),
+            p("Here is the link to this project's", a("GitHub repository.", 
+                                                      href = "https://github.com/alexanderkpark/home-field-advantage"))
+            
+             )
+             
+             )
+        
+        )
+        
 )
 
 ))
