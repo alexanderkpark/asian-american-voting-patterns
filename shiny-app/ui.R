@@ -390,7 +390,9 @@ tabPanel("NFL",
         
          ),
         
-        h5("What is a Posterior Probability Distribution?"),
+        # Explaining the interactive graph.
+        
+        h4("What is a Posterior Probability Distribution?"),
         
         p("Above, you see a", strong("posterior probability distribution"), "of 
         predicted home and away scores for your selected team and season range. 
@@ -400,7 +402,7 @@ tabPanel("NFL",
         expectations."), "In this case, the ouput is Score, and the expectations 
         are based on the home or away statuse of a game."),
         
-        h5("Posterior Probability Distribution Explanation"),
+        h4("Posterior Probability Distribution Explanation"),
         
         p("This posterior probability distribution was made using a linear 
           regression model where", strong("Score"), "is the output and",
@@ -421,10 +423,12 @@ tabPanel("NFL",
         
         tableOutput("NFLModelTable"),
         
+        # Discussing the model.
+        
         h4("Discussion of the Model"),
         
         p("This model of the NFL takes", strong("home"), "as the predictor of 
-          the output", strong("score"), "home is an indicator of whether a 
+          the output", strong("score."), "home is an indicator of whether a 
           game was played at home or away, with home = 1 indicating that the 
           game was played at home. The output score is the predicted amount of 
           points a team would score."),
@@ -452,7 +456,9 @@ tabPanel("NFL",
         consistent with", a("this article", href = "https://www.lineups.com/articles/how-important-is-home-field-advantage-in-the-nfl/#Debunking-the-Myths-of-HomeField-Advantage"),
         "and", a("this article.", href = "https://www.espn.com/chalk/story/_/id/29831703/will-2020-nfl-season-see-death-home-field-advantage"), 
         "In fact, Las Vegas has traditionally seen NFL home field advantage as 
-        worth 3 points to the spread when determining odds for games.")
+        worth 3 points to the spread when determining odds for games. This 
+        model shows that there has been a small but significant home field 
+        advantage in the NFL from the 1966 season to the 2019 season.")
         
 ),
 
@@ -535,11 +541,71 @@ tabPanel("NBA",
 
          ),
          
+         # Explaining the interactive graph.
+         
+         h4("Posterior Probability Distribution Explanation"),
+         
+         p("This posterior probability distribution* was made using a linear 
+          regression model where", strong("Score"), "is the output and",
+           strong("Home"), "is the sole predictor. Score is the predicted score 
+          of a team, while Home is whether the game is home or away. Score is on 
+          the x-axis while Probability – i.e., the chance that the given score 
+          would occure – is on the y-axis. The green distribution is the 
+          distribution of predicted home scores of a team during the selected 
+          range of seasons, while the gray distribution is the distribution of 
+          predicted away scores for a team during the selected range of seasons. 
+          The green line shows the median of the predicted home scores over the 
+          range of seasons, while the gray line shows the median of predicted 
+          away scores over the range of seasons."),
+         
+         p("*If you need a refresher on what a posterior probability 
+           distribution is, please refer to the NFL tab."),
+         
          # NBA Model Table.
          
          h3("NBA Model as a League from the 2003 Season to March 2020"),
-         tableOutput("NBAModelTable")
          
+         tableOutput("NBAModelTable"),
+         
+         # Discussing the model.
+         
+         h4("Discussion of the Model"),
+         
+         p("This model of the NBA takes", strong("home"), "as the predictor of 
+          the output", strong("score."), "home is an indicator of whether a 
+          game was played at home or away, with home = 1 indicating that the 
+          game was played at home. The output score is the predicted amount of 
+          points a team would score."),
+         
+         p("This table shows the Beta value and confidence intervals for the 
+        Intercept and home. The Beta value for the Intercept is equal to the 
+          median of the posterior distribution for score when a team plays away 
+          from home – i.e., when home = 0.", 
+           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
+          an average NBA team that played sometime between the 2003 season and March 
+          2020 would score if they played an away game."),
+           "The Beta value for home is equal to the median of the posterior 
+          distribution for the average change in score when a team plays at home
+          – i.e., when home = 1.",
+           em("What this means is that the prediction for the amount of points an 
+          average NBA team that played sometime between the 2003 season and March 2020 
+          would score if they played at home is roughly equal to the Beta for 
+          the Intercept PLUS the Beta for home."),
+           "The confidence intervals tell us that we can be 95% sure that the 
+          true values for a team's score away from home and for the change in 
+          score if the team played at home falls in the range of the confidence 
+          interval bounds for Intercept and home respectively"),
+         
+         p("Of the big American sports leagues, the NBA is thought to have the 
+         greatest home field – or home court – advantage. According to",
+           a("this article,", href = "https://bleacherreport.com/articles/2905080-the-truth-about-nba-home-court-advantage"),
+         "home teams in the NBA win 56 to 58% of all games in a given season, 
+         and a whopping 65% of all playoff games since 1984. My model does not 
+         invalidate these statements for the period between the 2003 season and 
+         March 2020, but it is certainly interesting that the predicted 
+         difference in points scored for a team at home versus a team away from 
+         home is only about 3 points.")
+    
 ),
 
 ########## MLB: A DEEPER DIVE ##########
