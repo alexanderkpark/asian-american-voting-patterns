@@ -1,5 +1,7 @@
 ########## PREP ##########
 
+# Load all necessary libraries.
+
 library(shiny)
 library(shinythemes)
 library(tidyverse)
@@ -10,107 +12,75 @@ library(gtsummary)
 library(broom.mixed)
 library(rstanarm)
 
-# Define UI for application that draws a histogram
+# Define UI for my application here.
+
 shinyUI(
+    
     navbarPage(
     
 # Here, I am setting the theme for my Shiny App.
+        
         theme = shinytheme("flatly"),
     
 #Here, I am setting the title of my Shiny App.
+
         "Home Field Advantage in the NFL, MLB, and NBA",
     
 ########## INTRODUCTION ##########
 
-    # Introduction Tab setup
+        # Introduction Tab setup
 
-    tabPanel("Introduction",
-             
-             fluidPage(
-
-                 fluidRow(column(8,
+        tabPanel("Introduction",
+            
+            # Generate a 2x2 layout.
                  
-                                 # Background Section. Text extends beyond the
-                                 # line when it is a long link.
+            fluidPage(
+
+                 fluidRow(
+                     
+                     column(8, 
+                        
+                        # Background Section.
                                  
-                                 h2("What is Home Field Advantage? And Why Does 
-                                    It Matter, Anyway?"),
-                                 p(strong("Home field advantage"), "is the 
-                                 supposed benefit that a team enjoys when they 
-                                 play in their home stadium as opposed to when 
-                                 they go and play in other venues as visitors. 
-                                 This benefit is attributed to a variety of 
-                                 factors, including fans and referee bias. The 
-                                 concept of home field advantage has been taken 
-                                   as a maxim for years by players, coaches, 
-                                   management, and fans alike. In fact, home 
-                                   field advantage is so ingrained in sports 
-                                   culture that virtually all American sports 
-                                   leagues – from high school tournaments all 
-                                   the way up to Big Four – award home field 
-                                   privileges throughout the playoffs to the 
-                                   top seeded team from the regular season. 
-                                   Recently, though, there are growing murmurs 
-                                   in the sports world that", 
-                                   a("home field advantage is not what it used 
-                                     to be.", href = "https://www.nytimes.com/2020/01/10/sports/football/road-team-advantage.html"),
-                                   "So,", strong("does home field advantage 
-                                                 actually matter?")),
+                        h2("What is Home Field Advantage? 
+                           And Why Does It Matter, Anyway?"),
+                        
+                        p(
+                        strong("Home field advantage"), "is the supposed benefit that a team enjoys when they play in their home stadium as opposed to when they go and play in other venues as visitors. 
+                        This benefit is attributed to a variety of factors, including fans and referee bias. 
+                        The concept of home field advantage has been taken as a maxim for years by players, coaches, management, and fans alike. 
+                        In fact, home field advantage is so ingrained in sports culture that virtually all American sports leagues – from high school tournaments all the way up to Big Four – award home field privileges throughout the playoffs to the top seeded team from the regular season. 
+                        Recently, though, there are growing murmurs in the sports world that", a("home field advantage is not what it used to be.", href = "https://www.nytimes.com/2020/01/10/sports/football/road-team-advantage.html"),
+                        "So,", strong("does home field advantage actually matter?")
+                         ),
                                  
+                        # Motivations Section.
                                  
-                                 # Motivations Section. Text extends beyond the
-                                 # line when it is a long link.
+                        h2("The Purpose of this Project"),
+                        
+                        p(
+                        "The purpose of this project is to explore whether home field advantage actually matters – and more. 
+                        If home field advantage does matter, how many more points can teams in the NFL, NBA, and MLB expect to get when playing  at home as opposed to when they play as visitors? 
+                        How has home field advantage in these three leagues changed over time? 
+                        This project will endeavor to provide answers to these questions by analyzing data on home vs. away scores of teams in all three leagues throughout the years."
+                        ),
                                  
-                                 h2("The Purpose of this Project"),
-                                 p("The purpose of this project is to explore 
-                                 whether home field advantage actually matters 
-                                   – and more. If home field advantage does 
-                                   matter, how many more points can teams in the 
-                                   NFL, NBA, and MLB expect to get when playing 
-                                   at home as opposed to when they play as 
-                                   visitors? How has home field advantage in 
-                                   these three leagues changed over time? This 
-                                   project will endeavor to provide answers to 
-                                   these questions by analyzing data on home vs.
-                                   away scores of teams in all three leagues 
-                                   throughout the years."),
+                        p(
+                        "All of the questions posed above have become more relevant in the wake of the COVID-19 pandemic, as American sports leagues have been forced to put on games with little to no fan presence in the stadiums. 
+                        Not only have these COVID regulations erased the opportunity for sports fans to go see the teams they love, but they have also", a("diminished the sports watching experience on TV as well.", href = "https://www.nytimes.com/2020/05/20/sports/coronavirus-sports-fans.html"),
+                        "Moreover, athletes have claimed that they", a("depend on the energy of fans during their games,", href = "https://apnews.com/article/523715605c0353939e563cd57f604284"), 
+                        "meaning the lack of fans in stadiums could impact athletic performance on the field as well. 
+                        Recognizing the impact of COVID-19,", strong("this project will use data up to the last games in each of the three leagues that were not impacted by COVID regulations.")
+                        ), 
                                  
-                                 p("All of the questions posed above have become 
-                                   more relevant in the wake of the COVID-19 
-                                   pandemic, as American sports leagues have 
-                                   been forced to put on games with little to 
-                                   no fan presence in the stadiums. Not only 
-                                   have these COVID regulations erased the 
-                                   opportunity for sports fans to go see the 
-                                   teams they love, but they have also", 
-                                   a("diminished the sports watching experience 
-                                     on TV as well.", href = "https://www.nytimes.com/2020/05/20/sports/coronavirus-sports-fans.html"),
-                                   "Moreover, athletes have claimed that they", 
-                                   a("depend on the energy of fans during their 
-                                     games,", href = "https://apnews.com/article/523715605c0353939e563cd57f604284"), 
-                                   "meaning the lack of fans in stadiums could 
-                                   impact athletic performance on the field as 
-                                   well. Recognizing the impact of COVID-19,", 
-                                   strong("this project will use data up to the 
-                                          last games in each of the three 
-                                          leagues that were not impacted by 
-                                          COVID regulations.")), 
-                                 
-                                 p(em("PSA: COVID-19 is an extremely deadly 
-                                      disease which has killed almost 1.5 
-                                      million people worldwide (as of December 
-                                      2, 2020) and has impacted the lives of 
-                                      countless others. Fighting the virus is 
-                                      infinitely more important than any fan 
-                                      experience at a sports game. Follow COVID 
-                                      regulations wherever they are present to 
-                                      do your part in ensuring that fans around 
-                                      the world can return to stadiums to 
-                                      support their teams soon."))
-                                 
-                                 ),
+                        p(
+                        em("PSA: COVID-19 is an extremely deadly disease which has killed almost 1.5 million people worldwide (as of December 2, 2020) and has impacted the lives of countless others. 
+                        Fighting the virus is infinitely more important than any fan experience at a sports game. Follow COVID regulations wherever they are present to do your part in ensuring that fans around the world can return to stadiums to support their teams soon.")
+                        )
+                        
+                        ),
                           
-                            column(4, align = "center",
+                    column(4, align = "center",
                                    
                         # Render images.
                         
@@ -126,10 +96,12 @@ shinyUI(
                           a("NBA Logo."), href = "https://mediacentral.nba.com/wp-content/uploads/logos/NBA.jpg")
                         
                         )
+                    
+                    ),
                  
-                 ),
+                 fluidRow(
                      
-                fluidRow(column(4, align = "center",
+                     column(4, align = "center",
                                 
                         # Render images.
                         
@@ -144,119 +116,95 @@ shinyUI(
                           a("MLB Logo,", href = "https://en.wikipedia.org/wiki/File:Major_League_Baseball_logo.svg"),
                           a("Fenway Scoreboard."), href = "https://apnews.com/article/a8058fe68efb46bf91aa649f32c5464c")
                         
-                     ),
+                        ),
                      
                      column(8,
-                        
-                            # How to navigate this app section.
                             
-                            h2("How to Navigate this Project"),
+                        # How to navigate this app section.
                             
-                            p("This project is divided into seperate tabs for each
-                        league – NFL, NBA, and MLB. Each tab contains 
-                        an interactive visualization where you will be able to 
-                          choose a team and a range of seasons to view 
-                          predictions for home and away scores for that team in 
-                          those seasons. At the bottom, each tab also contains a 
-                          table of values representing the results of models 
-                          that were developed using data from the leagues. Each 
-                          model produces predictions for the entire league 
-                          across all of the seasons I have data for."),
+                        h2("How to Navigate this Project"),
                             
-                            p("Confused? Never fear! I have provided detailed 
-                          analysis and reasoning for all of my models, and I 
-                          will thoroughly discuss the meaning and significance 
-                          of my outputs."),
+                        p(
+                        "This project is divided into seperate tabs for each league – NFL, NBA, and MLB. 
+                        Each tab contains an interactive visualization where you will be able to choose a team and a range of seasons to view predictions for home and away scores for that team in those seasons. 
+                        At the bottom, each tab also contains a table of values representing the results of models that were developed using data from the leagues. 
+                        Each model produces predictions for the entire league across all of the seasons I have data for."
+                        ),
                             
-                            # Disclaimers section.
+                        p(
+                        "Confused? 
+                        Never fear! 
+                        I have provided detailed analysis and reasoning for all of my models, and I will thoroughly discuss the meaning and significance of my outputs."
+                        ),
                             
-                            h2("Disclaimers"),
+                        # Disclaimers section.
                             
-                            h4("Score as Model Output"),
+                        h2("Disclaimers"),
                             
-                            p("For the purposes of this project, I use", 
-                              strong("the amount of points/runs a team would score – 
-                          referred to in my models as \"score\" as the output of
-                          my models."), "This means that I will", em("mostly"), 
-                              "be predicting the potential benefits of home field 
-                          advantage towards", strong("offensive output.")),
+                        h4("Score as Model Output"),
                             
-                            p("This disclaimer is important to understand, as",
-                              em("the amount of points a team scores does NOT 
-                          strongly take into account the defensive performance of 
-                          a team."), "This statement is least true for the NFL, 
-                          where there are direct defensive opportunities to 
-                          score, i.e., off of an intercepted pass or a fumble. 
-                          For the NBA, where the delineation between a defensive
-                          and offensive possession of the ball is very fluid, 
-                          the score may also provide a small amount of insight 
-                          for the defensive performance for a team, in that the 
-                          more defensive rebounds and steals a team gets, the 
-                          more chances they will have to score on a fast break. 
-                          In both the NFL and NBA, time is limited in games, so 
-                          good defense may also lead to greater time possessing 
-                          the ball, which in turn can oftentimes lead to higher 
-                          scores."),
+                        p(
+                        "For the purposes of this project, I use", strong("the amount of points/runs a team would score – referred to in my models as \"score\" – as the output of my models."), 
+                        "This means that I will", em("mostly"), "be predicting the potential benefits of home field advantage towards", strong("offensive output.")
+                        ),
                             
-                            p("For the MLB, however,", em("the number of runs a team
-                         scores only provides as to how the team performed 
-                         offensively."), "How many runs scored provides no 
-                          information as to how the pitchers pitched or how the 
-                          defense played. When viewing the MLB models, it is 
-                          therefore", em("very important you keep this 
-                        disclaimer regarding score as the output in mind!")),
+                        p(
+                        "This disclaimer is important to understand, as", em("the amount of points a team scores does NOT strongly take into account the defensive performance of a team."), 
+                        "This statement is least true for the NFL, where there are direct defensive opportunities to score, i.e., off of an intercepted pass or a fumble. 
+                        For the NBA, where the delineation between a defensive and offensive possession of the ball is very fluid, the score may also provide a small amount of insight for the defensive performance for a team, in that the more defensive rebounds and steals a team gets, the more chances they will have to score on a fast break. 
+                        In both the NFL and NBA, time is limited in games, so good defense may also lead to greater time possessing the ball, which in turn can oftentimes lead to higher scores."
+                        ),
                             
-                            h4("Team Names and Continuity"),
+                        p(
+                        "For the MLB, however,", em("the number of runs a team scores only provides insight as to how the team performed offensively."), 
+                        "How many runs scored provides no information as to how the pitchers pitched or how the defense played. 
+                        When viewing the MLB models, it is therefore", em("very important you keep this disclaimer regarding score as the output in mind!")
+                        ),
                             
-                            p("For the purposes of this project, I only use 
-                              modern team names. This also means that",
-                              em("ALL data from defunct teams have been assigned
-                                 to successor teams."), "For example, data for 
-                              the Boston Braves has been assigned to the Atlanta 
-                              Braves, as the Braves moved from Boston to 
-                              Milwaukee in 1953 and then to Atlanta in 1966."),
+                        h4("Team Names and Continuity"),
                             
-                            h4("Range of Data"),
+                        p(
+                        "For the purposes of this project, I only use modern team names. 
+                        This also means that", em("ALL data from defunct teams have been assigned to successor teams."), 
+                        "For example, data for the Boston Braves has been assigned to the Atlanta Braves, as the Braves moved from Boston to Milwaukee in 1953 and then to Atlanta in 1966."
+                        ),
                             
-                            p("This project draws on data from the NFL, NBA, and 
-                        MLB. However, the amount of data I was able to find for 
-                        each league differed. For the NFL, I have data starting 
-                        from the 1966 season. For the NBA, I have data starting 
-                        from the 2003 season. And for the MLB, I have data for 
-                        the entire history of the league. However, I have 
-                        chosen to limit my analysis of the MLB to games from 
-                        the 1947 season-onwards, as this was the season when 
-                        racial integration was achieved in the league. Finally, 
-                        as mentioned earlier, this project will not deal with 
-                        data from games impacted by COVID regulations.")
+                        h4("Range of Data"),
                             
+                        p("This project draws on data from the NFL, NBA, and MLB. 
+                        However, the amount of data I was able to find for  each league differed. 
+                        For the NFL, I have data starting from the 1966 season. 
+                        For the NBA, I have data starting from the 2003 season. 
+                        And for the MLB, I have data for the entire history of the league. 
+                        However, I have chosen to limit my analysis of the MLB to games from the 1947 season-onwards, as this was the season when racial integration was achieved in the league, so therefore can be considered the beginning of the modern MLB. 
+                        Finally, as mentioned earlier, this project will not deal with data from games impacted by COVID regulations."
+                        )
                             
-                     )
+                        ),
                      
                      )
                  
                  ),
              
+            # Introducing the interactive average score graph. 
+            
+             h2("Average Scores Home and Away for Teams in the NFL, NBA, and MLB Over the Years"),
              
-             h2("Average Scores Home and Away for Teams in the NFL, NBA, 
-                        and MLB Over the Years"),
+             p(
+             "As you can see, average home scores are higher than average  away scores for the vast majority of teams across these three leagues. 
+             In the following tabs, we will take a closer look into just how important home field advantage is for each league AND for each team!"),
              
-             p("As you can see, average home scores are higher than average 
-                   away scores for the vast majority of teams across these 
-                   three leagues. In the following tabs, we will take a closer 
-                   look into just how important home field advantage is for each 
-                   league AND for each team!"),
-             
-             # Creating sidebar for NFL interactive model inputs.
+             # Creating sidebar for interactive model input.
              
              sidebarLayout( 
                  
                  sidebarPanel(
+                     
                      h3("Choose League"),
                      
-                     p("Choose a league from the dropdown menu to view the 
-                       average home and away scores for every team in that 
-                       league over the years."),
+                     p(
+                     "Choose a league from the dropdown menu to view the average home and away scores for every team in that league over the years."
+                     ),
                      
                      # Specifying inputs for interactive model. You can choose
                      # home or away to see average scores across the season
@@ -270,16 +218,15 @@ shinyUI(
                                  selected = "NFL"),
                      
                      p(strong("MLB"), 
-                     "data from 1947 season (racial integration) to 2019 
-                       season (pre-COVID)."),
+                     "data from 1947 season (racial integration) to 2019 season (pre-COVID)."),
                      
                      p(strong("NBA"),
-                       "data from 2003 season to March 2020 (pre-Covid)."),
+                       "data from 2003 season to March 2020 (pre-COVID)."),
                      
                      p(strong("NFL"),
                        "NFL data from 1966 season to 2019 season (pre-COVID).")
                      
-                 ),
+                    ),
                  
                  mainPanel(
                      
@@ -287,7 +234,7 @@ shinyUI(
                      
                      plotOutput("AvgScoreInteractive")
                      
-                 )
+                    )
                  
                  )
 
@@ -298,10 +245,9 @@ shinyUI(
 
 # NFL Tab setup.
 
-tabPanel("NFL",
+    tabPanel("NFL",
              
-         h2("Model of Linear Regression for the NFL with Score as Output and 
-         Home as Predictor"),
+         h2("Model of Linear Regression for the NFL with Score as Output and Home as Predictor"),
          
          # Creating sidebar for interactive model inputs.
          
@@ -311,9 +257,9 @@ tabPanel("NFL",
                  
                  h3("NFL Dashboard"),
                  
-                 p("Choose a team and a range of seasons to view a posterior 
-                   distribution of predicted home scores and predicted away 
-                   scores."),
+                 p(
+                 "Choose a team and a range of seasons to view a posterior distribution of predicted home scores and predicted away scores."
+                 ),
                  
                  # Specifying inputs for interactive model. You can choose a
                  # team and a range of seasons to display a posterior
@@ -364,60 +310,58 @@ tabPanel("NFL",
                  
                  h4("Season Limits"),
                  
-                 p("Many teams were founded after the 1966 season. For these 
-                  teams, inputting seasons before their founding will result in 
-                  an innacurate visualization.", em("Please do NOT input 
-                seasons that occurred before teams' foundings!"), "Here is a 
-                list of teams that were founded after the 1966 season and their 
-                  founding years:"),
+                 p(
+                 "Many teams were founded after the 1966 season. 
+                 For these teams, inputting seasons before their founding will result in an innacurate visualization.", 
+                 em("Please do NOT input seasons that occurred before teams' foundings!"), 
+                 "Here is a list of teams that were founded after the 1966 season and their founding years:"),
                  
-                 p(strong("Baltimore Ravens (1996), Carolina Panthers (1995),
-                 Cincinnati Bengals (1968), Houston Texans (2002), Jacksonville 
-                 Jaguars (1995), new Orleans Saints (1967), Seattle Seahawks 
-                 (1976), Tampa Bay Buccaneers (1976)"))
+                 p(
+                 strong("Baltimore Ravens (1996), 
+                 Carolina Panthers (1995),
+                 Cincinnati Bengals (1968), 
+                 Houston Texans (2002), 
+                 Jacksonville 
+                 Jaguars (1995), 
+                 New Orleans Saints (1967), 
+                 Seattle Seahawks (1976), 
+                 Tampa Bay Buccaneers (1976)")
+                 )
                  
-             ),
+                ),
          
         mainPanel(
             
-         # Displaying NFL Interactive Graph.
+            # Displaying NFL Interactive Graph.
          
-        h3("NFL Predicted Home and Away Scores"),
+            h3("NFL Predicted Home and Away Scores"),
         
-         plotOutput("NFLModelInteractive")
+            plotOutput("NFLModelInteractive")
          
-        )
+                )
         
-         ),
+            ),
         
         # Explaining the interactive graph.
         
         h4("What is a Posterior Probability Distribution?"),
         
-        p("Above, you see a", strong("posterior probability distribution"), "of 
-        predicted home and away scores for your selected team and season range. 
-        A posterior probability distribution is a", em("probability distribution 
-        – a distribution that covers a set of outcomes, with each outcome having 
-        a chance of occuring between 0 and 1 – of an output based on beliefs and
-        expectations."), "In this case, the ouput is Score, and the expectations 
-        are based on the home or away statuse of a game."),
+        p("Above, you see a", strong("posterior probability distribution"), "of predicted home and away scores for your selected team and season range. 
+        A posterior probability distribution is a", em("probability distribution– a distribution that covers a set of outcomes, with each outcome having a chance of occuring between 0 and 1 – of an output based on beliefs and expectations."), 
+        "In this case, the ouput is Score, and the expectations are based on the home or away status of a game."
+        ),
         
         h4("Posterior Probability Distribution Explanation"),
         
-        p("This posterior probability distribution was made using a linear 
-          regression model where", strong("Score"), "is the output and",
-          strong("Home"), "is the sole predictor. Score is the predicted score 
-          of a team, while Home is whether the game is home or away. Score is on 
-          the x-axis while Probability – i.e., the chance that the given score 
-          would occure – is on the y-axis. The blue distribution is the 
-          distribution of predicted home scores of a team during the selected 
-          range of seasons, while the red distribution is the distribution of 
-          predicted away scores for a team during the selected range of seasons. 
-          The blue line shows the median of the predicted home scores over the 
-          range of seasons, while the red line shows the median of predicted 
-          away scores over the range of seasons."),
+        p(
+        "This posterior probability distribution was made using a linear regression model where", strong("Score"), "is the output and", strong("Home"), "is the sole predictor. 
+        Score is the predicted score of a team, while Home is whether the game is home or away. 
+        Score is on the x-axis while Probability – i.e., the chance that the given score would occur – is on the y-axis. 
+        The blue distribution is the distribution of predicted home scores of a team during the selected range of seasons, while the red distribution is the distribution of predicted away scores for a team during the selected range of seasons. 
+        The blue line shows the median of the predicted home scores over the range of seasons, while the red line shows the median of predicted away scores over the range of seasons."
+        ),
         
-         # Displaying NFL Model Table.
+        # Displaying NFL Model Table.
              
         h3("NFL Model as a League from the 1966 Season to the 2019 Season"),
         
@@ -435,22 +379,23 @@ tabPanel("NFL",
         
         p("This table shows the Beta value and confidence intervals for the 
         Intercept and home. The Beta value for the Intercept is equal to the 
-          median of the posterior distribution for score when a team plays away 
+          median of the posterior distribution for the average predicted score when a team plays away 
           from home – i.e., when home = 0.", 
           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
-          an average NFL team that played sometime between the 1966 and 2019 
-          season would score if they played an away game."),
+          an average NFL team will score if they play an away game."),
           "The Beta value for home is equal to the median of the posterior 
           distribution for the average change in score when a team plays at home
           – i.e., when home = 1.",
           em("What this means is that the prediction for the amount of points an 
-          average NFL team that played sometime between the 1966 and 2019 season 
-          would score if they played at home is roughly equal to the Beta for 
+          average NFL team will score if they play at home is roughly equal to the Beta for 
           the Intercept PLUS the Beta for home."),
+          strong("According to my model, the average NFL team can expect to 
+                  score around 3 more points at home than if they played away 
+                  from home."),
           "The confidence intervals tell us that we can be 95% sure that the 
           true values for a team's score away from home and for the change in 
-          score if the team played at home falls in the range of the confidence 
-          interval bounds for Intercept and home respectively"),
+          score if the team played at home falls in the range of the respective
+          interval bounds for Intercept and home."),
         
         p("The Beta for home that is displayed is just under 3, which is 
         consistent with", a("this article", href = "https://www.lineups.com/articles/how-important-is-home-field-advantage-in-the-nfl/#Debunking-the-Myths-of-HomeField-Advantage"),
@@ -466,7 +411,7 @@ tabPanel("NFL",
 
 # NBA Tab setup.
 
-tabPanel("NBA",
+    tabPanel("NBA",
          
          h2("Linear Regression for the NBA with Score as Output and Home as 
             Predictor"),
@@ -550,7 +495,7 @@ tabPanel("NBA",
            strong("Home"), "is the sole predictor. Score is the predicted score 
           of a team, while Home is whether the game is home or away. Score is on 
           the x-axis while Probability – i.e., the chance that the given score 
-          would occure – is on the y-axis. The green distribution is the 
+          would occur – is on the y-axis. The green distribution is the 
           distribution of predicted home scores of a team during the selected 
           range of seasons, while the gray distribution is the distribution of 
           predicted away scores for a team during the selected range of seasons. 
@@ -579,22 +524,23 @@ tabPanel("NBA",
          
          p("This table shows the Beta value and confidence intervals for the 
         Intercept and home. The Beta value for the Intercept is equal to the 
-          median of the posterior distribution for score when a team plays away 
+          median of the posterior distribution for the average predicted score when a team plays away 
           from home – i.e., when home = 0.", 
            em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
-          an average NBA team that played sometime between the 2003 season and March 
-          2020 would score if they played an away game."),
+          an average NBA team will score if they play an away game."),
            "The Beta value for home is equal to the median of the posterior 
           distribution for the average change in score when a team plays at home
           – i.e., when home = 1.",
            em("What this means is that the prediction for the amount of points an 
-          average NBA team that played sometime between the 2003 season and March 2020 
-          would score if they played at home is roughly equal to the Beta for 
+          average NBA team will score if they play at home is roughly equal to the Beta for 
           the Intercept PLUS the Beta for home."),
+           strong("According to my model, the average NBA team can expect to 
+                  score around 3 more points at home than if they played away 
+                  from home."),
            "The confidence intervals tell us that we can be 95% sure that the 
           true values for a team's score away from home and for the change in 
-          score if the team played at home falls in the range of the confidence 
-          interval bounds for Intercept and home respectively"),
+          score if the team played at home falls in the range of the respective
+          interval bounds for Intercept and home."),
          
          p("Of the big American sports leagues, the NBA is thought to have the 
          greatest home field – or home court – advantage. According to",
@@ -612,7 +558,7 @@ tabPanel("NBA",
 
 # MLB Tab setup.
 
-tabPanel("MLB: A Deeper Dive",
+    tabPanel("MLB: A Deeper Dive",
          
          h2("Linear Regression for the MLB with Score as Output and Home, 
              Attendance, and their Interaction as Predictors"),
@@ -699,16 +645,153 @@ tabPanel("MLB: A Deeper Dive",
                  # Displaying MLB Interactive Graph.
                  
                  h3("MLB Predicted Home and Away Scores"),
+                 
                  plotOutput("MLBModelInteractive")
                  
              )
              
          ),
          
+         # Explaining the interactive graph.
+         
+         h4("Posterior Probability Distribution Explanation"),
+         
+         p("This posterior probability distribution* was made using a linear 
+          regression model where", strong("Score"), "is the output and",
+           strong("Home,"), strong("Attendance**,"), "and the", strong("Interaction between Home and Attendance"), "are predictors.", 
+           em("This is a more intricate model than the models for the NFL and 
+           NBA."), "Score is the predicted score 
+          of a team. Home is whether the game is home or away – in this case, controlling for attendance. Attendance the 
+          average home attendance the home team enjoyed over the selected 
+          range of seasons divided by 1000. The Interaction between Home and Attendance is the 
+          predictor that takes into account the interaction between Home and Attendance, i.e., the effect of home attendance. Score is on 
+          the x-axis while Probability – i.e., the chance that the given score 
+          would occur – is on the y-axis. The blue distribution is the 
+          distribution of predicted away scores of a team during the selected 
+          range of seasons, not taking into account attendance. The purple distribution is the distribution of predicted home scores, not taking into account home attendance. The orange distribution is the distribution of 
+          predicted away scores for a team during the selected range of seasons, taking into account 1000 more people in attendance. The red distribution is the distribution of predicted home scores, taking into account 1000 more people in attendance.
+          The blue line shows the median of the predicted away scores over the 
+          range of seasons, not taking into account attendance. The purple line shows the median of predicted 
+          home scores over the range of seasons, not taking into account attendance. The orange line shows the median of predicted away scores over the range of seasons, taking into account attendance. Finally, the red line shows the median of predicted home scores, taking into account the interaction between home and attendance, i.e., the effect of home attendance."),
+         
+         p("*If you need a refresher on what a posterior probability 
+           distribution is, please refer to the NFL tab."),
+         
+         p("**The attendance predictor is the average home attendance divided  for a team 
+           over the entire season rather than individual attendance figures per 
+           game because it is difficult to build a model using per-game 
+           attendance figures. The attendance predictor is divided by 1000 so we 
+           can see the effect of 1000 more fans on score rather than 1 more fan, 
+           which would be miniscule."),
+         
          # MLB Complex Model Table
          
          h3("MLB Model as a League from the 1947 Season to the 2019 Season"),
-         tableOutput("MLBComplexModelTable")
+         
+         tableOutput("MLBComplexModelTable"),
+         
+         h4("Discussion of the Model"),
+         
+         p("This model of the MLB is a step up from the NFL and NBA models, as 
+         it takes into account three predictors to produce the output", strong("score."),
+         "These predictors are as follows:", strong("home"), "is whether or not a 
+          game is played at home or away, with home = 1 indicating that the 
+          game is played at home.", strong("attendance"), "is the additional number of fans in 
+         attendance of a game, with attendance = 1 meaning there were 1000 fans.",
+         strong("home * attendance,"), "or the interaction between the home and 
+         attendance predictors is meant to account for the effect of a home crowd. 
+         The interaction predictor is only taken into account when both home = 1 
+         and attendance = 1, i.e., there are 1000 home fans.",
+         em("The purpose of these additional predictors is to see how attendance,
+         especially home attendance, can impact score, and whether or not 
+         playing at home by itself has any effect on the score output.")),
+         
+         p("This table shows the Beta value and confidence intervals for the 
+        Intercept, home, attendance, and the interaction between home and 
+        attendance. The Beta value of the Intercept is the median of the posterior 
+        distribution for average predicted score for an MLB team when 
+           home = 0 and attendance = 0 – the team is playing away from home, 
+           and there is no fan attendance.", 
+           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of runs 
+          an average MLB team will score if they played an away game without any fans."),
+           "The Beta value of home is the median of the posterior distribution 
+           for the average change in score for an MLB team when home = 1.",
+           em("This means that whenever the average MLB team plays at home, they 
+              tend to experience the average change in score of the Beta value 
+              of home from the Intercept value."),
+           "The Beta value of attendance is the median of the posterior distribution 
+           for the average change in score for an MLB team when
+           attendance = 1 – when there are 1000 more fans.",
+           em("This means that every time 1000 more fans are in the stadium, MLB 
+           teams tend to experience an average change in score of the Beta value 
+           for attendance from the Intercept value."),
+           "Finally, the Beta value of home:attendance is the median of the 
+           posterior distribution for the average change in score based on the 
+           interaction between the home and attendance predictors – i.e., the 
+           effect of 1000 more home fans.",
+           em("This means that, for a given home game with 1000 fans, the 
+           average MLB team will tend to score a number of runs equal to the sum
+           of the Beta values for the Intercept, home, attendance, and 
+              home:attendance. Adding all of the Beta values together allows for 
+              you to take into account the effects of the home and attendance 
+              predictors as well as the interaction between them.")),
+         
+         p("This table shows the Beta value and confidence intervals for the 
+        Intercept and home. The Beta value for the Intercept is equal to the 
+          median of the posterior distribution for score when a team plays away 
+          from home – i.e., when home = 0.", 
+           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
+          an average NBA team that played sometime between the 2003 season and March 
+          2020 would score if they played an away game."),
+           "The Beta value for home is equal to the median of the posterior 
+          distribution for the average change in score when a team plays at home
+          – i.e., when home = 1.",
+           em("What this means is that the prediction for the amount of points an 
+          average NBA team that played sometime between the 2003 season and March 2020 
+          would score if they played at home is roughly equal to the Beta for 
+          the Intercept PLUS the Beta for home."),
+           "The confidence intervals tell us that we can be 95% sure that the 
+          true values for the Betas for Intercept, home, attendance, and 
+           home:attendance will exist within their respective displayed bounds."),
+         
+         p("The MLB has always been known as the league in which home field 
+         advantage", a("matters the least.", href = "https://www.mlb.com/news/home-field-advantage-has-disappeared-in-2020"),
+           "My model seems to confirm that home field advantage matters very little. 
+           Without taking into account attendance, my model shows that playing a 
+           home game is actually detrimental overall to the number of runs a team 
+           can expect to score. This goes against conventional wisdom, as", 
+           a("teams are generally thought to have an advantage at home", href = "https://www.baseball-reference.com/bullpen/Home_field_advantage"), 
+           "due to knowing the ballpark better and being afforded the opportunity 
+           to hit in the bottom of the inning. However, the negative effect that 
+           home seems to have is very small – less than 1/2 of a run. This would 
+           suggest that", 
+           strong("playing at home in and of itself does not matter in the MLB."), 
+           "Rather, other covariates must matter when determining the MLB's 
+           small home field advantage."),
+         
+         p("One of those covariates could be attendance. A closer look at my model 
+           shows that teams benefit from games with higher attendance, and 
+           especially benefit from home games with higher attendance. The Beta 
+           values for attendance and the interaction between home and attendance 
+           are the increase in the predicted number of runs per 1000 fans. As the 
+           average attendance across all MLB regular season games has", 
+           a("hovered around 28 to 30 thousand in recent years,", href = "https://www.statista.com/statistics/235634/average-attendance-per-game-in-the-mlb--regular-season/#:~:text=MLB%20average%20per%20game%20attendance%202009%2D2019&text=In%20the%202019%20season%2C%20the,Major%20League%20Baseball%20was%2028%2C317."),
+           "you can see how these Beta values can add up to make a small 
+           difference in predicted number of runs a team would score."),
+         
+         p("For example, the average home attendance for the LA Dodgers in 2019, the league 
+         leaders in that category for the year,",
+           a("was 49,065.", href = "http://www.espn.com/mlb/attendance/_/year/2019"),
+           "According to my model, the Dodgers could have expected to score about 1 more run when they 
+         played at home on an average night as opposed to an away game where they 
+         had (for simplification's sake) no fans. This is a small run difference, 
+         but I argue that this is not insignificant. After all, one run in baseball 
+         is relatively hard to come by. Therefore, while I did not have the data 
+         for the NFl and NBA to construct a model which took into account home 
+         attendance at games, judging from the MLB model, I believe it is safe to 
+           assume that greater home attendence would result in greater home scores
+           in the NFL and NBA, especially as home field advantage is thought to 
+           matter much more in these two leagues.")
          
 ),
 
@@ -716,7 +799,7 @@ tabPanel("MLB: A Deeper Dive",
 
 # About Tab setup. 
 
-tabPanel("About",
+    tabPanel("About",
          
          fluidPage(
              
@@ -726,68 +809,74 @@ tabPanel("About",
                 # link.
                              
                 h2("About Me"),
-                p("My name is Alexander Park and I am pursuing an A.B. in Government 
-         with a specialization in Public Policy and a secondary in Economics at 
-         Harvard University. I will graduate in the spring of 2023. I am a 
-         lifelong Boston sports fan, especially of the Patriots, Red Sox, and 
-         Celtics. Besides sports, I have passions for American and Korean 
-         politics, U.S. foreign policy, and the processes of and motivations 
-         behind democratization. You can reach me at", a("apark@college.harvard.edu", href = "mailto:apark@college.harvard.edu"),
-        "."),
+                
+                p(
+                "My name is Alexander Park and I am pursuing an A.B. in Government with a specialization in Public Policy and a secondary in Economics at Harvard University. 
+                I will graduate in the spring of 2023. 
+                I am a lifelong Boston sports fan, especially of the Patriots, Red Sox, and Celtics. 
+                Besides sports, I have passions for American and Korean politics, U.S. foreign policy, and the processes of and motivations behind democratization. 
+                You can reach me at", a("apark@college.harvard.edu.", href = "mailto:apark@college.harvard.edu")
+                ),
         
-        # Project Motivations Section
+                # Project Motivations Section
         
-        h2("Project Motivations"),
-        p("This is my final project for GOV 50: Data at Harvard University. As 
-         a Boston sports fan, I am used to having home field advantage in the 
-         playoffs. Therefore, I wanted to use data analysis to determine 
-         quantitatively how much home field advantage actually matters in my 
-         three favorite leagues: the NFL, NBA, and MLB. In finding all of this 
-         out, I hope to contribute to the sports-watching experience for fans 
-         around the country and the world."),
+                h2("Project Motivations"),
+                
+                p(
+                "This is my final project for GOV 50: Data at Harvard University. 
+                As a Boston sports fan, I am used to having home field advantage in the playoffs. 
+                Therefore, I wanted to use data analysis to determine quantitatively how much home field advantage actually matters in my three favorite leagues: the NFL, NBA, and MLB. 
+                In finding all of this out, I hope to contribute to the sports-watching experience for fans around the country and the world."
+                ),
         
-        # Acknowledgements Section.
+                # Acknowledgments Section.
         
-        h2("Acknowledgements"),
-        p("I am grateful for the guidance that", strong("Wyatt Hurt"), "and",
-          strong("Tyler Simko"), "have given me throughout this semester. 
-         Without their instruction and advice, I would not have been able to 
-         develop this project and start my journey in the field of data 
-         science.")
+                h2("Acknowledgments"),
+                
+                p(
+                "I am grateful for the guidance that", strong("Wyatt Hurt"), "and",strong("Tyler Simko"), "have given me throughout this semester.
+                Without their instruction and advice, I would not have been able to develop this project and start my journey in the field of data science."
+                )
                              
              ),
              
              column(4,
             
-            # Data Section. Text extends beyond the line when it is a long link.
+                # Data Section. Specify where my data is from.
             
-            h2("The Data"),
+                h2("The Data"),
             
-            h3("NFL Data"),
-            p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle 
-         user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")),
+                h3("NFL Data"),
+                
+                p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
+                ),
             
-            h3("NBA Data"),
-            p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle
-         user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")),
+                h3("NBA Data"),
+                
+                p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")
+                ),
             
-            h3("MLB Data"),
-            p("I obtained MLB scores from the 1947 season onwards from", 
-              a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")),
+                h3("MLB Data"),
+                
+                p("I obtained MLB scores from the 1947 season onwards from", a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")
+                ),
             
-            p("I obtained MLB attendance data from the 1947 season onwards from",
-              a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")),
+                p("I obtained MLB attendance data from the 1947 season onwards from", a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")
+                ),
             
-            h3("GitHub"),
-            p("Here is the link to this project's", a("GitHub repository.", 
-                                                      href = "https://github.com/alexanderkpark/home-field-advantage"))
+                h3("GitHub"),
+                
+                p("Here is the link to this project's", a("GitHub repository.", href = "https://github.com/alexanderkpark/home-field-advantage")
+                )
             
-             )
+                )
              
-             )
+            )
         
         )
         
-)
+    )
 
-))
+    )
+
+)
