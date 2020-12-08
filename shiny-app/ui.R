@@ -184,7 +184,7 @@ shinyUI(
                         Finally, as mentioned earlier, this project will not deal with data from games impacted by COVID regulations."
                         )
                             
-                        ),
+                        )
                      
                      )
                  
@@ -595,10 +595,12 @@ shinyUI(
                 
                 h4("Season Limits"),
                 
-                p("Many teams were founded after the 1947 season. 
+                p(
+                "Many teams were founded after the 1947 season. 
                 For these teams, inputting seasons before their founding will result in  an innacurate visualization.", 
                 em("Please do NOT input seasons that occurred before teams' foundings!"), 
-                "Here is a list of teams that were founded after the 1947 season and their founding years:"),
+                "Here is a list of teams that were founded after the 1947 season and their founding years:"
+                ),
                 
                 p(
                 strong("Arizona Diamondbacks (1998), 
@@ -691,7 +693,7 @@ shinyUI(
          "Finally, the Beta value of home:attendance is the median of the posterior distribution for the average change in score based on the interaction between the home and attendance predictors – i.e., the effect of 1000 more home fans.", 
          em("This means that, for a given home game with 1000 fans, the average MLB team will tend to score a number of runs equal to the sum of the Beta values for the Intercept, home, attendance, and home:attendance. 
             Adding all of the Beta values together allows for you to take into account the effects of the home and attendance predictors as well as the interaction between them."),
-         "Finally, the confidence intervals tell us that we can be 95% sure that the true values for the Betas for Intercept, home, attendance, and home:attendance will exist within their respective displayed bounds."),
+         "Finally, the confidence intervals tell us that we can be 95% sure that the true values for the Betas for Intercept, home, attendance, and home:attendance will exist within their respective displayed bounds."
          ),
 
          
@@ -776,25 +778,30 @@ shinyUI(
             
                 h3("NFL Data"),
                 
-                p("I obtained NFL scores from the 1966 season onwards from", a("Kaggle user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
+                p(
+                "I obtained NFL scores from the 1966 season onwards from", a("Kaggle user spreadspoke.", href = "https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data")
                 ),
             
                 h3("NBA Data"),
                 
-                p("I obtained NBA scores from the 2004 season onwards from", a("Kaggle user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")
+                p(
+                "I obtained NBA scores from the 2004 season onwards from", a("Kaggle user Nathan Lauga.", href = "https://www.kaggle.com/nathanlauga/nba-games")
                 ),
             
                 h3("MLB Data"),
                 
-                p("I obtained MLB scores from the 1947 season onwards from", a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")
+                p(
+                "I obtained MLB scores from the 1947 season onwards from", a("FiveThirtyEight's mlb-elo data set.", href = "https://data.fivethirtyeight.com/")
                 ),
             
-                p("I obtained MLB attendance data from the 1947 season onwards from", a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")
+                p(
+                "I obtained MLB attendance data from the 1947 season onwards from", a("Sean Lahman's Baseball Database.", href = "http://www.seanlahman.com/baseball-archive/statistics/")
                 ),
             
                 h3("GitHub"),
                 
-                p("Here is the link to this project's", a("GitHub repository.", href = "https://github.com/alexanderkpark/home-field-advantage")
+                p(
+                "Here is the link to this project's", a("GitHub repository.", href = "https://github.com/alexanderkpark/home-field-advantage")
                 )
             
                 )
@@ -805,6 +812,6 @@ shinyUI(
         
     )
 
-    )
+)
 
 )
