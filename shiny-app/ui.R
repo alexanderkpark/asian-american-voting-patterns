@@ -337,6 +337,20 @@ tabPanel("NFL",
                              value = c(1966, 2019),
                              sep = "")
                  
+                 h4("Season Limits"),
+                 
+                 p("Many teams were founded after the 1966 season. For these 
+                  teams, inputting seasons before their founding will result in 
+                  an innacurate visualization.", em("Please do NOT input 
+                seasons that occurred before teams' foundings!"), "Here is a 
+                list of teams that were founded after the 1966 season and their 
+                  founding years:"),
+                 
+                 p(strong("Baltimore Ravens (1996), Carolina Panthers (1995),
+                 Cincinnati Bengals (1968), Houston Texans (2002), Jacksonville 
+                 Jaguars (1995), new Orleans Saints (1967), Seattle Seahawks 
+                 (1976), Tampa Bay Buccaneers (1976)"))
+                 
              ),
          
         mainPanel(
@@ -521,11 +535,11 @@ tabPanel("MLB: A Deeper Dive",
                   founding years:"),
                 
                 p(strong("Arizona Diamondbacks (1998), Colorado Rockies (1993), 
-                Kansas City Royals (1969), Los Angeles Angels (1961), Miami 
-                Marlins (1993), Milwaukee Brewers (1969), New York Mets (1962), 
-                San Diego Padres (1969), Seattle Mariners (1977), Tampa Bay Rays 
-                (1998), Texas Rangers (1961), Toronto Blue Jays (1977), 
-                Washington Nationals (1969)"))
+                Houston Astros (1962), Kansas City Royals (1969), Los Angeles 
+                Angels (1961), Miami Marlins (1993), Milwaukee Brewers (1969), 
+                New York Mets (1962), San Diego Padres (1969), Seattle Mariners 
+                (1977), Tampa Bay Rays  (1998), Texas Rangers (1961), Toronto 
+                Blue Jays (1977), Washington Nationals (1969)"))
                  
              ),
              
