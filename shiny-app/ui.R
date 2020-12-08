@@ -187,6 +187,16 @@ shinyUI(
                           therefore", em("very important you keep this 
                         disclaimer regarding score as the output in mind!")),
                             
+                            h4("Team Names and Continuity"),
+                            
+                            p("For the purposes of this project, I only use 
+                              modern team names. This also means that",
+                              em("ALL data from defunct teams have been assigned
+                                 to successor teams."), "For example, data for 
+                              the Boston Braves has been assigned to the Atlanta 
+                              Braves, as the Braves moved from Boston to 
+                              Milwaukee in 1953 and then to Atlanta in 1966."),
+                            
                             h4("Range of Data"),
                             
                             p("This project draws on data from the NFL, NBA, and 
@@ -497,7 +507,25 @@ tabPanel("MLB: A Deeper Dive",
                              min = 1947,
                              max = 2019,
                              value = c(1947, 2020),
-                             sep = "")
+                             sep = ""),
+                 
+                # Disclaimer for clubs founded later than 1947.
+                
+                h4("Season Limits"),
+                
+                p("Many teams were founded after the 1947 season. For these 
+                  teams, inputting seasons before their founding will result in 
+                  an innacurate visualization.", em("Please do NOT input 
+                seasons that occurred before teams' foundings!"), "Here is a 
+                list of teams that were founded after the 1947 season and their 
+                  founding years:"),
+                
+                p(strong("Arizona Diamondbacks (1998), Colorado Rockies (1993), 
+                Kansas City Royals (1969), Los Angeles Angels (1961), Miami 
+                Marlins (1993), Milwaukee Brewers (1969), New York Mets (1962), 
+                San Diego Padres (1969), Seattle Mariners (1977), Tampa Bay Rays 
+                (1998), Texas Rangers (1961), Toronto Blue Jays (1977), 
+                Washington Nationals (1969)"))
                  
              ),
              

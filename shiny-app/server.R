@@ -191,23 +191,30 @@ shinyServer(function(input, output) {
       
       output$MLBModelInteractive <- renderPlot({
         
-        # Make MLB Model Interactive Graph.
-        
         mlb_model_data_int <- mlb_model_data %>%
           filter(season %in% input$user_mlb_season,
                  team == input$user_mlb_team)
-        
-        # Creating MLB interactive model data.
         
         mlb_model_int <- stan_glm(score ~ home + attendance + home * attendance,
                                   data = mlb_model_data_int,
                                   refresh = 0) %>%
           as_tibble() %>%
-          rename("mu" = "(Intercept)") %>%
+          rename("mu" = "(Intercept)",
+                 "interaction" = "home:attendance") %>%
           mutate(predicted_home = mu + home) %>%
+          mutate(predicted_attendance = mu + attendance) %>%
+          mutate(predicted_interaction = mu + interaction) %>%
           mutate(mu_median = median(mu)) %>%
-          mutate(predicted_home_median = median(predicted_home)) %>%
-          pivot_longer(cols = c(mu, predicted_home),
+          mutate(predicted_home_median = 
+                   median(predicted_home)) %>%
+          mutate(predicted_attendance_median = 
+                   median(predicted_attendance)) %>%
+          mutate(predicted_interaction_median = 
+                   median(predicted_interaction)) %>%
+          pivot_longer(cols = c(mu, 
+                                predicted_home, 
+                                predicted_attendance, 
+                                predicted_interaction),
                        names_to = "parameter",
                        values_to = "values")
         
@@ -219,14 +226,24 @@ shinyServer(function(input, output) {
                          color = "white",
                          position = "identity",
                          bins = 100,
-                         alpha = 0.5) +
+                         alpha = 0.25) +
           geom_vline(xintercept = mlb_model_int$mu_median,
                      color = "blue") +
           geom_vline(xintercept = mlb_model_int$predicted_home_median,
+                     color = "purple") +
+          geom_vline(xintercept = mlb_model_int$predicted_attendance_median,
+                     color = "orange") +
+          geom_vline(xintercept = mlb_model_int$predicted_interaction_median,
                      color = "red") +
-          scale_fill_manual(name = "Home Status",
-                            labels = c("Away", "Home"),
-                            values = c("navyblue", "red4")) +
+          scale_fill_manual(name = "Parameter",
+                            labels = c("Away",
+                                       "+1000 in Attendance",
+                                       "Home",
+                                       "Interaction b/w Home and Attendance"),
+                            values = c("navyblue",
+                                       "darkorange1",
+                                       "purple2",
+                                       "red4")) +
           labs(title = "Posterior Probability Distribution of Home and Away Scores",
                x = "Score",
                y = "Probability")
