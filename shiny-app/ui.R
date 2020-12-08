@@ -383,16 +383,76 @@ tabPanel("NFL",
          # Displaying NFL Interactive Graph.
          
         h3("NFL Predicted Home and Away Scores"),
+        
          plotOutput("NFLModelInteractive")
          
         )
         
          ),
         
+        h5("What is a Posterior Probability Distribution?"),
+        
+        p("Above, you see a", strong("posterior probability distribution"), "of 
+        predicted home and away scores for your selected team and season range. 
+        A posterior probability distribution is a", em("probability distribution 
+        – a distribution that covers a set of outcomes, with each outcome having 
+        a chance of occuring between 0 and 1 – of an output based on beliefs and
+        expectations."), "In this case, the ouput is Score, and the expectations 
+        are based on the home or away statuse of a game."),
+        
+        h5("Posterior Probability Distribution Explanation"),
+        
+        p("This posterior probability distribution was made using a linear 
+          regression model where", strong("Score"), "is the output and",
+          strong("Home"), "is the sole predictor. Score is the predicted score 
+          of a team, while Home is whether the game is home or away. Score is on 
+          the x-axis while Probability – i.e., the chance that the given score 
+          would occure – is on the y-axis. The blue distribution is the 
+          distribution of predicted home scores of a team during the selected 
+          range of seasons, while the red distribution is the distribution of 
+          predicted away scores for a team during the selected range of seasons. 
+          The blue line shows the median of the predicted home scores over the 
+          range of seasons, while the red line shows the median of predicted 
+          away scores over the range of seasons."),
+        
          # Displaying NFL Model Table.
              
         h3("NFL Model as a League from the 1966 Season to the 2019 Season"),
-        tableOutput("NFLModelTable")
+        
+        tableOutput("NFLModelTable"),
+        
+        h4("Discussion of the Model"),
+        
+        p("This model of the NFL takes", strong("home"), "as the predictor of 
+          the output", strong("score"), "home is an indicator of whether a 
+          game was played at home or away, with home = 1 indicating that the 
+          game was played at home. The output score is the predicted amount of 
+          points a team would score."),
+        
+        p("This table shows the Beta value and confidence intervals for the 
+        Intercept and home. The Beta value for the Intercept is equal to the 
+          median of the posterior distribution for score when a team plays away 
+          from home – i.e., when home = 0.", 
+          em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
+          an average NFL team that played sometime between the 1966 and 2019 
+          season would score if they played an away game."),
+          "The Beta value for home is equal to the median of the posterior 
+          distribution for the average change in score when a team plays at home
+          – i.e., when home = 1.",
+          em("What this means is that the prediction for the amount of points an 
+          average NFL team that played sometime between the 1966 and 2019 season 
+          would score if they played at home is roughly equal to the Beta for 
+          the Intercept PLUS the Beta for home."),
+          "The confidence intervals tell us that we can be 95% sure that the 
+          true values for a team's score away from home and for the change in 
+          score if the team played at home falls in the range of the confidence 
+          interval bounds for Intercept and home respectively"),
+        
+        p("The Beta for home that is displayed is just under 3, which is 
+        consistent with", a("this article", href = "https://www.lineups.com/articles/how-important-is-home-field-advantage-in-the-nfl/#Debunking-the-Myths-of-HomeField-Advantage"),
+        "and", a("this article.", href = "https://www.espn.com/chalk/story/_/id/29831703/will-2020-nfl-season-see-death-home-field-advantage"), 
+        "In fact, Las Vegas has traditionally seen NFL home field advantage as 
+        worth 3 points to the spread when determining odds for games.")
         
 ),
 
