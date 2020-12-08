@@ -45,6 +45,10 @@ shinyUI(
                         h2("What is Home Field Advantage? 
                            And Why Does It Matter, Anyway?"),
                         
+                        # Throughout my app, I stick to the "one line, one
+                        # sentence" policy for any text I write. I make sure to
+                        # keep code from spilling over the line.
+                        
                         p(
                         strong("Home field advantage"), "is the supposed benefit that a team enjoys when they play in their home stadium as opposed to when they go and play in other venues as visitors. 
                         This benefit is attributed to a variety of factors, including fans and referee bias. 
@@ -308,6 +312,8 @@ shinyUI(
                              value = c(1966, 2019),
                              sep = ""),
                  
+                 # Disclaimer for the model.
+                 
                  h4("Season Limits"),
                  
                  p(
@@ -371,41 +377,26 @@ shinyUI(
         
         h4("Discussion of the Model"),
         
-        p("This model of the NFL takes", strong("home"), "as the predictor of 
-          the output", strong("score."), "home is an indicator of whether a 
-          game was played at home or away, with home = 1 indicating that the 
-          game was played at home. The output score is the predicted amount of 
-          points a team would score."),
+        p(
+        "This model of the NFL takes", strong("home"), "as the predictor of the output", strong("score."), "home is an indicator of whether a game was played at home or away, with home = 1 indicating that the game was played at home. 
+        The output score is the predicted amount of points a team would score."
+        ),
         
-        p("This table shows the Beta value and confidence intervals for the 
-        Intercept and home. The Beta value for the Intercept is equal to the 
-          median of the posterior distribution for the average predicted score when a team plays away 
-          from home – i.e., when home = 0.", 
-          em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
-          an average NFL team will score if they play an away game."),
-          "The Beta value for home is equal to the median of the posterior 
-          distribution for the average change in score when a team plays at home
-          – i.e., when home = 1.",
-          em("What this means is that the prediction for the amount of points an 
-          average NFL team will score if they play at home is roughly equal to the Beta for 
-          the Intercept PLUS the Beta for home."),
-          strong("According to my model, the average NFL team can expect to 
-                  score around 3 more points at home than if they played away 
-                  from home."),
-          "The confidence intervals tell us that we can be 95% sure that the 
-          true values for a team's score away from home and for the change in 
-          score if the team played at home falls in the range of the respective
-          interval bounds for Intercept and home."),
+        p(
+        "This table shows the Beta value and confidence intervals for the Intercept and home. 
+        The Beta value for the Intercept is equal to the median of the posterior distribution for the average predicted score when a team plays away from home – i.e., when home = 0.", 
+        em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points an average NFL team will score if they play an away game."),
+        "The Beta value for home is equal to the median of the posterior distribution for the average change in score when a team plays at home – i.e., when home = 1.",
+        em("What this means is that the prediction for the amount of points an average NFL team will score if they play at home is roughly equal to the Beta for the Intercept PLUS the Beta for home."),
+        strong("According to my model, the average NFL team can expect to score around 3 more points at home than if they played away from home."),
+        "The confidence intervals tell us that we can be 95% sure that the true values for a team's score away from home and for the change in score if the team played at home falls in the range of the respective interval bounds for Intercept and home."),
         
-        p("The Beta for home that is displayed is just under 3, which is 
-        consistent with", a("this article", href = "https://www.lineups.com/articles/how-important-is-home-field-advantage-in-the-nfl/#Debunking-the-Myths-of-HomeField-Advantage"),
-        "and", a("this article.", href = "https://www.espn.com/chalk/story/_/id/29831703/will-2020-nfl-season-see-death-home-field-advantage"), 
-        "In fact, Las Vegas has traditionally seen NFL home field advantage as 
-        worth 3 points to the spread when determining odds for games. This 
-        model shows that there has been a small but significant home field 
-        advantage in the NFL from the 1966 season to the 2019 season.")
+        p(
+        "The Beta for home that is displayed is just under 3, which is consistent with", a("this article", href = "https://www.lineups.com/articles/how-important-is-home-field-advantage-in-the-nfl/#Debunking-the-Myths-of-HomeField-Advantage"), "and", a("this article.", href = "https://www.espn.com/chalk/story/_/id/29831703/will-2020-nfl-season-see-death-home-field-advantage"), 
+        "In fact, Las Vegas has traditionally seen NFL home field advantage as worth 3 points to the spread when determining odds for games. 
+        This model shows that there has been a small but significant home field advantage in the NFL from the 1966 season to the 2019 season.")
         
-),
+    ),
 
 ########## NBA ##########
 
@@ -413,8 +404,7 @@ shinyUI(
 
     tabPanel("NBA",
          
-         h2("Linear Regression for the NBA with Score as Output and Home as 
-            Predictor"),
+         h2("Linear Regression for the NBA with Score as Output and Home as Predictor"),
          
          # Creating sidebar for interactive model inputs.
 
@@ -424,9 +414,7 @@ shinyUI(
 
                  h3("NBA Dashboard"),
 
-                 p("Choose a team and a range of seasons to view a posterior
-                   distribution of predicted home scores and predicted away
-                   scores."),
+                 p("Choose a team and a range of seasons to view a posterior distribution of predicted home scores and predicted away scores."),
 
                  # Specifying inputs for interactive model. You can choose a
                  # team and a range of seasons to display a posterior
@@ -480,6 +468,7 @@ shinyUI(
                  # Displaying NBA Interactive Graph.
 
                  h3("NBA Predicted Home and Away Scores"),
+                 
                  plotOutput("NBAModelInteractive")
 
              )
@@ -490,23 +479,19 @@ shinyUI(
          
          h4("Posterior Probability Distribution Explanation"),
          
-         p("This posterior probability distribution* was made using a linear 
-          regression model where", strong("Score"), "is the output and",
-           strong("Home"), "is the sole predictor. Score is the predicted score 
-          of a team, while Home is whether the game is home or away. Score is on 
-          the x-axis while Probability – i.e., the chance that the given score 
-          would occur – is on the y-axis. The green distribution is the 
-          distribution of predicted home scores of a team during the selected 
-          range of seasons, while the gray distribution is the distribution of 
-          predicted away scores for a team during the selected range of seasons. 
-          The green line shows the median of the predicted home scores over the 
-          range of seasons, while the gray line shows the median of predicted 
-          away scores over the range of seasons."),
+         p(
+         "This posterior probability distribution* was made using a linear regression model where", strong("Score"), "is the output and", strong("Home"), "is the sole predictor. 
+         Score is the predicted score of a team, while Home is whether the game is home or away. 
+         Score is on the x-axis while Probability – i.e., the chance that the given score would occur – is on the y-axis. 
+         The green distribution is the distribution of predicted home scores of a team during the selected range of seasons, while the gray distribution is the distribution of predicted away scores for a team during the selected range of seasons. 
+         The green line shows the median of the predicted home scores over the range of seasons, while the gray line shows the median of predicted away scores over the range of seasons."
+         ),
          
-         p("*If you need a refresher on what a posterior probability 
-           distribution is, please refer to the NFL tab."),
+         p(
+         "*If you need a refresher on what a posterior probability distribution is, please refer to the NFL tab."
+         ),
          
-         # NBA Model Table.
+         # NBA Model Table rendered.
          
          h3("NBA Model as a League from the 2003 Season to March 2020"),
          
@@ -516,43 +501,31 @@ shinyUI(
          
          h4("Discussion of the Model"),
          
-         p("This model of the NBA takes", strong("home"), "as the predictor of 
+         p(
+         "This model of the NBA takes", strong("home"), "as the predictor of 
           the output", strong("score."), "home is an indicator of whether a 
           game was played at home or away, with home = 1 indicating that the 
           game was played at home. The output score is the predicted amount of 
-          points a team would score."),
+          points a team would score."
+         ),
          
-         p("This table shows the Beta value and confidence intervals for the 
-        Intercept and home. The Beta value for the Intercept is equal to the 
-          median of the posterior distribution for the average predicted score when a team plays away 
-          from home – i.e., when home = 0.", 
-           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
-          an average NBA team will score if they play an away game."),
-           "The Beta value for home is equal to the median of the posterior 
-          distribution for the average change in score when a team plays at home
-          – i.e., when home = 1.",
-           em("What this means is that the prediction for the amount of points an 
-          average NBA team will score if they play at home is roughly equal to the Beta for 
-          the Intercept PLUS the Beta for home."),
-           strong("According to my model, the average NBA team can expect to 
-                  score around 3 more points at home than if they played away 
-                  from home."),
-           "The confidence intervals tell us that we can be 95% sure that the 
-          true values for a team's score away from home and for the change in 
-          score if the team played at home falls in the range of the respective
-          interval bounds for Intercept and home."),
+         p(
+         "This table shows the Beta value and confidence intervals for the Intercept and home. 
+         The Beta value for the Intercept is equal to the median of the posterior distribution for the average predicted score when a team plays away from home – i.e., when home = 0.", 
+         em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points an average NBA team will score if they play an away game."), 
+         "The Beta value for home is equal to the median of the posterior distribution for the average change in score when a team plays at home – i.e., when home = 1.", 
+         em("What this means is that the prediction for the amount of points an average NBA team will score if they play at home is roughly equal to the Beta for the Intercept PLUS the Beta for home."), 
+         strong("According to my model, the average NBA team can expect to score around 3 more points at home than if they played away from home."), 
+         "The confidence intervals tell us that we can be 95% sure that the true values for a team's score away from home and for the change in score if the team played at home falls in the range of the respective interval bounds for Intercept and home."
+         ),
          
-         p("Of the big American sports leagues, the NBA is thought to have the 
-         greatest home field – or home court – advantage. According to",
-           a("this article,", href = "https://bleacherreport.com/articles/2905080-the-truth-about-nba-home-court-advantage"),
-         "home teams in the NBA win 56 to 58% of all games in a given season, 
-         and a whopping 65% of all playoff games since 1984. My model does not 
-         invalidate these statements for the period between the 2003 season and 
-         March 2020, but it is certainly interesting that the predicted 
-         difference in points scored for a team at home versus a team away from 
-         home is only about 3 points.")
+         p(
+         "Of the big American sports leagues, the NBA is thought to have the greatest home field – or home court – advantage. 
+         According to", a("this article,", href = "https://bleacherreport.com/articles/2905080-the-truth-about-nba-home-court-advantage"), "home teams in the NBA win 56 to 58% of all games in a given season, and a whopping 65% of all playoff games since 1984. 
+         My model does not contradict these statements for the period between the 2003 season and March 2020, but it is certainly interesting that the predicted difference in points scored for a team at home versus a team away from home is only about 3 points."
+         )
     
-),
+    ),
 
 ########## MLB: A DEEPER DIVE ##########
 
@@ -571,9 +544,7 @@ shinyUI(
                  
                  h3("MLB Dashboard"),
                  
-                 p("Choose a team and a range of seasons to view a posterior
-                   distribution of predicted home scores and predicted away
-                   scores."),
+                 p("Choose a team and a range of seasons to view a posterior distribution of predicted home scores and predicted away scores."),
                  
                  # Specifying inputs for interactive model. You can choose a
                  # team and a range of seasons to display a posterior
@@ -624,19 +595,28 @@ shinyUI(
                 
                 h4("Season Limits"),
                 
-                p("Many teams were founded after the 1947 season. For these 
-                  teams, inputting seasons before their founding will result in 
-                  an innacurate visualization.", em("Please do NOT input 
-                seasons that occurred before teams' foundings!"), "Here is a 
-                list of teams that were founded after the 1947 season and their 
-                  founding years:"),
+                p("Many teams were founded after the 1947 season. 
+                For these teams, inputting seasons before their founding will result in  an innacurate visualization.", 
+                em("Please do NOT input seasons that occurred before teams' foundings!"), 
+                "Here is a list of teams that were founded after the 1947 season and their founding years:"),
                 
-                p(strong("Arizona Diamondbacks (1998), Colorado Rockies (1993), 
-                Houston Astros (1962), Kansas City Royals (1969), Los Angeles 
-                Angels (1961), Miami Marlins (1993), Milwaukee Brewers (1969), 
-                New York Mets (1962), San Diego Padres (1969), Seattle Mariners 
-                (1977), Tampa Bay Rays  (1998), Texas Rangers (1961), Toronto 
-                Blue Jays (1977), Washington Nationals (1969)"))
+                p(
+                strong("Arizona Diamondbacks (1998), 
+                Colorado Rockies (1993), 
+                Houston Astros (1962), 
+                Kansas City Royals (1969), 
+                Los Angeles Angels (1961), 
+                Miami Marlins (1993), 
+                Milwaukee Brewers (1969), 
+                New York Mets (1962), 
+                San Diego Padres (1969), 
+                Seattle Mariners (1977), 
+                Tampa Bay Rays  (1998), 
+                Texas Rangers (1961), 
+                Toronto Blue Jays (1977), 
+                Washington Nationals (1969)")
+                
+                )
                  
              ),
              
@@ -656,33 +636,31 @@ shinyUI(
          
          h4("Posterior Probability Distribution Explanation"),
          
-         p("This posterior probability distribution* was made using a linear 
-          regression model where", strong("Score"), "is the output and",
-           strong("Home,"), strong("Attendance**,"), "and the", strong("Interaction between Home and Attendance"), "are predictors.", 
-           em("This is a more intricate model than the models for the NFL and 
-           NBA."), "Score is the predicted score 
-          of a team. Home is whether the game is home or away – in this case, controlling for attendance. Attendance the 
-          average home attendance the home team enjoyed over the selected 
-          range of seasons divided by 1000. The Interaction between Home and Attendance is the 
-          predictor that takes into account the interaction between Home and Attendance, i.e., the effect of home attendance. Score is on 
-          the x-axis while Probability – i.e., the chance that the given score 
-          would occur – is on the y-axis. The blue distribution is the 
-          distribution of predicted away scores of a team during the selected 
-          range of seasons, not taking into account attendance. The purple distribution is the distribution of predicted home scores, not taking into account home attendance. The orange distribution is the distribution of 
-          predicted away scores for a team during the selected range of seasons, taking into account 1000 more people in attendance. The red distribution is the distribution of predicted home scores, taking into account 1000 more people in attendance.
-          The blue line shows the median of the predicted away scores over the 
-          range of seasons, not taking into account attendance. The purple line shows the median of predicted 
-          home scores over the range of seasons, not taking into account attendance. The orange line shows the median of predicted away scores over the range of seasons, taking into account attendance. Finally, the red line shows the median of predicted home scores, taking into account the interaction between home and attendance, i.e., the effect of home attendance."),
+         p(
+         "This posterior probability distribution* was made using a linear regression model where", strong("Score"), "is the output and", strong("Home,"), strong("Attendance**,"), "and the", strong("Interaction between Home and Attendance"), "are predictors.", 
+         em("This is a more intricate model than the models for the NFL and NBA."), 
+         "Score is the predicted score of a team. 
+         Home is whether the game is home or away – in this case, controlling for attendance. 
+         Attendance is the average home attendance the home team enjoyed over the selected range of seasons divided by 1000. 
+         The Interaction between Home and Attendance is the predictor that takes into account the interaction between Home and Attendance, i.e., the effect of home attendance. 
+         Score is on the x-axis while Probability – i.e., the chance that the given score would occur – is on the y-axis. 
+         The blue distribution is the distribution of predicted away scores of a team during the selected range of seasons, not taking into account attendance. 
+         The purple distribution is the distribution of predicted home scores, not taking into account home attendance. 
+         The orange distribution is the distribution of predicted away scores for a team during the selected range of seasons, taking into account 1000 more people in attendance. 
+         The red distribution is the distribution of predicted home scores, taking into account 1000 more people in attendance. 
+         The blue line shows the median of the predicted away scores over the range of seasons, not taking into account attendance. 
+         The purple line shows the median of predicted home scores over the range of seasons, not taking into account attendance. 
+         The orange line shows the median of predicted away scores over the range of seasons, taking into account attendance. Finally, the red line shows the median of predicted home scores, taking into account the interaction between home and attendance, i.e., the effect of home attendance."
+         ),
          
-         p("*If you need a refresher on what a posterior probability 
-           distribution is, please refer to the NFL tab."),
+         p(
+         "*If you need a refresher on what a posterior probability distribution is, please refer to the NFL tab."
+         ),
          
-         p("**The attendance predictor is the average home attendance divided  for a team 
-           over the entire season rather than individual attendance figures per 
-           game because it is difficult to build a model using per-game 
-           attendance figures. The attendance predictor is divided by 1000 so we 
-           can see the effect of 1000 more fans on score rather than 1 more fan, 
-           which would be miniscule."),
+         p(
+         "**The attendance predictor is the average home attendance divided  for a team over the entire season rather than individual attendance figures per game because it is difficult to build a model using per-game attendance figures. 
+         The attendance predictor is divided by 1000 so we can see the effect of 1000 more fans on score rather than 1 more fan, which would be miniscule."
+         ),
          
          # MLB Complex Model Table
          
@@ -692,108 +670,58 @@ shinyUI(
          
          h4("Discussion of the Model"),
          
-         p("This model of the MLB is a step up from the NFL and NBA models, as 
-         it takes into account three predictors to produce the output", strong("score."),
-         "These predictors are as follows:", strong("home"), "is whether or not a 
-          game is played at home or away, with home = 1 indicating that the 
-          game is played at home.", strong("attendance"), "is the additional number of fans in 
-         attendance of a game, with attendance = 1 meaning there were 1000 fans.",
-         strong("home * attendance,"), "or the interaction between the home and 
-         attendance predictors is meant to account for the effect of a home crowd. 
-         The interaction predictor is only taken into account when both home = 1 
-         and attendance = 1, i.e., there are 1000 home fans.",
-         em("The purpose of these additional predictors is to see how attendance,
-         especially home attendance, can impact score, and whether or not 
-         playing at home by itself has any effect on the score output.")),
+         p(
+         "This model of the MLB is a step up from the NFL and NBA models, as it takes into account three predictors to produce the output", strong("score."),
+         "These predictors are as follows:", 
+         strong("home"), "is whether or not a game is played at home or away, with home = 1 indicating that the game is played at home.", 
+         strong("attendance"), "is the additional number of fans in attendance of a game, with attendance = 1 meaning there were 1000 fans.",
+         strong("home * attendance,"), "or the interaction between the home and attendance predictors is meant to account for the effect of a home crowd. 
+         The interaction predictor is only taken into account when both home = 1 and attendance = 1, i.e., there are 1000 home fans.",
+         em("The purpose of these additional predictors is to see how attendance, especially home attendance, can impact score, and whether or not playing at home by itself has any effect on the score output.")
+         ),
          
-         p("This table shows the Beta value and confidence intervals for the 
-        Intercept, home, attendance, and the interaction between home and 
-        attendance. The Beta value of the Intercept is the median of the posterior 
-        distribution for average predicted score for an MLB team when 
-           home = 0 and attendance = 0 – the team is playing away from home, 
-           and there is no fan attendance.", 
-           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of runs 
-          an average MLB team will score if they played an away game without any fans."),
-           "The Beta value of home is the median of the posterior distribution 
-           for the average change in score for an MLB team when home = 1.",
-           em("This means that whenever the average MLB team plays at home, they 
-              tend to experience the average change in score of the Beta value 
-              of home from the Intercept value."),
-           "The Beta value of attendance is the median of the posterior distribution 
-           for the average change in score for an MLB team when
-           attendance = 1 – when there are 1000 more fans.",
-           em("This means that every time 1000 more fans are in the stadium, MLB 
-           teams tend to experience an average change in score of the Beta value 
-           for attendance from the Intercept value."),
-           "Finally, the Beta value of home:attendance is the median of the 
-           posterior distribution for the average change in score based on the 
-           interaction between the home and attendance predictors – i.e., the 
-           effect of 1000 more home fans.",
-           em("This means that, for a given home game with 1000 fans, the 
-           average MLB team will tend to score a number of runs equal to the sum
-           of the Beta values for the Intercept, home, attendance, and 
-              home:attendance. Adding all of the Beta values together allows for 
-              you to take into account the effects of the home and attendance 
-              predictors as well as the interaction between them.")),
+         p(
+         "This table shows the Beta value and confidence intervals for the Intercept, home, attendance, and the interaction between home and attendance. 
+         The Beta value of the Intercept is the median of the posterior distribution for average predicted score for an MLB team when home = 0 and attendance = 0 – the team is playing away from home, and there is no fan attendance.", 
+         em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of runs an average MLB team will score if they played an away game without any fans."), 
+         "The Beta value of home is the median of the posterior distribution for the average change in score for an MLB team when home = 1.", 
+         em("This means that whenever the average MLB team plays at home, they tend to experience the average change in score of the Beta value of home from the Intercept value."), 
+         "The Beta value of attendance is the median of the posterior distribution for the average change in score for an MLB team when attendance = 1 – when there are 1000 more fans.", 
+         em("This means that every time 1000 more fans are in the stadium, MLB teams tend to experience an average change in score of the Beta value for attendance from the Intercept value."),
+         "Finally, the Beta value of home:attendance is the median of the posterior distribution for the average change in score based on the interaction between the home and attendance predictors – i.e., the effect of 1000 more home fans.", 
+         em("This means that, for a given home game with 1000 fans, the average MLB team will tend to score a number of runs equal to the sum of the Beta values for the Intercept, home, attendance, and home:attendance. 
+            Adding all of the Beta values together allows for you to take into account the effects of the home and attendance predictors as well as the interaction between them."),
+         "Finally, the confidence intervals tell us that we can be 95% sure that the true values for the Betas for Intercept, home, attendance, and home:attendance will exist within their respective displayed bounds."),
+         ),
+
          
-         p("This table shows the Beta value and confidence intervals for the 
-        Intercept and home. The Beta value for the Intercept is equal to the 
-          median of the posterior distribution for score when a team plays away 
-          from home – i.e., when home = 0.", 
-           em("What this means is that the Beta for Intercept is roughly equal to the prediction for the amount of points 
-          an average NBA team that played sometime between the 2003 season and March 
-          2020 would score if they played an away game."),
-           "The Beta value for home is equal to the median of the posterior 
-          distribution for the average change in score when a team plays at home
-          – i.e., when home = 1.",
-           em("What this means is that the prediction for the amount of points an 
-          average NBA team that played sometime between the 2003 season and March 2020 
-          would score if they played at home is roughly equal to the Beta for 
-          the Intercept PLUS the Beta for home."),
-           "The confidence intervals tell us that we can be 95% sure that the 
-          true values for the Betas for Intercept, home, attendance, and 
-           home:attendance will exist within their respective displayed bounds."),
+         p(
+         "The MLB has always been known as the league in which home field advantage", a("matters the least.", href = "https://www.mlb.com/news/home-field-advantage-has-disappeared-in-2020"),
+         "My model seems to confirm that home field advantage matters very little. 
+         Without taking into account attendance, my model shows that playing a home game is actually detrimental overall to the number of runs a team can expect to score. 
+         This goes against conventional wisdom, as", a("teams are generally thought to have an advantage at home", href = "https://www.baseball-reference.com/bullpen/Home_field_advantage"), "due to knowing the ballpark better and being afforded the opportunity to hit in the bottom of the inning. 
+         However, the negative effect that home seems to have is very small – less than 1/2 of a run. 
+         This would suggest that", strong("playing at home in and of itself does not matter much in the MLB."), 
+         "Rather, other covariates must also matter when determining the MLB's small home field advantage."
+         ),
          
-         p("The MLB has always been known as the league in which home field 
-         advantage", a("matters the least.", href = "https://www.mlb.com/news/home-field-advantage-has-disappeared-in-2020"),
-           "My model seems to confirm that home field advantage matters very little. 
-           Without taking into account attendance, my model shows that playing a 
-           home game is actually detrimental overall to the number of runs a team 
-           can expect to score. This goes against conventional wisdom, as", 
-           a("teams are generally thought to have an advantage at home", href = "https://www.baseball-reference.com/bullpen/Home_field_advantage"), 
-           "due to knowing the ballpark better and being afforded the opportunity 
-           to hit in the bottom of the inning. However, the negative effect that 
-           home seems to have is very small – less than 1/2 of a run. This would 
-           suggest that", 
-           strong("playing at home in and of itself does not matter in the MLB."), 
-           "Rather, other covariates must matter when determining the MLB's 
-           small home field advantage."),
+         p(
+         "One of those covariates could be attendance. 
+         A closer look at my model hows that teams benefit from games with higher attendance, and especially benefit from home games with higher attendance. 
+         The Beta values for attendance and the interaction between home and attendance are the increase in the predicted number of runs per 1000 fans. 
+         As the average attendance across all MLB regular season games has", a("hovered around 28 to 30 thousand in recent years,", href = "https://www.statista.com/statistics/235634/average-attendance-per-game-in-the-mlb--regular-season/#:~:text=MLB%20average%20per%20game%20attendance%202009%2D2019&text=In%20the%202019%20season%2C%20the,Major%20League%20Baseball%20was%2028%2C317."),
+         "you can see how these Beta values can add up to make a small difference in predicted number of runs a team would score."
+         ),
          
-         p("One of those covariates could be attendance. A closer look at my model 
-           shows that teams benefit from games with higher attendance, and 
-           especially benefit from home games with higher attendance. The Beta 
-           values for attendance and the interaction between home and attendance 
-           are the increase in the predicted number of runs per 1000 fans. As the 
-           average attendance across all MLB regular season games has", 
-           a("hovered around 28 to 30 thousand in recent years,", href = "https://www.statista.com/statistics/235634/average-attendance-per-game-in-the-mlb--regular-season/#:~:text=MLB%20average%20per%20game%20attendance%202009%2D2019&text=In%20the%202019%20season%2C%20the,Major%20League%20Baseball%20was%2028%2C317."),
-           "you can see how these Beta values can add up to make a small 
-           difference in predicted number of runs a team would score."),
+         p(
+         "For example, the average home attendance for the LA Dodgers in 2019, the league leaders in that category for the year,", a("was 49,065.", href = "http://www.espn.com/mlb/attendance/_/year/2019"), 
+         "According to my model, the Dodgers could have expected to score about 1 more run when they played at home on an average night as opposed to an away game where they had (for simplification's sake) no fans. 
+         This is a small run difference, but I argue that this is not insignificant. 
+         After all, one run in baseball is relatively hard to come by. 
+         Therefore, while I did not have the data for the NFl and NBA to construct a model which took into account home attendance at games, judging from the MLB model, I believe it is safe to assume that greater home attendence would result in greater home scores in the NFL and NBA, especially as home field advantage is thought to matter much more in these two leagues."
+         )
          
-         p("For example, the average home attendance for the LA Dodgers in 2019, the league 
-         leaders in that category for the year,",
-           a("was 49,065.", href = "http://www.espn.com/mlb/attendance/_/year/2019"),
-           "According to my model, the Dodgers could have expected to score about 1 more run when they 
-         played at home on an average night as opposed to an away game where they 
-         had (for simplification's sake) no fans. This is a small run difference, 
-         but I argue that this is not insignificant. After all, one run in baseball 
-         is relatively hard to come by. Therefore, while I did not have the data 
-         for the NFl and NBA to construct a model which took into account home 
-         attendance at games, judging from the MLB model, I believe it is safe to 
-           assume that greater home attendence would result in greater home scores
-           in the NFL and NBA, especially as home field advantage is thought to 
-           matter much more in these two leagues.")
-         
-),
+    ),
 
 ########## ABOUT ##########
 

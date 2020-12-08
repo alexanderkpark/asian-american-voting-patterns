@@ -1,6 +1,6 @@
 ########## SETUP ##########
 
-# Read in RDS.
+# Read in necessary RDS files.
 
 combined_league_data <- readRDS(file = "combined_league_data.RDS")
 nfl_model <- readRDS(file = "nfl_model.RDS")
@@ -11,39 +11,48 @@ mlb_complex_model <- readRDS(file = "mlb_model_complex.RDS")
 mlb_model_data <- readRDS(file = "mlb_model_data.RDS")
 
 # Define server logic required to draw graphs.
+
 shinyServer(function(input, output) {
   
 ########## INTRODUCTION ##########
   
-  # Images for rendering on Intro Page.
+  # Images for rendering on Introduction Tab.
   
   output$NFLLogo <- renderImage({
+    
     list(src = "www/nfl_logo.png",
          width = 256,
          height = 350,
          alt = "Error displaying image")
-  }, deleteFile = FALSE)
+  
+    }, deleteFile = FALSE)
   
   output$NBALogo <- renderImage({
+    
     list(src = "www/nba_logo.png",
          width = 135,
          height = 296,
          alt = "Error displaying image")
-  }, deleteFile = FALSE)
+  
+    }, deleteFile = FALSE)
   
   output$MLBLogo <- renderImage({
+    
     list(src = "www/mlb_logo.png",
          width = 350,
          height = 190,
          alt = "Error displaying image")
-  }, deleteFile = FALSE)
+  
+    }, deleteFile = FALSE)
   
   output$FenwayScoreboard <- renderImage({
+    
     list(src = "www/fenway.jpeg",
          width = 400,
          height = 228,
          alt = "Error displaying image")
-  }, deleteFile = FALSE)
+  
+    }, deleteFile = FALSE)
   
   # Bar graph of average NFL home scores made.
   

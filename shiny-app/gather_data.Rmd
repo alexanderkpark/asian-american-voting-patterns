@@ -12,7 +12,11 @@ library(readxl)
 library(janitor)
 library(rstanarm)
 require("knitr")
-opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
+
+# I have commented out the following line so as not to crash anyone else's
+# computer. This line was for me to set my working directory.
+
+# opts_knit$set(root.dir = "~/Desktop/GOV_50/home-field-advantage/shiny-app")
 ```
 
 # NFL Average Score Data
