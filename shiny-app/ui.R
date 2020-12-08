@@ -45,7 +45,7 @@ shinyUI(
                                    as a maxim for years by players, coaches, 
                                    management, and fans alike. In fact, home 
                                    field advantage is so ingrained in sports 
-                                   ulture that virtually all American sports 
+                                   culture that virtually all American sports 
                                    leagues – from high school tournaments all 
                                    the way up to Big Four – award home field 
                                    privileges throughout the playoffs to the 
