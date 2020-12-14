@@ -270,7 +270,8 @@ shinyServer(function(input, output) {
                          color = "white",
                          position = "identity",
                          bins = 100,
-                         alpha = 0.25) +
+                         alpha = 0.5) +
+          facet_wrap(~ parameter) +
           geom_vline(xintercept = mlb_model_int$mu_median,
                      color = "blue") +
           geom_vline(xintercept = mlb_model_int$predicted_home_median,
