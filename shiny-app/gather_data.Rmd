@@ -405,6 +405,58 @@ saveRDS(nfl_model, file = "nfl_model.RDS")
 
 ```
 
+# NBA Model
+
+$$ score = \beta_0 + \beta_1 home_i + \epsilon_i $$
+
+```{r nba model}
+
+# Here, I wrangle NBA data for the NBA model.
+
+# For home data, I specify home = 1.
+
+nba_model_data_home <- nba_scores_2004 %>%
+  select(home_team, 
+         pts_home,
+         season) %>%
+  mutate(home = 1) %>%
+  rename(team = home_team,
+         score = pts_home)
+
+# For away data, I specify home = 0.
+
+nba_model_data_away <- nba_scores_2004 %>%
+  select(away_team, 
+         pts_away,
+         season) %>%
+  mutate(home = 0) %>%
+  rename(team = away_team,
+         score = pts_away)
+
+# Here, I make the tibble for the NBA model.This tibble will also be used in
+# making the "NBAModelInteractive" graphic in my NBA tab.
+
+nba_model_data <- bind_rows(nba_model_data_home, nba_model_data_away)
+
+# Here, I make the NBA model using stan_glm() in order to predict the difference
+# in scores between home and away games for the league, on the whole.
+
+nba_model <- stan_glm(score ~ home,
+                      data = nba_model_data,
+                      refresh = 0)
+
+print(nba_model, digits = 4)
+
+# Save RDS of NBA model.
+
+saveRDS(nba_model, file = "nba_model.RDS")
+
+# Save RDS of nba_model_data for use with interactive graphic.
+
+saveRDS(nba_model_data, file = "nba_model_data.RDS")
+
+```
+
 # MLB Model
 
 $$ score = \beta_0 + \beta_1 home_i + \beta_2 attendance_i + \beta_3 home_i * attendance_i + \epsilon_i $$
@@ -525,57 +577,5 @@ print(mlb_model_complex, digits = 4)
 # Save RDS.
 
 saveRDS(mlb_model_complex, file = "mlb_model_complex.RDS")
-
-```
-
-# NBA Model
-
-$$ score = \beta_0 + \beta_1 home_i + \epsilon_i $$
-
-```{r nba model}
-
-# Here, I wrangle NBA data for the NBA model.
-
-# For home data, I specify home = 1.
-
-nba_model_data_home <- nba_scores_2004 %>%
-  select(home_team, 
-         pts_home,
-         season) %>%
-  mutate(home = 1) %>%
-  rename(team = home_team,
-         score = pts_home)
-
-# For away data, I specify home = 0.
-
-nba_model_data_away <- nba_scores_2004 %>%
-  select(away_team, 
-         pts_away,
-         season) %>%
-  mutate(home = 0) %>%
-  rename(team = away_team,
-         score = pts_away)
-
-# Here, I make the tibble for the NBA model.This tibble will also be used in
-# making the "NBAModelInteractive" graphic in my NBA tab.
-
-nba_model_data <- bind_rows(nba_model_data_home, nba_model_data_away)
-
-# Here, I make the NBA model using stan_glm() in order to predict the difference
-# in scores between home and away games for the league, on the whole.
-
-nba_model <- stan_glm(score ~ home,
-                      data = nba_model_data,
-                      refresh = 0)
-
-print(nba_model, digits = 4)
-
-# Save RDS of NBA model.
-
-saveRDS(nba_model, file = "nba_model.RDS")
-
-# Save RDS of nba_model_data for use with interactive graphic.
-
-saveRDS(nba_model_data, file = "nba_model_data.RDS")
 
 ```

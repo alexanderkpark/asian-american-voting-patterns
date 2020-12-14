@@ -133,7 +133,7 @@ shinyServer(function(input, output) {
                      color = "blue") +
           scale_fill_manual(name = "Home Status", 
                             labels = c("Away", "Home"),
-                            values = c("red4", "navyblue")) +
+                            values = c("red3", "navyblue")) +
           labs(title = "Posterior Probability Distribution of Home and Away Scores",
                x = "Score",
                y = "Probability") +
@@ -271,7 +271,7 @@ shinyServer(function(input, output) {
                          position = "identity",
                          bins = 100,
                          alpha = 0.5) +
-          facet_wrap(~ parameter) +
+          facet_wrap(~ parameter, ncol = 1) +
           geom_vline(xintercept = mlb_model_int$mu_median,
                      color = "blue") +
           geom_vline(xintercept = mlb_model_int$predicted_home_median,
@@ -288,8 +288,9 @@ shinyServer(function(input, output) {
                             values = c("navyblue",
                                        "darkorange1",
                                        "purple2",
-                                       "red4")) +
-          labs(title = "Posterior Probability Distribution of Home and Away Scores",
+                                       "red3")) +
+          labs(title = "Posterior Probability Distribution of Scores",
+               subtitle = "By Parameter",
                x = "Score",
                y = "Probability") +
           theme_bw()

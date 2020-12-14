@@ -11,6 +11,7 @@ library(gt)
 library(gtsummary)
 library(broom.mixed)
 library(rstanarm)
+library(mathjaxr)
 
 # Define UI for my application here.
 
@@ -98,7 +99,6 @@ shinyUI(
                         p("Image Sources:",
                           a("NFL Logo,", href = "https://static.nfl.com/static/content/public/static/wildcat/assets/img/application-shell/shield/default.svg"),
                           a("NBA Logo."), href = "https://mediacentral.nba.com/wp-content/uploads/logos/NBA.jpg")
-                        
                         )
                     
                     ),
@@ -119,7 +119,6 @@ shinyUI(
                         p("Image Sources:",
                           a("MLB Logo,", href = "https://en.wikipedia.org/wiki/File:Major_League_Baseball_logo.svg"),
                           a("Fenway Scoreboard."), href = "https://apnews.com/article/a8058fe68efb46bf91aa649f32c5464c")
-                        
                         ),
                      
                      column(8,
@@ -360,8 +359,11 @@ shinyUI(
         h4("Posterior Probability Distribution Explanation"),
         
         p(
-        "This posterior probability distribution was made using a linear regression model where", strong("Score"), "is the output and", strong("Home"), "is the sole predictor. 
-        Score is the predicted score of a team, while Home is whether the game is home or away. 
+        "This posterior probability distribution was made using a linear regression model where", strong("Score"), "is the output and", strong("Home"), "is the sole predictor."
+        ),
+        
+        p(
+        "Score is the predicted score of a team, while Home is whether the game is home or away. 
         Score is on the x-axis while Probability – i.e., the chance that the given score would occur – is on the y-axis. 
         The blue distribution is the distribution of predicted home scores of a team during the selected range of seasons, while the red distribution is the distribution of predicted away scores for a team during the selected range of seasons. 
         The blue line shows the median of the predicted home scores over the range of seasons, while the red line shows the median of predicted away scores over the range of seasons."
@@ -371,16 +373,23 @@ shinyUI(
              
         h3("NFL Model as a League from the 1966 Season to the 2019 Season"),
         
+        withMathJax(),
+        
+        helpText("$$score = \\beta_0 + \\beta_1 home_i + \\epsilon_i$$"),
+        
         tableOutput("NFLModelTable"),
         
-        # Discussing the model.
+        # Explanation and discussion of the model.
         
-        h4("Discussion of the Model"),
+        h4("Output and Predictor"),
         
         p(
-        "This model of the NFL takes", strong("home"), "as the predictor of the output", strong("score."), "home is an indicator of whether a game was played at home or away, with home = 1 indicating that the game was played at home. 
+        "This model of the NFL takes", strong("home"), "as the predictor of the output", strong("score."), 
+        "home is an indicator of whether a game was played at home or away, with home = 1 indicating that the game was played at home. 
         The output score is the predicted amount of points a team would score."
         ),
+        
+        h4("Explanation of the Table"),
         
         p(
         "This table shows the Beta value and confidence intervals for the Intercept and home. 
@@ -390,6 +399,8 @@ shinyUI(
         em("What this means is that the prediction for the amount of points an average NFL team will score if they play at home is roughly equal to the Beta for the Intercept PLUS the Beta for home."),
         strong("According to my model, the average NFL team can expect to score around 3 more points at home than if they played away from home."),
         "The confidence intervals tell us that we can be 95% sure that the true values for a team's score away from home and for the change in score if the team played at home falls in the range of the respective interval bounds for Intercept and home."),
+        
+        h4("Discussion of the Model"),
         
         p(
         "The Beta for home that is displayed is just under 3, which is consistent with", a("this article", href = "https://www.lineups.com/articles/how-important-is-home-field-advantage-in-the-nfl/#Debunking-the-Myths-of-HomeField-Advantage"), "and", a("this article.", href = "https://www.espn.com/chalk/story/_/id/29831703/will-2020-nfl-season-see-death-home-field-advantage"), 
@@ -480,8 +491,11 @@ shinyUI(
          h4("Posterior Probability Distribution Explanation"),
          
          p(
-         "This posterior probability distribution* was made using a linear regression model where", strong("Score"), "is the output and", strong("Home"), "is the sole predictor. 
-         Score is the predicted score of a team, while Home is whether the game is home or away. 
+         "This posterior probability distribution* was made using a linear regression model where", strong("Score"), "is the output and", strong("Home"), "is the sole predictor."
+         ),
+         
+         p(
+         "Score is the predicted score of a team, while Home is whether the game is home or away. 
          Score is on the x-axis while Probability – i.e., the chance that the given score would occur – is on the y-axis. 
          The green distribution is the distribution of predicted home scores of a team during the selected range of seasons, while the gray distribution is the distribution of predicted away scores for a team during the selected range of seasons. 
          The green line shows the median of the predicted home scores over the range of seasons, while the gray line shows the median of predicted away scores over the range of seasons."
@@ -495,19 +509,23 @@ shinyUI(
          
          h3("NBA Model as a League from the 2003 Season to March 2020"),
          
+         withMathJax(),
+         
+         helpText("$$score = \\beta_0 + \\beta_1 home_i + \\epsilon_i$$"),
+         
          tableOutput("NBAModelTable"),
          
-         # Discussing the model.
+         # Explanation and discussion of the model.
          
-         h4("Discussion of the Model"),
+         h4("Output and Predictor"),
          
          p(
-         "This model of the NBA takes", strong("home"), "as the predictor of 
-          the output", strong("score."), "home is an indicator of whether a 
-          game was played at home or away, with home = 1 indicating that the 
-          game was played at home. The output score is the predicted amount of 
-          points a team would score."
+         "This model of the NBA takes", strong("home"), "as the predictor of the output", strong("score."), 
+         "home is an indicator of whether a game was played at home or away, with home = 1 indicating that the game was played at home. 
+         The output score is the predicted amount of points a team would score."
          ),
+         
+         h4("Explanation of the Table"),
          
          p(
          "This table shows the Beta value and confidence intervals for the Intercept and home. 
@@ -518,6 +536,8 @@ shinyUI(
          strong("According to my model, the average NBA team can expect to score around 3 more points at home than if they played away from home."), 
          "The confidence intervals tell us that we can be 95% sure that the true values for a team's score away from home and for the change in score if the team played at home falls in the range of the respective interval bounds for Intercept and home."
          ),
+         
+         h4("Discussion of the Model"),
          
          p(
          "Of the big American sports leagues, the NBA is thought to have the greatest home field – or home court – advantage. 
@@ -640,7 +660,11 @@ shinyUI(
          
          p(
          "This posterior probability distribution* was made using a linear regression model where", strong("Score"), "is the output and", strong("Home,"), strong("Attendance**,"), "and the", strong("Interaction between Home and Attendance"), "are predictors.", 
-         em("This is a more intricate model than the models for the NFL and NBA."), 
+         em("This is a more intricate model than the models for the NFL and NBA."),
+         "Therefore, this posterior probability distribution has been divided by parameter for easier interpretation."
+         ),
+         
+         p(
          "Score is the predicted score of a team. 
          Home is whether the game is home or away – in this case, controlling for attendance. 
          Attendance is the average home attendance the home team enjoyed over the selected range of seasons divided by 1000. 
@@ -660,7 +684,7 @@ shinyUI(
          ),
          
          p(
-         "**The attendance predictor is the average home attendance divided  for a team over the entire season rather than individual attendance figures per game because it is difficult to build a model using per-game attendance figures. 
+         "**The attendance predictor is the average home attendance divided for a team over the entire season rather than individual attendance figures per game because it is difficult to build a model using per-game attendance figures. 
          The attendance predictor is divided by 1000 so we can see the effect of 1000 more fans on score rather than 1 more fan, which would be miniscule."
          ),
          
@@ -668,9 +692,15 @@ shinyUI(
          
          h3("MLB Model as a League from the 1947 Season to the 2019 Season"),
          
+         withMathJax(),
+         
+         helpText("$$score = \\beta_0 + \\beta_1 home_i + \\beta_2 attendance_i + \\beta_3 home_i * attendance_i + \\epsilon_i$$"),
+         
          tableOutput("MLBComplexModelTable"),
          
-         h4("Discussion of the Model"),
+         # Explanation and discussion of the model.
+         
+         h4("Output and Predictors"),
          
          p(
          "This model of the MLB is a step up from the NFL and NBA models, as it takes into account three predictors to produce the output", strong("score."),
@@ -681,6 +711,8 @@ shinyUI(
          The interaction predictor is only taken into account when both home = 1 and attendance = 1, i.e., there are 1000 home fans.",
          em("The purpose of these additional predictors is to see how attendance, especially home attendance, can impact score, and whether or not playing at home by itself has any effect on the score output.")
          ),
+         
+         h4("Explanation of the Table"),
          
          p(
          "This table shows the Beta value and confidence intervals for the Intercept, home, attendance, and the interaction between home and attendance. 
@@ -695,7 +727,8 @@ shinyUI(
             Adding all of the Beta values together allows for you to take into account the effects of the home and attendance predictors as well as the interaction between them."),
          "Finally, the confidence intervals tell us that we can be 95% sure that the true values for the Betas for Intercept, home, attendance, and home:attendance will exist within their respective displayed bounds."
          ),
-
+         
+         h4("Discussion of the Model"),
          
          p(
          "The MLB has always been known as the league in which home field advantage", a("matters the least.", href = "https://www.mlb.com/news/home-field-advantage-has-disappeared-in-2020"),
@@ -720,7 +753,8 @@ shinyUI(
          "According to my model, the Dodgers could have expected to score about 1 more run when they played at home on an average night as opposed to an away game where they had (for simplification's sake) no fans. 
          This is a small run difference, but I argue that this is not insignificant. 
          After all, one run in baseball is relatively hard to come by. 
-         Therefore, while I did not have the data for the NFl and NBA to construct a model which took into account home attendance at games, judging from the MLB model, I believe it is safe to assume that greater home attendence would result in greater home scores in the NFL and NBA, especially as home field advantage is thought to matter much more in these two leagues."
+         Therefore, while I did not have the data for the NFl and NBA to construct a model which took into account home attendance at games,",
+         strong("judging from the MLB model, I believe it is safe to assume that greater home attendence would result in greater home scores in the NFL and NBA, especially as home field advantage is thought to matter much more in these two leagues.")
          )
          
     ),
