@@ -354,7 +354,6 @@ saveRDS(combined_league_data, file = "combined_league_data.RDS")
 
 ```
 
-
 # NFL Model
 
 $$ score = \beta_0 + \beta_1 home_i + \epsilon_i $$
